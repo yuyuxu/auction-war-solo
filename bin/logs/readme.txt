@@ -1,0 +1,1 @@
+This foler contains the logs for player behaviors either from server side of view plus some extra information.

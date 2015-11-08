@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login</title>
+  <link rel="stylesheet" href="./stylesheets/bootstrap.min.css"></link>
+  <link rel="stylesheet" href="./stylesheets/bootstrap-theme.min.css"></link>
+  <link rel="stylesheet" href="./stylesheets/login.css"></link>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="form-signin" >
+      <h3 class="form-signin-heading" align="center">
+        <b>Login to Auction War</b>
+      </h3>
+      <br />
+      <!-- hidden variable -->
+      <form action="questionnaire" method="post" style="display:none">
+        <a id="login-as-guest" onclick="$(this).closest('form').submit()" data-toggle="tooltip" data-original-title="Play immediately by login as a guest" class="btn btn-lg btn-primary btn-block" type="submit" style="width:100%">Login As Guest</a>
+      </form>
+      <hr />
+      <br />
+      <form action="questionnaire" method="post">
+        <div>
+          <input type="text" class="form-control" name="user_id" placeholder="Amazon Mechanic Turk ID" required="" autofocus="" />
+          <!-- hidden variable -->
+          <label id="error-info" class="visibility:hidden; margin-left:10px"><font color="red"><%=error%></font></label>
+          <!-- hidden variable -->
+          <input name="from" type="hidden" value='login'></input>
+        </div>
+        <br />
+        <a id="login-as-worker" onclick="$(this).closest('form').submit()" data-toggle="tooltip" data-original-title="- Input your turker ID
+- After finishing the game, you will get a verification code
+- Use that code to get paid" class="btn btn-lg btn-danger btn-block" type="submit" >Login</a>
+      </form>
+    </div>
+  </div>
+  <script type="text/javascript" src="./javascripts/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="./javascripts/bootstrap/bootstrap.min.js"></script>
+</body>
+</html>

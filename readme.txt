@@ -35,7 +35,7 @@ Tech Notes:
 	Green: correct one
 - About javascript scope vs context vs closure
 ? What is a proper way to write socket io on server side
--> How to resolve circular dependencies? 
+-> How to resolve circular dependencies?
 	http://stackoverflow.com/questions/10869276/how-to-deal-with-cyclic-dependencies-in-node-js
 -> Naming convention : variable of required package should be all capital cases
 --> So far all the id with dummy_ means testing cases
@@ -61,7 +61,7 @@ Tech Notes:
 	status:ques, status:finish, status:introduction
 	db:no-player
 	error:ques
--- Error logging format 
+-- Error logging format
 	[] * : &
 	[]: indicate action
 	* : indicate where
@@ -81,12 +81,10 @@ Tech Notes:
 --- Right now I'm using ajax from window.onbeforeunload to unregister user
 ??? Protocol for SetGameStatus needs to be refactored
 
-Some important Bugs and Fixes that's done~ 
+Some important Bugs and Fixes that's done~
 - Accept button should disappear after item is moved, otherwise it would make the items incorrect
 - Add alert for start turn
 - Mention in Mturk the required browser is Chrome!!
-
-
 
 --------------
 What needs to be done?
@@ -96,3 +94,15 @@ What needs to be done?
 - Change Client logging level
 - Add authentification to admin
 - Add some statistics to admin
+
+
+
+TODO: -----
+How to extract data from database
+User.prototype.LoadData = function (data) {
+  this.cache['questionnaire'] = data['Item']['questionnaire']['S'];
+  this.cache['role'] = data['Item']['role']['S'];
+  this.cache['quiz'] = data['Item']['quiz']['S'];
+  this.cache['game'] = data['Item']['game']['S'];
+  this.cache['reward'] = data['Item']['reward']['S'];
+}

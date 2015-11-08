@@ -20,20 +20,21 @@ app.use(cookie_parser());
 
 // mount static assets
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'initializer')));
 
 // mount controller functions
-app.use(require('./routes/controller_index'));
+app.use(require('./routes/controller_login'));
 app.use(require('./routes/controller_questionnaire'));
-app.use(require('./routes/controller_introduction'));
-app.use(require('./routes/controller_quiz'));
-app.use(require('./routes/controller_game'));
-app.use(require('./routes/controller_finish'));
-app.use(require('./routes/controller_admin'));
-app.use(require('./routes/controller_notification'));
+// app.use(require('./routes/controller_introduction'));
+// app.use(require('./routes/controller_quiz'));
+// app.use(require('./routes/controller_game'));
+// app.use(require('./routes/controller_finish'));
+// app.use(require('./routes/controller_admin'));
+// app.use(require('./routes/controller_notification'));
 
 // mount function that catches 404 and forward it to error handler
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
+  var err = new Error('Page Not Found');
   err.status = 404;
   next(err);
 });
