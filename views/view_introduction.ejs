@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<title>Introduction</title>
+	<link rel="stylesheet" href="./stylesheets/bootstrap.min.css"></link>
+	<link rel="stylesheet" href="./stylesheets/prettify.css"></link>
+	<link rel="stylesheet" href="./stylesheets/custom.css"></link>
+	<link rel="stylesheet" href="./stylesheets/style.css"></link>
+  </head>
+  <body>
+	<section class="featured">
+	  <div class="container"> 
+		<div class="row">
+		  <div class="col-md-9 col-md-offset-1">
+			  <h2 class="slogan" style="font-size:36px">Auction War - Introduction</h2>
+		  </div>
+		</div>
+	  </div>
+	</section>
+	<section id="section-services" class="section pad-bot10" style="color: #141823">
+	  <input id="player-side" name="player_side" type="hidden" value='<%=player_side%>'></input> 
+	  <div class="container-fluid" id="Sam-0" style="display:none">
+		<div class='row'>
+		  <div class="col-md-8 col-md-offset-2">
+			  <h3 class="page-head">General Information: Sam's Consignment House</h3> 
+			  <div class="container-fluid">
+				<p style ="word-wrap:break-word; font-size:19px;"><span style="font-weight:bold;font-size:17px;">Your name is Sam</span>, owner of Sam's Consignment House.</p>
+				<p style ="word-wrap:break-word; font-size:19px; color:black">
+				The U.S. storage rental industry is a booming industry. However, the rented storage lockers are sometimes abandoned. The contents of abandoned lockers are usually sold at auctions. You want to jointly purchase one of these lockers with another buyer. First, however you must negotiate with the other buyer on how to divide the contents of the locker.
+				</p>
+				<p style ="word-wrap:break-word; font-size:17px;font-weight:bold" >Your task is to try to reach an agreement with the person on the other side of the table on how to divide these items.</p>
+			  </div>
+			  <hr />
+			  <h3 class="page-head">Your Business and Today's Auction</h3>
+			  <div class="container-fluid">
+				<p style ="word-wrap:break-word; font-size:19px; color:black">This storage unit contains the following valuable items:</p>
+			  </div>
+			  <br />
+			  <ul style="list-style-type:upper-roman; word-wrap:break-word; font-size:19px; ">
+				<li><u>Print of an art deco painting:</u> You could find someone to buy this item but your <span style="font-weight:bold;font-size:17px;">profit would be small</span>. This is your lowest priority item.</li>
+				<div align="center">
+				  <img src="./images/item1.png"/>
+				</div>
+				<br />
+				<li><u>Art deco lamps:</u> There are two art deco lamps that are far more valuable than the painting. You could get a <span style="font-weight:bold;font-size:17px;">tidy profit</span> on these lamps. These are your medium priority items.</li>
+				<div align="center">
+					<img src="./images/item2.png"/>
+					<img src="./images/item2.png"/>
+				</div>
+				<br />
+				<li><u>Crates of LP records:</u> You have a buyer that is very interested in these records. Obtaining all of them would be <span style="font-weight:bold;font-size:17px;">worth more to you than everything else in the locker</span>. These are your highest priority times. Try to get them all (if possible). Just 1 of these crates could be worth as much as both of the lamps.</li>
+				<div align="center">
+					<img src="./images/item3.png"/>
+					<img src="./images/item3.png"/>
+					<img src="./images/item3.png"/>
+				</div>
+			  </ul>
+			  <hr />
+			  <h3 class="page-head">Your goal</h3>
+			  <div class="container-fluid">
+				<p style ="word-wrap:break-word; font-size:19px;color:black">Remember, your goal in this task is to <span style="font-weight:bold;font-size:17px;">get the best outcome for yourself.</span></p>
+			  </div>
+			  <hr />
+			  <h3 class="page-head">Your task</h3>
+			  <div class="container-fluid">
+				<p style ="word-wrap:break-word; font-size:19px;color:black"> To negotiate, you and your opponent take turns, game will notify you when it is the start of your turn. </p>
+				<p style ="word-wrap:break-word; font-size:19px;color:black"> During your turn, you can take <span style="color:red;font-weight:bold;font-size:17px">at least one of the following actions:</span> 
+				<ul style ="word-wrap:break-word; font-size:19px;color:black">
+				  <li> Make a statement or ask a question by selecting from the list. </li>
+				  <li> Make an offer by drag the items on the table. </li>
+				</ul>
+				</p>
+				<p style ="word-wrap:break-word; font-size:19px; color:black"> Once both party agrees on who gets what for every item, the game is over. </p>
+			  </div>
+			  <hr/>
+			  <div style="float:left">
+				<form action="questionnaire" method="post">
+				  <input type='button' class='btn btn-primary' id='prevstage' style="width:10em" value='Previous Stage'/>
+				  <input id="player-id" name="user_id" type="hidden" value='<%=user_id%>'></input> 
+				  <input name="from" type="hidden" value='introduction'></input>
+				</form>
+			  </div>
+			  <div style="float:right">
+				<form action="quiz" method="post">
+				  <input type='button' class="btn btn-danger" id="nextstage" style="width:10em" value="Next Stage"></input> 
+				  <input id="player-id" name="user_id" type="hidden" value='<%=user_id%>'></input>
+				  <input name="from" type="hidden" value='introduction'></input>
+				  <input id="test-name" name="test_name" type="hidden" value='<%=test_name%>'></input>
+				</form>
+			  </div>
+		  </div>
+		</div>
+	  </div>
+	  <div class="container-fluid" id="Alex-0" style="display:none">
+		<div class='row'>
+		  <div class="col-md-8 col-md-offset-2">
+			  <h3 class="page-head">General Information: Alex's Antiques</h3>
+			  <div class="container-fluid">
+				<p style ="word-wrap:break-word; font-size:19px;"><span style="font-weight:bold;font-size:17px;">Your name is Alex</span>, owner of Alex's Antiques.</p>
+				<p style ="word-wrap:break-word; font-size:19px; color:black">
+				The U.S. storage rental industry is a booming industry. However, the rented storage lockers are sometimes abandoned. The contents of abandoned lockers are usually sold at auctions. You want to jointly purchase one of these lockers with another buyer. First, however you must negotiate with the other buyer on how to divide the contents of the locker.
+				</p>
+				<p style ="word-wrap:break-word; font-size:17px;font-weight:bold">Your task is to try to reach an agreement with the person on the other side of the table on how to divide these items.</p>
+			  </div>
+			  <hr />
+			  <h3 class="page-head">Your Business and Today's Auction</h3>
+			  <div class="container-fluid">
+				<p style ="word-wrap:break-word; font-size:19px; color:black">This storage unit contains the following valuable items:</p>
+			  </div>
+			  <br />
+			  <ul style="list-style-type:upper-roman; word-wrap:break-word;font-size:19px;">
+				<li><u>Print of an art deco painting:</u> You could find someone to buy this item but your <span style="font-weight:bold;font-size:17px;">profit would be zero</span>. This is your lowest priority item.</li>
+				<div align="center">
+				  <img src="./images/item1.png"/>
+				</div>
+				<br />
+				<li><u>Art deco lamps:</u> There are two art deco lamps that are far more valuable than the painting. You could get a <span style="font-weight:bold;font-size:17px;">tidy profit on these lamps </span>. These are your medium priority items.</li>
+				<div align="center">
+				  <img src="./images/item2.png"/>
+				  <img src="./images/item2.png"/>
+				</div>
+				<br />
+				<li><u>Crates of LP records:</u> You have a buyer that is very interested in these records. Obtaining all of them would be worth more to you than everything else in the locker. <span style="font-weight:bold;font-size:17px;">These are your highest priority times.</span> Try to get them all (if possible). Just 1 of these crates could be worth as much as both of the lamps.</li>
+				<div align="center">
+				  <img src="./images/item3.png"/>
+				  <img src="./images/item3.png"/>
+				  <img src="./images/item3.png"/>
+				</div>
+			  </ul>
+			  <hr />    
+			  <h3 class="page-head">Your goal</h3>
+			  <div class="container-fluid">
+				<p style ="word-wrap:break-word; font-size:19px;color:black">Remember, your goal in this task is to <span style="font-weight:bold;font-size:17px;">get the best outcome for yourself.</span></p>
+			  </div>
+			  <hr />
+			  <h3 class="page-head">Your task</h3>
+			  <div class="container-fluid">
+				<p style ="word-wrap:break-word; font-size:19px;color:black"> To negotiate, you and your opponent take turns, game will notify you when it is the start of your turn. </p>
+				<p style ="word-wrap:break-word; font-size:19px;color:black"> During your turn, you can take <span style="color:red;font-weight:bold;font-size:17px">at least one of the following actions:</span> 
+				<ul style ="word-wrap:break-word; font-size:19px;color:black">
+				  <li> Make a statement or ask a question by selecting from the list. </li>
+				  <li> Make an offer by drag the items on the table. </li>
+				</ul>
+				</p>
+				<p style ="word-wrap:break-word; font-size:19px; color:black"> Once both party agrees on who gets what for every item, the game is over. </p>
+			  </div>
+			  <hr/>
+			  <div style="float:left">
+				<form action="questionnaire" method="post">
+					<input type='button' class='btn btn-primary' id='prevstage1' style="width:10em" value='Previous Stage'/>
+					<input id="player-id" name="user_id" type="hidden" value='<%=user_id%>'></input> 
+					<input name="from" type="hidden" value='introduction'></input>
+				</form>
+			  </div>             
+			  <div style="float:right">
+				<form action="quiz" method="post">
+					<input type='button' class="btn btn-danger" id="nextstage1" style="width:10em" value="Next Stage"></input> 
+					<input id="player-id" name="user_id" type="hidden" value='<%=user_id%>'></input>
+					<input name="from" type="hidden" value='introduction'></input>
+					<input id="test-name" name="test_name" type="hidden" value='<%=test_name%>'></input>
+				</form>
+			  </div>
+		  </div>
+		</div>
+	  </div>
+	  <div class="container-fluid" id="Alex-1" style="display:none">
+		<div class='row'>
+		  <div class="col-md-8 col-md-offset-2">
+			  <h3 class="page-head">General Information: Alex's Antiques</h3> 
+			  <div class="container-fluid">
+				<p style ="word-wrap:break-word; font-size:19px;coloar:black"><span style="font-weight:bold;font-size:17px;">Your name is Alex</span>, owner of Alex's Antiques.</p>
+				<p style ="word-wrap:break-word; font-size:19px;color:black">
+				The U.S. storage rental industry is a booming industry. However, the rented storage lockers are sometimes abandoned. The contents of abandoned lockers are usually sold at auctions. You want to jointly purchase one of these lockers with another buyer. First, however you must negotiate with the other buyer on how to divide the contents of the locker.
+				</p>                
+				<p style ="word-wrap:break-word; font-size:17px;font-weight:bold" >Your task is to try to reach an agreement with the person on the other side of the table on how to divide these items.</p>
+			  </div>
+			  <hr />
+			  <h3 class="page-head">Your Business and Today's Auction</h3>
+			  <div class="container-fluid">
+				<p style ="word-wrap:break-word; font-size:19px; color:black">This storage unit contains the following valuable items:</p>
+			  </div>
+			  <br />
+			  <ul style="list-style-type:upper-roman; word-wrap:break-word; font-size:19px;">
+				<li><u>Print of an art deco painting:</u> You could find someone to buy this item but your <span style="font-weight:bold;font-size:17px;">profit would be zero</span>. This is your lowest priority item.</li>
+				<div align="center">
+				  <img src="./images/item1.png"/>
+				</div>
+				<br />
+				<li>Art deco lamps: There are two art deco lamps that are the  <span style="font-weight:bold;font-size:17px;">most valuable</span> items in the locker. These are your highest priority times. Try to get them all (if possible). Just 1 lamp could be worth as much as all of the records.</li>
+				<div align="center">
+				  <img src="./images/item2.png"/>
+				  <img src="./images/item2.png"/>
+				</div>
+				<br />
+				<li>Crates of LP records: These albums are far more valuable than the painting. You could get <span style="font-weight:bold;font-size:17px;">a tidy profit</span> on them. These are your medium priority items.</li>
+				<div align="center">
+				  <img src="./images/item3.png"/>
+				  <img src="./images/item3.png"/>
+				  <img src="./images/item3.png"/>
+				</div>
+			  </ul>
+			  <hr />    
+			  <h3 class="page-head">Your goal</h3>
+			  <div class="container-fluid">
+				<p style ="word-wrap:break-word; font-size:19px;color:black">Remember, your goal in this task is to <span style="font-weight:bold;font-size:17px;">get the best outcome for yourself.</span></p>
+			  </div>
+			  <hr />
+			  <h3 class="page-head">Your task</h3>
+			  <div class="container-fluid">
+				<p style ="word-wrap:break-word; font-size:19px;color:black"> To negotiate, you and your opponent take turns, game will notify you when it is the start of your turn. </p>
+				<p style ="word-wrap:break-word; font-size:19px;color:black"> During your turn, you can take <span style="color:red;font-weight:bold;font-size:17px">at least one of the following actions:</span> 
+				<ul style ="word-wrap:break-word; font-size:19px;color:black">
+				  <li> Make a statement or ask a question by selecting from the list. </li>
+				  <li> Make an offer by drag the items on the table. </li>
+				</ul>
+				</p>
+				<p style ="word-wrap:break-word; font-size:19px; color:black"> Once both party agrees on who gets what for every item, the game is over. </p>
+			  </div>
+			  <hr/>
+				<div style="float:left">
+					<form action="questionnaire" method="post">
+						<input type='button' class='btn btn-primary' id='prevstage2' style="width:10em" value='Previous Stage'/>
+						<input id="player-id" name="user_id" type="hidden" value='<%=user_id%>'></input> 
+				  		<input name="from" type="hidden" value='introduction'></input>
+					</form>
+				</div>
+				<div style="float:right">
+					<form action="quiz" method="post">
+						<input type='button' class="btn btn-danger" id="nextstage2" style="width:10em" value="Next Stage"></input> 
+						<input id="player-id" name="user_id" type="hidden" value='<%=user_id%>'></input>
+				  		<input name="from" type="hidden" value='introduction'></input>
+						<input id="test-name" name="test_name" type="hidden" value='<%=test_name%>'></input>
+					</form>
+				</div>
+		  </div>
+		</div>
+	  </div>
+	</section>
+	<script src="./javascripts/jquery/jquery.min.js"></script>
+	<script src="./javascripts/jquery/jquery.bootstrap.wizard.js"></script>
+	<script src="./javascripts/knockout/knockout-3.1.0.js"></script>
+	<script src="./javascripts/bootstrap/bootstrap.min.js"></script>
+	<script src="./javascripts/bootbox/bootbox.min.js"></script>
+	<script src="./javascripts/others/prettify.js"></script>
+	<script src="./vmodel_utility.js"></script>
+	<script src="./vmodel_introduction.js"></script>
+  </body>
+</html>

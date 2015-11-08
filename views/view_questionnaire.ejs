@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<title>Questionnaires</title>
+	<link rel="stylesheet" href="./stylesheets/bootstrap.min.css"></link>
+	<link rel="stylesheet" href="./stylesheets/prettify.css"></link>
+	<link rel="stylesheet" href="./stylesheets/custom.css"></link>
+	<link rel="stylesheet" href="./stylesheets/style.css"/></link>
+	<style type="text/css">
+		label {
+			width : 10em;
+			padding-top : 1em;
+			cursor : pointer;
+		}
+	</style>
+	</head>
+  <body>
+	<section class="featured">
+	  <div class="container"> 
+		<div class="row">
+		  <div class="col-md-9 col-md-offset-1">
+			  <h2 class="slogan" style="font-size:36px">Auction War - Questionnaires</h2>
+		  </div>
+		</div>
+	  </div>
+	</section>    
+	<section id="section-services" class="section pad-bot10 fill" style="color: #141823">         
+	  <div class="container-fluid">
+		<div class='row'>
+		  <div class="col-md-8 col-md-offset-1">
+			<section id="wizard">
+				<div id="rootwizard" class="form-group">
+					<div class='container' style="margin-bottom:10px" align="left">
+					  <ul>
+						<li><a href="#tab1" data-toggle="tab">Step One</a></li>
+						<li><a href="#tab2" data-toggle="tab">Step Two</a></li>
+					  </ul>
+					</div>        
+					<h3 align="center" data-bind="text: title"></h3>
+					<div class="container">
+					  <ul data-bind="foreach: descriptions">
+						<p class="text-left" style="font-size:19px;" data-bind="text: descText"></p>
+						<div align="center"> <img data-bind="attr:{src: descImage}"/> </div>
+					  </ul>
+					</div>
+					<div align="center" class="container">
+						<table class="table">
+							<thead><tr><th style="font-size:19px" data-bind="text: statement"></th><th style="font-size:19px;text-align:center">Choices</th></tr></thead>
+							<tbody data-bind="foreach: questions">
+							  <tr align="left">
+								<td>
+								  <table data-bind="foreach: questionRow">
+									<tr data-bind="foreach: questionColumn">
+									  <td style="padding-right:16px;font-weight:bold" data-bind="text: questionCellText"> </td>
+									</tr>
+								  </table>
+								</td>
+								<td align="center"><table border="0">
+								  <tbody>
+									<tr align="right" data-bind="foreach: $root.availableChoices">
+									  <td style="text-align:center">
+										<label class="radio-inline" style="padding-bottom:16px;">
+										  <input type="radio" data-bind="checked: $parent.selected, attr: {name: $parent.count, value: choiceText}"></input> 
+										</label>
+									  </td>
+									</tr>
+									<tr data-bind="foreach: $root.availableChoices">
+										<td style="width:220px;text-align:center;font-size:19px" data-bind="text: choiceText"></td>
+									</tr>
+								  </tbody>
+								</table></td>
+							  </tr>
+							</tbody>          
+						</table>
+					</div>
+					<hr />
+					<div style="float:left">
+						<input type='button' class='btn btn-primary button-previous' style="width:10em" name='previous' value='Previous'/>
+					</div>             
+					<div style="float:right">
+						<input type='button' class='btn btn-primary button-next' style="width:10em" name='next' value='Next'/>
+						<form action="introduction" method="post">
+							<input id="next-stage" type='button' class="btn btn-danger button-finish" style="display:none;width:10em" name="finish" value="Next Stage"/>
+							<input id="player-id" name="user_id" type="hidden" value='<%=user_id%>'/>
+							<input name="from" type="hidden" value='questionnaire'/>
+							<input id="test-name" name="test_name" type="hidden" value='<%=test_name%>'></input>
+							<input id="submit-data" name="questionnaire_data" type="hidden" value='<%=questionnaire_data%>'/>
+						</form>
+					</div>
+				</div>
+			</section>
+		  </div>
+		</div>
+	  </div>
+	</section>
+	<script src="./javascripts/jquery/jquery.min.js"></script>
+	<script src="./javascripts/jquery/jquery.bootstrap.wizard.js"></script>
+	<script src="./javascripts/knockout/knockout-3.1.0.js"></script>
+	<script src="./javascripts/bootstrap/bootstrap.min.js"></script>
+	<script src="./javascripts/bootbox/bootbox.min.js"></script>
+	<script src="./javascripts/others/prettify.js"></script>
+	<script src="./vmodel_utility.js"></script>
+	<script src="./vmodel_questionnaire.js"></script>
+	<script src="./data_questionnaire.js"></script>
+	<script src="./model_questionnaire.js"></script>
+  </body>
+</html>

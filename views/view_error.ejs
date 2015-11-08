@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->
+
+<head>
+	<meta charset="UTF-8" />
+	<title>404 Error Page </title>
+	<link href="./stylesheets/bootstrap.css" rel="stylesheet" />
+	<link href="./stylesheets/font-awesome.css" rel="stylesheet" />
+	<link href="./stylesheets/style.css" rel="stylesheet" />
+</head>
+<body>
+	<section class="featured">
+		<div class="container"> 
+			<div class="row">
+				<div class="col-md-9 col-md-offset-1">
+						<h2 class="slogan" style="font-size:36px">Auction War - Error</h2>
+				</div>
+			</div>
+		</div>
+	</section>
+	<section class="section pad-bot10 fill" style="color: #141823">	
+		<div class="container" style="margin-top:30px">
+			<div class="col-lg-8 col-lg-offset-2 text-center">
+				<div class="logo">
+					<h1>Oops, Error 404 !</h1>
+			  	</div>
+				<hr />
+				<h3 align="center">- Error Message -</h3>
+			  	<p style="font-weight:bold;color:red;font-size:110%;"> <%=message%></p>
+				<hr />
+				<h3 align="center">- Error Tracking -</h3>
+			  	<p style="font-weight:bold;color:red;font-size:110%;"><%=error%></p>
+			  	<hr />
+			  	<h3 align="center">- What Next? -</h3>
+			  	<div align="middle">
+			  		<p style="font-weight:bold;color:black;font-size:110%;"> Please report this error message to <u style="color:blue">athena.xyy@gmail.com</u> and then return to Main Page. </p>
+<!-- 			  		<ul style="color:black;font-weight:bold;font-size:110%;color:black">
+						<li> Please report this error to <u style="color:blue">athena.xyy@gmail.com</u>. </li>
+					</ul>
+ -->					<br />
+					<a href="."  class="btn btn-danger btn-block" style="width:50%" role="button">Return to Main Page</a>
+				</div>
+				<!-- <input type="text" placeholder="Please report your problem, we will get back to you ASAP!" class="form-control" />
+				<br />
+				<div class="col-lg-6  col-lg-offset-3">
+					<div class="btn-group btn-group-justified">
+						<a href="#" class="btn btn-danger">Contact Support</a> 
+					</div>
+				</div> -->
+			</div>				
+		</div>
+	</section>
+</body>
+</html>
