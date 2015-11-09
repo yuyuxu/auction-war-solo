@@ -89,7 +89,9 @@ User.prototype.Log = function (type, data) {
   data_str = JSON.stringify(data);
   data_str += '\n';
 
-  var log_file = '../bin/logs/' + this.user_id + '_server.json';
+  var log_file = path.join(__dirname, '../bin/logs/' +
+                                      this.user_id +
+                                      '_server.json');
   fs.exists(log_file, function (exists) {
     if (!exists) {
       fs.writeFile(log_file, data_str, function (err) {

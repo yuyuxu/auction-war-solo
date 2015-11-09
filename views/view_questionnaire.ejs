@@ -8,9 +8,9 @@
   <link rel="stylesheet" href="./stylesheets/style.css"/></link>
   <style type="text/css">
     label {
-      width : 10em;
-      padding-top : 1em;
-      cursor : pointer;
+      width: 10em;
+      padding-top: 1em;
+      cursor: pointer;
     }
   </style>
   </head>
@@ -39,37 +39,42 @@
           <h3 align="center" data-bind="text: title"></h3>
           <div class="container">
             <ul data-bind="foreach: descriptions">
-            <p class="text-left" style="font-size:19px;" data-bind="text: descText"></p>
-            <div align="center"> <img data-bind="attr:{src: descImage}"/> </div>
+            <p class="text-left" style="font-size:19px;" data-bind="text: description_text"></p>
+            <div align="center"> <img data-bind="attr: {src: description_image}"/> </div>
             </ul>
           </div>
           <div align="center" class="container">
             <table class="table">
-              <thead><tr><th style="font-size:19px" data-bind="text: statement"></th><th style="font-size:19px;text-align:center">Choices</th></tr></thead>
+              <thead>
+              <tr>
+                <th style="font-size:19px" data-bind="text: statements"></th>
+                <th style="font-size:19px;text-align:center">Choices</th>
+              </tr>
+              </thead>
               <tbody data-bind="foreach: questions">
-                <tr align="left">
-                <td>
-                  <table data-bind="foreach: questionRow">
-                  <tr data-bind="foreach: questionColumn">
-                    <td style="padding-right:16px;font-weight:bold" data-bind="text: questionCellText"> </td>
+              <tr align="left">
+                <td align="center">
+                  <table data-bind="foreach: question_row">
+                  <tr data-bind="foreach: question_column">
+                    <td style="padding-right:15px;font-weight:bold;min-width:200px" data-bind="text: question_cell_text"> </td>
                   </tr>
                   </table>
                 </td>
-                <td align="center"><table border="0">
+                <td align="center">
+                  <table border="0">
                   <tbody>
-                  <tr align="right" data-bind="foreach: $root.availableChoices">
+                  <tr align="right" data-bind="foreach: $root.choices">
                     <td style="text-align:center">
-                    <label class="radio-inline" style="padding-bottom:16px;">
-                      <input type="radio" data-bind="checked: $parent.selected, attr: {name: $parent.count, value: choiceText}"></input>
+                    <label class="radio-inline">
+                      <input type="radio" data-bind="checked: $parent.selected, attr: {name: $parent.count, value: choice_text}"></input>
+                      <i data-bind="text: choice_text"></i>
                     </label>
                     </td>
                   </tr>
-                  <tr data-bind="foreach: $root.availableChoices">
-                    <td style="width:220px;text-align:center;font-size:19px" data-bind="text: choiceText"></td>
-                  </tr>
                   </tbody>
-                </table></td>
-                </tr>
+                  </table>
+                </td>
+              </tr>
               </tbody>
             </table>
           </div>
@@ -101,9 +106,9 @@
   <script src="./javascripts/bootstrap/bootstrap.min.js"></script>
   <script src="./javascripts/bootbox/bootbox.min.js"></script>
   <script src="./javascripts/others/prettify.js"></script>
-  <script src="./vmodel_utility.js"></script>
-  <script src="./vmodel_questionnaire.js"></script>
+  <script src="./initializer_utility.js"></script>
   <script src="./data_questionnaire.js"></script>
-  <script src="./model_questionnaire.js"></script>
+  <script src="./initializer_questionnaire.js"></script>
+  <script src="./view_model_questionnaire.js"></script>
   </body>
 </html>

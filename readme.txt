@@ -98,7 +98,7 @@ What needs to be done?
 
 
 TODO: -----
-How to extract data from database
+- How to extract data from database
 User.prototype.LoadData = function (data) {
   this.cache['questionnaire'] = data['Item']['questionnaire']['S'];
   this.cache['role'] = data['Item']['role']['S'];
@@ -106,3 +106,13 @@ User.prototype.LoadData = function (data) {
   this.cache['game'] = data['Item']['game']['S'];
   this.cache['reward'] = data['Item']['reward']['S'];
 }
+
+- How to think about modules in front/back end
+like namespace or package, really should always define module if needed.
+although module looks slightly different in front end and back end.
+front end module is like a namespace, "conventionly" defined directly use a map object, because front end script is loaded as public
+back end module is defined as a package and exported as a module
+
+- Questionnaire page need to adjust layout (distorted after resizing)
+
+- Also it would be nice if ko has callback function when clicking on button

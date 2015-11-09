@@ -8,7 +8,7 @@ var path = require('path');
 // create an express object
 var app = express();
 
-// setup view engine
+// setup view engine and views
 app.engine('html', require('ejs').renderFile);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -18,9 +18,10 @@ app.use(body_parser.json());
 app.use(body_parser.urlencoded({extended: true}));
 app.use(cookie_parser());
 
-// mount static assets
+// mount static assets and scripts
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'initializer')));
+app.use(express.static(path.join(__dirname, 'view_model')));
 
 // mount controller functions
 app.use(require('./routes/controller_login'));
@@ -41,7 +42,7 @@ app.use(function(req, res, next) {
 
 // handle development error, will print stacktrace
 if (app.get('env') === 'development') {
-  app.use(function (err, req, res, next) {
+  app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('view_error', {
       message: err.message,
@@ -52,7 +53,7 @@ if (app.get('env') === 'development') {
 }
 
 // handle production error, no stacktraces leaked to user
-app.use(function (err, req, res, next) {
+app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('view_error', {
     message: err.message,
@@ -62,7 +63,7 @@ app.use(function (err, req, res, next) {
 });
 
 // run server
-var server = app.listen(3000, function () {
+var server = app.listen(3000, function() {
   var host = server.address().address;
   var port = server.address().port;
   console.log('auction-war app listening at http://%s:%s', host, port);

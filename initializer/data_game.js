@@ -1,11 +1,10 @@
-/**
- * Some notes on game constants
- *  Variables that indicate speed has unit as milliseconds
- */
-const ImageItems = ["./images/item1.png", "./images/item2.png", "./images/item3.png"];
+const ImageItems = ["./images/item1.png",
+                    "./images/item2.png",
+                    "./images/item3.png"];
 const ImageBackground = "./images/wood_table.jpg";
 const SimulationFPS = 30;
 const EffectSelectScale = 1.1;
+// speed unit is milliseconds
 const EffectMoveSpeed = 100;
 const EffectDefaultTransition = 50;
 const EffectNoDots = 15;
