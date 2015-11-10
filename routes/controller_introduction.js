@@ -1,89 +1,90 @@
 var express = require('express');
-var signal = require('signal-js');
+var logger = require('../utility/logger');
 var manager_db = require('../data_access/aws_dynamodb');
-var logger_db = require('../utility/logger').GetLogger('db');
-var logger_model = require('../utility/logger').GetLogger('model');
 var manager_user = require('../model/model_manager_user').GetInstance();
 
 var router = express.Router();
 
-/**
- * /view_introduction: 
- * take:	user_id, player_side
- * submit: 	user_id, from
- */
-router.post('/introduction', function (req, res, next) {
-	var turker_id = req.body.user_id;
-	var from = req.body.from;
-	var t_name = req.body.test_name;
+router.post('/introduction', function(req, res) {
+  var from = req.body.from;
+  var turker_id = req.body.user_id;
 
-	if (turker_id == null || from == null) {
-		res.render('view_index.ejs', {error: '[post] introduction: user_id or from is null.', test_name: ''});
-		return;
-	}
-	var user = manager_user.GetUser(turker_id);
-	if (user == null) {
-		res.render('view_index.ejs', {error: '[post] introduction: user for this this turker %s does not exist! (' + turker_id + ')', test_name: ''});
-		return;
-	}
-	
-	if (from == 'questionnaire') {
-		var q_data = req.body.questionnaire_data;
-		if (q_data == null)
-			res.render('view_index.ejs', {error: '[post] introduction: from questionnaire, questionnaire_data is null.', test_name: ''});
-		else {
-			user.SetData('questionnaire', q_data);
-			manager_db.UpdateAttributeQuestionnaire(turker_id, q_data, function (err, data) {
-				if (err) {
-					res.render('view_index.ejs', {error: 'UpdateAttributeQuestionnaire Err: ' + err, test_name: ''});
-				}
-				else {
-					signal.trigger('status:introduction', res, turker_id, t_name);
-				}
-			});
-		}
-	}
-	else if (from == 'quiz') {
-		var q_data = req.body.quiz_data;
-		if (q_data == null)
-			res.render('view_index.ejs', {error: '[post] introduction: from quiz, quiz_data is null.', test_name: ''});
-		else {
-			user.SetData('quiz', q_data);
-			user.SetData('role', '*');
-			manager_db.UpdateAttributeQuiz(turker_id, q_data, function (err, data) {
-				if (err) {
-					res.render('view_index.ejs', {error: 'UpdateAttributeQuiz Err: ' + err, test_name: ''});
-				}
-				else {
-					signal.trigger('status:introduction', res, turker_id, t_name);
-				}
-			});
-		}
-	}
-	else {
-		res.render('view_index.ejs', {error: '[post] introduction: from %s is invalid. (' + from + ')', test_name: ''});
-	}
-});
+  // validation
+  if (turker_id == null) {
+    logger.Log('/introduction error: turker_id is null');
+    res.redirect('/');
+    return;
+  }
+  var user = manager_user.GetUser(turker_id);
+  if (user == null) {
+    logger.Log('/introduction error: user cannot be null');
+    res.redirect('/');
+    return;
+  }
 
-signal.on('status:introduction', function (res, turker_id, t_name) {
-	var role = manager_user.AssignRole(turker_id);
-	var user = manager_user.GetUser(turker_id);
-
-	manager_db.UpdateAttributeRole(turker_id, role, function (err, data) {
-		if (err) {
-			res.render('view_index.ejs', {error: 'UpdateAttributeRole Err: ' + err, test_name : ''});
-		}
-		else {
-			user.Log({
-				type : 'controller',
-				data : {
-					at : 'introduction',
-					to : 'view_introduction.ejs',
-				},
-			});
-			res.render('view_introduction.ejs', {user_id: turker_id, player_side: user.GetData('role'), test_name: t_name});
-		}
-	});
+  // controller logic
+  if (from == 'questionnaire') {
+    // http request comes from questionnaire page
+    logger.Log('/introduction: navigated here from page "questionnaire"');
+    var questionnaire_data = req.body.questionnaire_data;
+    if (questionnaire_data == null) {
+      logger.Log('/introduction error: questionnaire_data cannot be null');
+      res.redirect('/');
+      return;
+    } else {
+      logger.Log('/introduction: update database questionnaire and role');
+      user.SetData('questionnaire', questionnaire_data);
+      user.SetData('role', manager_user.AssignRole(turker_id));
+      manager_db.UpdatePlayerAttributes(turker_id,
+                                        {'questionnaire': questionnaire_data,
+                                         'role': user.GetData('role')},
+                                        function(err, data) {
+        if (err) {
+          logger.Log('/introduction UpdatePlayerAttribute error: ' + err);
+          res.redirect('/');
+          return;
+        } else {
+          user.Log('controller', {from: 'questionnaire', to: 'introduction',
+                                  tip: 'updated role and questionnaire_data'});
+          res.render('view_introduction.ejs',
+            {user_id: turker_id, player_role: user.GetData('role')});
+        }
+      });
+    }
+  } else if (from == 'quiz') {
+    // http request comes from quiz page
+    logger.Log('/introduction: navigated here from page "quiz"');
+    var quiz_data = req.body.quiz_data;
+    if (quiz_data == null) {
+      logger.Log('/introduction error: quiz_data cannot be null');
+      res.redirect('/');
+      return;
+    } else {
+      user.SetData('quiz', quiz_data);
+      user.SetData('role', manager_user.AssignRole(turker_id));
+      logger.Log('/introduction: update database questionnaire and role');
+      manager_db.UpdatePlayerAttributes(turker_id,
+                                        {'quiz': quiz_data,
+                                         'role': user.GetData('role')},
+                                        function(err, data) {
+        if (err) {
+          logger.Log('/introduction UpdatePlayerAttribute error: ' + err);
+          res.redirect('/');
+          return;
+        } else {
+          user.Log('controller', {from: 'quiz', to: 'introduction',
+                                  tip: 'updated role and quiz_data'});
+          res.render('view_introduction.ejs',
+            {user_id: turker_id, player_role: user.GetData('role')});
+        }
+      });
+    }
+  } else {
+    // "from" is invalid
+    logger.Log('/introduction error: from is invalid');
+    res.redirect('/');
+    return;
+  }
 });
 
 module.exports = router;

@@ -21,17 +21,16 @@ app.use(cookie_parser());
 // mount static assets and scripts
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'initializer')));
+app.use(express.static(path.join(__dirname, 'initializer/game')));
 app.use(express.static(path.join(__dirname, 'view_model')));
 
 // mount controller functions
 app.use(require('./routes/controller_login'));
 app.use(require('./routes/controller_questionnaire'));
-// app.use(require('./routes/controller_introduction'));
-// app.use(require('./routes/controller_quiz'));
+app.use(require('./routes/controller_introduction'));
+app.use(require('./routes/controller_quiz'));
 // app.use(require('./routes/controller_game'));
 // app.use(require('./routes/controller_finish'));
-// app.use(require('./routes/controller_admin'));
-// app.use(require('./routes/controller_notification'));
 
 // mount function that catches 404 and forward it to error handler
 app.use(function(req, res, next) {

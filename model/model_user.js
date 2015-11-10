@@ -7,7 +7,7 @@ var path = require('path');
 /**
  * User model
  */
-function User (user_id) {
+function User(user_id) {
   this.user_id = user_id;
 
   // cached data for each page
@@ -24,7 +24,7 @@ function User (user_id) {
   this.log_started = false;
 }
 
-User.prototype.LoadData = function (data) {
+User.prototype.LoadData = function(data) {
   this.cache['questionnaire'] = data['Item']['questionnaire']['S'];
   this.cache['role'] = data['Item']['role']['S'];
   this.cache['quiz'] = data['Item']['quiz']['S'];
@@ -32,7 +32,7 @@ User.prototype.LoadData = function (data) {
   this.cache['reward'] = data['Item']['reward']['S'];
 }
 
-User.prototype.SetData = function (attribute, data) {
+User.prototype.SetData = function(attribute, data) {
   if (attribute == 'questionnaire') {
     this.cache['questionnaire'] = data;
   }
@@ -50,7 +50,7 @@ User.prototype.SetData = function (attribute, data) {
   }
 }
 
-User.prototype.GetData = function (attribute) {
+User.prototype.GetData = function(attribute) {
   if (attribute == 'questionnaire') {
     return this.cache['questionnaire'];
   }
@@ -69,11 +69,11 @@ User.prototype.GetData = function (attribute) {
   return null;
 }
 
-User.prototype.GetGameName = function () {
+User.prototype.GetGameName = function() {
   return this.cache['role'];
 }
 
-User.prototype.FinishedGame = function () {
+User.prototype.FinishedGame = function() {
   if (this.cache.reward === '' || this.cache.reward === '*') {
     return false;
   } else {
@@ -83,7 +83,7 @@ User.prototype.FinishedGame = function () {
   }
 }
 
-User.prototype.Log = function (type, data) {
+User.prototype.Log = function(type, data) {
   data['type'] = type;
   data['time'] = timer.GetTimeHMS();
   data_str = JSON.stringify(data);
@@ -92,15 +92,15 @@ User.prototype.Log = function (type, data) {
   var log_file = path.join(__dirname, '../bin/logs/' +
                                       this.user_id +
                                       '_server.json');
-  fs.exists(log_file, function (exists) {
+  fs.exists(log_file, function(exists) {
     if (!exists) {
-      fs.writeFile(log_file, data_str, function (err) {
+      fs.writeFile(log_file, data_str, function(err) {
         if (err) {
           logger.Log(err);
         }
       });
     } else {
-      fs.appendFile(log_file, data_str, function (err) {
+      fs.appendFile(log_file, data_str, function(err) {
         if (err) {
           logger.Log(err);
         }

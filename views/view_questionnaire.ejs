@@ -18,7 +18,7 @@
     </div>
   </section>
   <section id="section-services" class="pad-bot10 fill" style="color: #141823">
-    <div class="container-fluid row col-md-9 col-md-offset-1">
+    <div class="container-fluid row col-md-8 col-md-offset-2">
       <div id="root-wizard" class="form-group" style="margin-top: 30px">
         <div class="container" style="margin-bottom: 10px" align="left">
           <ul><li><a href="#tab1" data-toggle="tab">Step One</a></li>
@@ -29,7 +29,7 @@
         <!-- descriptions -->
         <div class="container">
           <ul data-bind="foreach: descriptions">
-          <p data-bind="text: description_text" class="text-left" style="font-size: 17px; font-weight: bold"></p>
+          <p data-bind="text: description_text" class="text-left" style="font-size: 17px"></p>
           <div align="center"><img data-bind="attr: {src: description_image}"/></div>
           </ul>
         </div>
@@ -41,10 +41,10 @@
             <tbody>
             <div class="row">
               <div class="col-xs-6 col-md-6">
-                <h4 data-bind="text: statements" style="text-align: center"></h4>
+                <h4 data-bind="text: statements" style="text-align: center; font-weight: bold"></h4>
               </div>
               <div class="col-xs-6 col-md-6">
-                <h4 style="text-align: center;">Choices</h4>
+                <h4 style="text-align: center; font-weight: bold">Choices</h4>
               </div>
             </div>
             </tbody>
@@ -61,8 +61,8 @@
                 <td width="48%" align="left">
                   <!-- question text is (row * 1) table -->
                   <table align="left">
-                    <tbody data-bind="foreach: question_row" align="left" style="font-weight: bold;">
-                      <tr><td><label data-bind="text: question_text" /></td></tr>
+                    <tbody data-bind="foreach: question_row" align="left">
+                      <tr><td><span data-bind="text: question_text" style="font-weight: 600" /></td></tr>
                     </tbody>
                   </table>
                 </td>
@@ -86,6 +86,7 @@
             </tbody>
           </table>
           <!-- table three: buttons -->
+          <hr />
           <table class="table">
             <tbody>
             <div class="pull-left">
@@ -93,8 +94,8 @@
             </div>
             <div class="pull-right">
               <input name="next" value="Next" type="button" class="btn btn-primary button-next" style="width: 10em" />
-              <form action="introduction" method="post">
-                <input name="finish" value="Next Stage" type="button" class="btn btn-danger button-finish" style="display: none; width: 10em" />
+              <input name="finish" value="Next Stage" type="button" class="btn btn-danger button-finish" style="display: none; width: 10em" />
+              <form id="submit-form" action="introduction" method="post">
                 <!-- hidden variable -->
                 <input id="player-id" name="user_id" value="<%=user_id%>" type="hidden" />
                 <!-- hidden variable -->
@@ -114,6 +115,7 @@
   <script src="./javascripts/jquery/jquery.bootstrap.wizard.js"></script>
   <script src="./javascripts/knockout/knockout-3.1.0.js"></script>
   <script src="./javascripts/bootstrap/bootstrap.min.js"></script>
+  <script src="./javascripts/bootbox/bootbox.min.js"></script>
   <script src="./javascripts/others/prettify.js"></script>
   <script src="./initializer_utility.js"></script>
   <script src="./data_questionnaire.js"></script>

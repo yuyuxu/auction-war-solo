@@ -5,7 +5,7 @@ ModuleAWSDB = {
   ddb: null,
 
   // helper functions for the database
-  MakeId: function () {
+  MakeId: function() {
     var text = '';
     var dictionary = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     var id_length = 10;
@@ -16,7 +16,7 @@ ModuleAWSDB = {
     return text;
   },
 
-  DefaultCallback: function (err, data) {
+  DefaultCallback: function(err, data) {
     if (err) {
       logger.Log('DefaultCallback Error: ' + data);
       return false;
@@ -25,14 +25,14 @@ ModuleAWSDB = {
     }
   },
 
-  InitDB: function () {
+  InitDB: function() {
     if (this.ddb == null) {
       AWS.config.loadFromPath(__dirname + '/config.json');
       this.ddb = new AWS.DynamoDB();
     }
   },
 
-  GetDB: function () {
+  GetDB: function() {
     if (this.ddb == null) {
       this.InitDB();
     }
@@ -40,7 +40,7 @@ ModuleAWSDB = {
   },
 
   // player database operations
-  CreatePlayer: function (user_id, callback) {
+  CreatePlayer: function(user_id, callback) {
     var param = {
       TableName: 'auction-war-solo-users',
       Item: {
@@ -58,7 +58,7 @@ ModuleAWSDB = {
     this.ddb.putItem(param, callback);
   },
 
-  DeletePlayer: function (user_id, option, callback) {
+  DeletePlayer: function(user_id, option, callback) {
     var param = {
       TableName: 'auction-war-solo-users',
       Key: {
@@ -73,8 +73,11 @@ ModuleAWSDB = {
     this.ddb.deleteItem(param, callback);
   },
 
+  /**
+   * attributes is a list of attribute name
+   */
   GetPlayerAttributes: function(user_id, attributes, callback) {
-    /** shorthand, if attributes are "all", get whole data */
+    // shorthand, if attributes are "all", get whole data
     if (attributes == 'all') {
       attributes = [
         'role',
@@ -99,7 +102,19 @@ ModuleAWSDB = {
     this.ddb.getItem(param, callback);
   },
 
-  UpdatePlayerAttribute: function(user_id, attribute, value, callback) {
+  /**
+   * attributes is a map of attribute name and its value
+   */
+  UpdatePlayerAttributes: function(user_id, attributes, callback) {
+    var attribute_keys = {};
+    for (var key in attributes) {
+      attribute_keys[key] = {
+        Action: 'PUT',
+        Value: {
+          S: attributes[key],
+        }
+      };
+    }
     var param = {
       TableName: 'auction-war-solo-users',
       Key: {
@@ -107,14 +122,7 @@ ModuleAWSDB = {
           S: user_id,
         }
       },
-      AttributeUpdates: {
-        attribute: {
-          Action: 'PUT',
-          Value: {
-            S: value,
-          }
-        }
-      }
+      AttributeUpdates: attribute_keys,
     }
     if (callback == null) {
       callback = this.DefaultCallback;
@@ -123,7 +131,7 @@ ModuleAWSDB = {
   },
 
   // game database operations
-  CreateGame: function (game_id, user_array, callback) {
+  CreateGame: function(game_id, user_array, callback) {
     var param = {
       TableName: 'auction-war-solo-games',
       Item: {
@@ -136,29 +144,6 @@ ModuleAWSDB = {
       callback = this.DefaultCallback;
     }
     this.ddb.putItem(param, callback);
-  },
-
-  UpdateGameAttribute: function (game_id, attribute, value, callback) {
-    var param = {
-      TableName: 'auction-war-solo-games',
-      Key: {
-        game_id: {
-          S: game_id,
-        }
-      },
-      AttributeUpdates: {
-        attribute: {
-          Action: 'PUT',
-          Value: {
-            S: value,
-          }
-        }
-      }
-    }
-    if (callback == null) {
-      callback = this.DefaultCallback;
-    }
-    this.ddb.updateItem(param, callback);
   },
 };
 

@@ -31,6 +31,10 @@ var QuestionnairePageCache = {
     var answers_str = JSON.stringify(this.answers);
     return answers_str;
   },
+
+  SetAnswersString: function(answers_str) {
+    this.answers = JSON.parse(answers_str);
+  },
 };
 
 // wizard module
@@ -45,7 +49,7 @@ var Wizard = {
       onNext: function(tab, navigation, index) {
         // check if answer is complete
         if (!QuestionnairePageCache.IsAnswerCompleted(index - 1)) {
-          alert('Please fill in all the questions.');
+          bootbox.alert('Please fill in all the questions.');
           return false;
         }
       },
@@ -64,7 +68,7 @@ var Wizard = {
           var answers_str = QuestionnairePageCache.GetAnswersString();
           InitializerUtility.Log('submit data: ' + answers_str);
           $('#submit-data').val(answers_str);
-          $('.button-finish').closest('form').submit();
+          $('#submit-form').submit();
         }
       },
 
@@ -109,14 +113,16 @@ var Wizard = {
 
 // initialize page
 $(document).ready(function() {
+  // if database does contain data of this user_id, load it into answer
+  // *notice here this has to happen before the wizard and view model is setup*
+  var answers_str = $('#submit-data').val();
+  InitializerUtility.Log('loading questionnaire page... ');
+  InitializerUtility.Log('answer is: ' + answers_str);
+  QuestionnairePageCache.SetAnswersString(answers_str);
+
   // wizard
   Wizard.Setup();
   window.prettyPrint && prettyPrint();
-
-  // click on the radio button
-  $('#input_choice').click(function() {
-    $('#input_choice').hide();
-  });
 
   // view model
   ko.applyBindings(VModelQuestionnaire.view_model_survey);

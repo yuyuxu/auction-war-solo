@@ -127,3 +127,28 @@ this.Select = function(question, choice) {
   select_cb(question['category'], question['count'], choice['choice_text']);
   return true;
 }
+
+- database
+note that I'm using string for all the database cell data type and usually it's serialization of json object so that format is all organized and standardalized
+maybe i should abstract database api more, especially the get and set attributes functions are the same because the all the entries are string
+
+- request / dataflow
+really should be using restful api instead of currently using form submit (and ajax)
+write down the dataflow of my app, also think about all the possible way of handling this and their pros and cons
+
+- standards
+this web application has certain protocols and standards I made up, I'm not sure if this is the right way of doing things
+
+- how to test it and how to add an admin page
+
+- about the pages
+quiz and introduction pages are more like completely static page
+questionnaire is view model page
+but really all the static pages shoudl be writen in view model to separate out the interaction and content, instead of now using jquery
+so far the way ejs get data from model doesn't look right to be mvc or mvvm
+quiz page really can use questionnaire
+
+- actual game logic
+when to assign role
+ai
+change the text on the introduction page
