@@ -107,12 +107,23 @@ User.prototype.LoadData = function (data) {
   this.cache['reward'] = data['Item']['reward']['S'];
 }
 
-- How to think about modules in front/back end
+- How to think about modules in front/back end (mvc vs mvvm)
 like namespace or package, really should always define module if needed.
 although module looks slightly different in front end and back end.
 front end module is like a namespace, "conventionly" defined directly use a map object, because front end script is loaded as public
 back end module is defined as a package and exported as a module
 
-- Questionnaire page need to adjust layout (distorted after resizing)
+- ko table cannot bind on tr?
 
-- Also it would be nice if ko has callback function when clicking on button
+- note
+now the view model is able to emit checked event
+now it's completly event based code for view model, so code is cleaner
+as before the answers were collected when next button is clicked (half even driven)
+
+- self vs this
+http://alistapart.com/article/getoutbindingsituations
+where's the problem?
+this.Select = function(question, choice) {
+  select_cb(question['category'], question['count'], choice['choice_text']);
+  return true;
+}

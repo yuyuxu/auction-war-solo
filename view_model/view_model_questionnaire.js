@@ -6,24 +6,29 @@ var VModelQuestionnaire = {
     descriptions: ko.observableArray(),
     statements: ko.observable(),
     questions: ko.observableArray(),
-    choices: ko.observableArray()
+    choices: ko.observableArray(),
   },
 
-  // creation helper function
-  RowQuestion: function() {
-    this.question_column = ko.observableArray();
+  // create model helper function
+  RowQuestion: function(text) {
+    this.question_text = text;
   },
 
-  ColumnQuestion: function(text) {
-    this.question_cell_text = text;
-  },
-
-  Question: function(data, index) {
+  // catetory: id of the study this question belongs to
+  // data: the whole data for one question
+  // index: the index of this question among all the questions in the study
+  // select_cb: which function to notify if the choice is selected
+  Question: function(category, data, index, select_cb) {
+    this.category = category;
     this.question_data = data;
-    this.id = ko.observable();
     this.question_row = ko.observableArray();
-    this.selected = ko.observable();
     this.count = index;
+    this.selected = ko.observable();
+    this.select_cb = select_cb;
+    this.Select = function(question, choice) {
+      select_cb(question['category'], question['count'], choice['choice_text']);
+      return true;
+    }
   },
 
   Choice: function(text) {
@@ -42,9 +47,7 @@ var VModelQuestionnaire = {
   },
 
   // refer ./data_questionnaire for formats
-  LoadModel: function(instrument, answer_list) {
-    InitializerUtility.Log("LoadModel: answer is " +
-                           JSON.stringify(answer_list));
+  LoadModel: function(instrument_index, instrument, answer_list, select_cb) {
     // title
     this.view_model_survey.title(instrument[0]);
 
@@ -63,20 +66,16 @@ var VModelQuestionnaire = {
     // questions
     this.view_model_survey.questions.removeAll();
     var temp = $.map(instrument[3], function(data, index) {
-      return new VModelQuestionnaire.Question(data, index);
+      return new VModelQuestionnaire.Question(instrument_index,
+                                              data,
+                                              index,
+                                              select_cb);
     });
     for (var i = 0; i < temp.length; ++i) {
-      temp[i].id(instrument[0]);
-      // for each question, go through its matrix data
+      // for each question, go through its row of data
       for (var j = 0; j < temp[i].question_data.length; ++j) {
         // row
-        var row = new VModelQuestionnaire.RowQuestion();
-        for (var k = 0; k < temp[i].question_data[j].length; ++k) {
-          // column
-          var cell_text = temp[i].question_data[j][k];
-          var column = new VModelQuestionnaire.ColumnQuestion(cell_text);
-          row.question_column.push(column);
-        }
+        var row = new VModelQuestionnaire.RowQuestion(temp[i].question_data[j]);
         temp[i].question_row.push(row);
       }
       // set answer if existing
@@ -96,12 +95,4 @@ var VModelQuestionnaire = {
       this.view_model_survey.choices.push(temp[i]);
     }
   },
-
-  GetAnswers: function() {
-    answer_list = [];
-    for (var i = 0; i < this.view_model_survey.questions().length; ++i) {
-      answer_list.push(this.view_model_survey.questions()[i]['selected']);
-    }
-    return answer_list;
-  }
 };

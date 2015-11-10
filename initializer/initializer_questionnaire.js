@@ -1,25 +1,26 @@
 // questionnaire page cache module
 var QuestionnairePageCache = {
-  // answers, {page_number: [list of answers]}
+  // answers, {page_id: {answer_index: answer_value}}
   answers: {},
 
-  /**
-   * @param {ko object} data - the question object from ko view model
-   */
-  DoCacheAnswer: function(page_number) {
-    // get answer from view model
-    var answer_list = VModelQuestionnaire.GetAnswers();
-    // cache answer
-    this.answers[page_number] = answer_list;
+  UpdateAnswer: function(page_id, answer_index, answer_value) {
+    // notice here QuestionnairePageCache is used instead of this
+    // because UpdateAnwser is used as a reference for callback function
+    // inside VModelQuestionnaire, therefore 'this' binding is lost
+    if (QuestionnairePageCache.answers[page_id] == null) {
+      QuestionnairePageCache.answers[page_id] = {};
+    }
+    QuestionnairePageCache.answers[page_id][answer_index] = answer_value;
   },
 
-  IsAnswerCompleted: function(page_number) {
-    if (this.answers[page_number] == null) {
+  IsAnswerCompleted: function(page_id) {
+    return true;
+    if (this.answers[page_id] == null) {
       InitializerUtility.Log('IsAnswerCompleted warning: no answers cached');
       return;
     }
-    for (var i = 0; i < this.answers[page_number].length; ++i) {
-      if (this.answers[page_number][i] == null) {
+    for (var i = 0; i < this.answers[page_id].length; ++i) {
+      if (this.answers[page_id][i] == null) {
         return false;
       }
     }
@@ -35,42 +36,33 @@ var QuestionnairePageCache = {
 // wizard module
 var Wizard = {
   Setup: function() {
-    $('#rootwizard').bootstrapWizard({
+    $('#root-wizard').bootstrapWizard({
       'tabClass': 'bwizard-steps',
       'nextSelector': '.button-next',
       'previousSelector': '.button-previous',
       'lastSelector': '.button-finish',
 
       onNext: function(tab, navigation, index) {
-        // cache the answers'
-        QuestionnairePageCache.DoCacheAnswer(index - 1);
-        InitializerUtility.Log('current answer: ' +
-                               QuestionnairePageCache.GetAnswersString());
+        // check if answer is complete
         if (!QuestionnairePageCache.IsAnswerCompleted(index - 1)) {
-          bootbox.alert('Please fill in all the questions.');
+          alert('Please fill in all the questions.');
           return false;
         }
       },
 
       onPrevious: function(tab, navigation, index) {
-        // cache the answers
-        QuestionnairePageCache.DoCacheAnswer(index + 1);
-        InitializerUtility.Log('current answer: ' +
-                               QuestionnairePageCache.GetAnswersString());
+        return true;
       },
 
       onLast: function(tab, navigation, index) {
-        // cache the answers
-        InitializerUtility.Log('Wizard onLast current index is: ' + index);
-        QuestionnairePageCache.DoCacheAnswer(index + 1,
-          VModelQuestionnaire.view_model_survey.questions);
-
+        // check if answer is complete
         if (!QuestionnairePageCache.IsAnswerCompleted(index)) {
-          bootbox.alert('Please fill in all the questions');
+          alert('Please fill in all the questions');
           return false;
         } else {
-          // submit data if it's last page as well
+          // submit data
           var answers_str = QuestionnairePageCache.GetAnswersString();
+          InitializerUtility.Log('submit data: ' + answers_str);
           $('#submit-data').val(answers_str);
           $('.button-finish').closest('form').submit();
         }
@@ -82,24 +74,27 @@ var Wizard = {
         var $total = navigation.find('li').length;
         var $current = index + 1;
         var $percent = ($current / $total) * 100;
-        $('#rootwizard').find('.bar').css({width: $percent + '%'});
+        $('#root-wizard').find('.bar').css({width: $percent + '%'});
         if ($current >= $total) {
-          $('#rootwizard').find('.button-next').hide();
-          $('#rootwizard').find('.button-finish').show();
-          $('#rootwizard').find('.button-finish').removeClass('disabled');
+          $('#root-wizard').find('.button-next').hide();
+          $('#root-wizard').find('.button-finish').show();
+          $('#root-wizard').find('.button-finish').removeClass('disabled');
         } else {
-          $('#rootwizard').find('.button-next').show();
-          $('#rootwizard').find('.button-finish').hide();
+          $('#root-wizard').find('.button-next').show();
+          $('#root-wizard').find('.button-finish').hide();
         }
 
-        InitializerUtility.Log('Wizard onTabShow current index is: ' + index);
         // load instrument and answer
         if (index == 0) {
-          VModelQuestionnaire.LoadModel(MachInstrument,
-                                        QuestionnairePageCache.answers[index]);
+          VModelQuestionnaire.LoadModel(index,
+                                        MachInstrument,
+                                        QuestionnairePageCache.answers[index],
+                                        QuestionnairePageCache.UpdateAnswer);
         } else if (index == 1) {
-          VModelQuestionnaire.LoadModel(SVOInstrument,
-                                        QuestionnairePageCache.answers[index]);
+          VModelQuestionnaire.LoadModel(index,
+                                        SVOInstrument,
+                                        QuestionnairePageCache.answers[index],
+                                        QuestionnairePageCache.UpdateAnswer);
         } else {
           InitializerUtility.Log('Wizard onLast Error: index is ' + index);
         }
@@ -112,7 +107,7 @@ var Wizard = {
   }
 };
 
-// intialize page
+// initialize page
 $(document).ready(function() {
   // wizard
   Wizard.Setup();

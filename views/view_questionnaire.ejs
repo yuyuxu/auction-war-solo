@@ -6,105 +6,114 @@
   <link rel="stylesheet" href="./stylesheets/prettify.css"></link>
   <link rel="stylesheet" href="./stylesheets/custom.css"></link>
   <link rel="stylesheet" href="./stylesheets/style.css"/></link>
-  <style type="text/css">
-    label {
-      width: 10em;
-      padding-top: 1em;
-      cursor: pointer;
-    }
-  </style>
   </head>
   <body>
   <section class="featured">
     <div class="container">
-    <div class="row">
-      <div class="col-md-9 col-md-offset-1">
-        <h2 class="slogan" style="font-size:36px">Auction War - Questionnaires</h2>
+      <div class="row">
+        <div class="col-md-9 col-md-offset-1">
+          <h2 class="slogan" style="font-size: 36px">Auction War - Questionnaires</h2>
+        </div>
       </div>
-    </div>
     </div>
   </section>
-  <section id="section-services" class="section pad-bot10 fill" style="color: #141823">
-    <div class="container-fluid">
-    <div class='row'>
-      <div class="col-md-8 col-md-offset-1">
-      <section id="wizard">
-        <div id="rootwizard" class="form-group">
-          <div class='container' style="margin-bottom:10px" align="left">
-            <ul>
-            <li><a href="#tab1" data-toggle="tab">Step One</a></li>
-            <li><a href="#tab2" data-toggle="tab">Step Two</a></li>
-            </ul>
-          </div>
-          <h3 align="center" data-bind="text: title"></h3>
-          <div class="container">
-            <ul data-bind="foreach: descriptions">
-            <p class="text-left" style="font-size:19px;" data-bind="text: description_text"></p>
-            <div align="center"> <img data-bind="attr: {src: description_image}"/> </div>
-            </ul>
-          </div>
-          <div align="center" class="container">
-            <table class="table">
-              <thead>
-              <tr>
-                <th style="font-size:19px" data-bind="text: statements"></th>
-                <th style="font-size:19px;text-align:center">Choices</th>
-              </tr>
-              </thead>
-              <tbody data-bind="foreach: questions">
-              <tr align="left">
-                <td align="center">
-                  <table data-bind="foreach: question_row">
-                  <tr data-bind="foreach: question_column">
-                    <td style="padding-right:15px;font-weight:bold;min-width:200px" data-bind="text: question_cell_text"> </td>
-                  </tr>
-                  </table>
-                </td>
-                <td align="center">
-                  <table border="0">
-                  <tbody>
-                  <tr align="right" data-bind="foreach: $root.choices">
-                    <td style="text-align:center">
-                    <label class="radio-inline">
-                      <input type="radio" data-bind="checked: $parent.selected, attr: {name: $parent.count, value: choice_text}"></input>
-                      <i data-bind="text: choice_text"></i>
-                    </label>
-                    </td>
-                  </tr>
-                  </tbody>
-                  </table>
-                </td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-          <hr />
-          <div style="float:left">
-            <input type='button' class='btn btn-primary button-previous' style="width:10em" name='previous' value='Previous'/>
-          </div>
-          <div style="float:right">
-            <input type='button' class='btn btn-primary button-next' style="width:10em" name='next' value='Next'/>
-            <form action="introduction" method="post">
-              <input id="next-stage" type='button' class="btn btn-danger button-finish" style="display:none;width:10em" name="finish" value="Next Stage"/>
-              <!-- hidden variable -->
-              <input id="player-id" name="user_id" type="hidden" value='<%=user_id%>'/>
-              <!-- hidden variable -->
-              <input name="from" type="hidden" value='questionnaire'/>
-              <!-- hidden variable -->
-              <input id="submit-data" name="questionnaire_data" type="hidden" value='<%=questionnaire_data%>'/>
-            </form>
-          </div>
+  <section id="section-services" class="pad-bot10 fill" style="color: #141823">
+    <div class="container-fluid row col-md-9 col-md-offset-1">
+      <div id="root-wizard" class="form-group" style="margin-top: 30px">
+        <div class="container" style="margin-bottom: 10px" align="left">
+          <ul><li><a href="#tab1" data-toggle="tab">Step One</a></li>
+          <li><a href="#tab2" data-toggle="tab">Step Two</a></li></ul>
         </div>
-      </section>
+        <!-- title -->
+        <h3 align="center" data-bind="text: title"></h3>
+        <!-- descriptions -->
+        <div class="container">
+          <ul data-bind="foreach: descriptions">
+          <p data-bind="text: description_text" class="text-left" style="font-size: 17px; font-weight: bold"></p>
+          <div align="center"><img data-bind="attr: {src: description_image}"/></div>
+          </ul>
+        </div>
+        <br />
+        <!-- main contents -->
+        <div class="container" align="left">
+          <!-- table one: one row for statements and choices -->
+          <table class="table">
+            <tbody>
+            <div class="row">
+              <div class="col-xs-6 col-md-6">
+                <h4 data-bind="text: statements" style="text-align: center"></h4>
+              </div>
+              <div class="col-xs-6 col-md-6">
+                <h4 style="text-align: center;">Choices</h4>
+              </div>
+            </div>
+            </tbody>
+          </table>
+          <!-- table two: main content -->
+          <table class="table">
+            <!-- each question data is a table body -->
+            <tbody data-bind="foreach: questions">
+              <!-- each table body should only have 1 row -->
+              <tr>
+                <!-- first cell is placeholder -->
+                <td width="2%"></td>
+                <!-- second cell is the question text -->
+                <td width="48%" align="left">
+                  <!-- question text is (row * 1) table -->
+                  <table align="left">
+                    <tbody data-bind="foreach: question_row" align="left" style="font-weight: bold;">
+                      <tr><td><label data-bind="text: question_text" /></td></tr>
+                    </tbody>
+                  </table>
+                </td>
+                <!-- third cell is the choices -->
+                <td width="48%" align="center">
+                  <!-- choice is also a (1 * number of choices) table -->
+                  <table align="center">
+                    <tr>
+                      <td data-bind="foreach: $root.choices" style="text-align: left">
+                        <label class="radio-inline">
+                          <input type="radio" data-bind="checked: $parent.selected, click: $parent.Select.bind($data, $parent), clickBubble: false, attr: {name: $parent.count, value: choice_text}" />
+                          <span data-bind="text: choice_text" />
+                        </label>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+                <!-- final cell is placeholder -->
+                <td width="2%"></td>
+              </tr>
+            </tbody>
+          </table>
+          <!-- table three: buttons -->
+          <table class="table">
+            <tbody>
+            <div class="pull-left">
+              <input name="previous" value="Previous" type="button" class="btn btn-primary button-previous" style="width: 10em" />
+            </div>
+            <div class="pull-right">
+              <input name="next" value="Next" type="button" class="btn btn-primary button-next" style="width: 10em" />
+              <form action="introduction" method="post">
+                <input name="finish" value="Next Stage" type="button" class="btn btn-danger button-finish" style="display: none; width: 10em" />
+                <!-- hidden variable -->
+                <input id="player-id" name="user_id" value="<%=user_id%>" type="hidden" />
+                <!-- hidden variable -->
+                <input name="from" value="questionnaire" type="hidden" />
+                <!-- hidden variable -->
+                <input id="submit-data" name="questionnaire_data" value="<%=questionnaire_data%>" type="hidden" />
+              </form>
+            </div>
+            </tbody>
+        </div>
+        <br />
+        <br />
       </div>
-    </div>
     </div>
   </section>
   <script src="./javascripts/jquery/jquery.min.js"></script>
   <script src="./javascripts/jquery/jquery.bootstrap.wizard.js"></script>
   <script src="./javascripts/knockout/knockout-3.1.0.js"></script>
   <script src="./javascripts/bootstrap/bootstrap.min.js"></script>
-  <script src="./javascripts/bootbox/bootbox.min.js"></script>
   <script src="./javascripts/others/prettify.js"></script>
   <script src="./initializer_utility.js"></script>
   <script src="./data_questionnaire.js"></script>
