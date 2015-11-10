@@ -1,194 +1,197 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Auction War - A Negotiation Game</title>
-	<link rel="stylesheet" href="./stylesheets/bootstrap.css"></link>
-	<link rel="stylesheet" href="./stylesheets/bootstrap.min.css"></link>
-	<link rel="stylesheet" href="./stylesheets/bootstrap-theme.min.css"></link>
-    <link rel="stylesheet" href="./stylesheets/style.css"></link>
-    <style>
-		.left-side {
-		  background-color: white;
-		  padding-bottom: 1000px;
-		  margin-bottom: -1000px;
-		  height: 100%;
-		  border: 1px solid rgba(0,0,0,0.1)
-		}
-		.something {
-		  height: 100%;
-		  background-color: white;
-		  padding-bottom: 1000px;
-		  margin-bottom: -1000px;
-		  height: 100%;
-		  border: 1px solid rgba(0,0,0,0.1)
-		}
-		.row {
-		  overflow: hidden;
-		}
-    </style>
+  <title>Auction War - A Negotiation Game</title>
+  <link rel="stylesheet" href="./stylesheets/bootstrap.css"></link>
+  <link rel="stylesheet" href="./stylesheets/bootstrap.min.css"></link>
+  <link rel="stylesheet" href="./stylesheets/bootstrap-theme.min.css"></link>
+  <link rel="stylesheet" href="./stylesheets/style.css"></link>
+  <style>
+    /* style specific used here to layout two panels in a row */
+    .left-side {
+      background-color: white;
+      padding-bottom: 1000px;
+      margin-bottom: -1000px;
+      height: 100%;
+      border: 1px solid rgba(0,0,0,0.1)
+    }
+    .something {
+      height: 100%;
+      background-color: white;
+      padding-bottom: 1000px;
+      margin-bottom: -1000px;
+      height: 100%;
+      border: 1px solid rgba(0,0,0,0.1)
+    }
+    .row {
+      overflow: hidden;
+  }
+  </style>
 </head>
 <body>
-    <section class="featured">
-      <div class="container"> 
-        <div class="row">
-          <div class="col-md-9 col-md-offset-1">
-              <h2 class="slogan" style="font-size:36px">Auction War - Game</h2>
-          </div>
+  <section class="featured">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-9 col-md-offset-1">
+            <h2 class="slogan" style="font-size: 36px">Auction War - Game</h2>
         </div>
       </div>
-    </section>
-	<section id="section-services" class="section pad-bot10" style="color:#141823">
-		<div class="row">	
-			<div class="col-md-1">
-			</div>
-			<div class="col-md-4 left-side" style="margin-right:10px; margin-top:10px">
-				<h4 align="center" style="margin-top:20px">
-					 <p style="font-weight:bold;"><u style="font-size:110%">Make a statement</u> or ask a question by selecting one from list below </p>
-				</h4>
-				<div class="list-group" style="border: solid 1px;cursor:pointer">
-					<a class="list-group-item" style="font-weight:bold" id="q1">
-				  		<div class="row">
-				  			<div class="col-md-5">
-				  				<li>Are you interested in</li>
-				  			</div>
-					  		<div class="col-md-4">
-						  		<select class="form-control" style="width:100%" id="q11">
-							  		<option>---</option>
-							  		<option>Painting</option>
-							  		<option>Lamp</option>
-							  		<option>Records</option>
-								</select> 
-							</div>
-							<div class="col-md-3">
-				  				? 
-				  			</div>
-				  		</div>
-					</a>
-				  	<a class="list-group-item" style="font-weight:bold" id="s2">
-				  		<div class="row">
-				  			<div class="col-md-5">
-				  				<li>I am interested in</li>
-				  			</div>
-					  		<div class="col-md-4">
-						  		<select class="form-control" style="width:100%" id="s21">
-							  		<option>---</option>
-							  		<option>Painting</option>
-							  		<option>Lamp</option>
-							  		<option>Records</option>
-								</select> 
-							</div>
-							<div class="col-md-3">
-				  				<select class="form-control" style="width:100%" id="s22">
-							  		<option>---</option>
-							  		<option>a lot.</option>
-							  		<option>somewhat.</option>
-							  		<option>a little.</option>
-							  		<option>not at all.</option>
-								</select>  
-				  			</div>
-				  		</div>
-					</a>
-					<a class="list-group-item" style="font-weight:bold" id="s3"><li>Your offer was unfair.</li></a>
-					<a class="list-group-item" style="font-weight:bold" id="s4"><li>Lets make offers that are good for both of us.</li></a>
-					<a class="list-group-item" style="font-weight:bold" id="s5"><li>I gave a little, you should give a little.</li></a>
-					<a class="list-group-item" style="font-weight:bold" id="s6"><li>This is my final offer.</li></a>
-					<a class="list-group-item" style="font-weight:bold" id="s7"><li>Your previous offer is not good enough.</li></a>
-				</div>
-				<p id="selected-statement" style="color:black;margin-left:10px;font-weight:bold;font-size:17px">You have not selected anything.</p>
-			</div>			
-			<div class="col-md-6 something" style="margin-left:10px; margin-top:10px">
-				<h4 align="center" style="margin-top:20px">
-					 <p style="font-weight:bold"><u style="font-size:110%">Make an offer</u> by dragging the items on table to your side or opponent's side. </p>
-				</h4>
-				<div align="left">
-					<canvas id="gameCanvas" width="800" height="450" style="border:1px solid #000000"></canvas>
-				</div>
-			</div>		
-		</div>
-		<div class="row" align="left" style="margin-top:15px;border-color:rgba(128, 128, 128, 0.5);background-color:white;border-style:groove;border-width:1.5px">
-			<div class="col-md-4" align="center">
-			</div>
-			<div class="col-md-5" align="left">
-				<p id="game-message" style="color:chocolate;font-size:120%;font-weight:bold"></p>
-				<p id="game-state" style="color:blue;font-size:120%;font-weight:bold">Game State </p>
-			</div>
-		</div>
-		<div class="row" id="nextstagediv" style="visibility:hidden" style="margin-top:10px">
-			<div class="col-md-4 col-md-offset-4">
-				<form action="finish" method="post">
-					<button type="button" class="btn btn-danger" style="width:100%;margin-top:20px" id="nextstage">Click Here to Get Your Reward Code</button>
-                    <input id="player-id" name="user_id" type="hidden" value='<%=user_id%>'></input>
-				  	<input name="from" type="hidden" value='game'></input>
-                    <input id="submit-data" name="game_data" type="hidden"></input>
-					<input id="test-name" name="test_name" type="hidden" value='<%=test_name%>'></input>
-				</form>
-			</div>
-		</div>
-		<div class="row" style="visibility:hidden">
-			<div class="col-md-4 col-md-offset-1">
-				<textarea disabled rows="5" style="width:100%;line-height:1.4;border: 0px inset black;background-color: white;resize:none;color:black;" id="logger">Welcome to auction war! - Logger</textarea>
-				<label id="player-side" style="visibility:hidden"><%=player_side%></label>
-			</div>
-			<div class="col-md-2 col-md-offset-2">
-				<div id="acceptdiv" style="visibility:hidden" align="left">
-					<button type="button" class="btn btn-danger btn-block" style="width:100%" id="accept">Accept Offer</button>
-					<br/>
-					<p style="font-size:110%;color:red;font-weight:bold;" align="left">
-					Attention: if you select this action, your turn will finish. <br/>
-					If both of you accept the offer, game will finish. </p>
-				</div>
-			</div>
-			<div class="col-md-2">
-				<div id="submitdiv" style="visibility:visible;" align="left">
-					<button type="button" class="btn btn-success btn-block" style="width:100%" id="submit">Submit Turn</button>
-					<br/>
-					<p id="submit-error" style="color:red;margin-left:10px;font-weight:bold"></p>
-				</div>
-			</div>
-		</div>
-	</section>
-	<script type="text/javascript" src="./javascripts/jquery/jquery.min.js"></script>    
-	<script type="text/javascript" src="./javascripts/bootstrap/bootstrap.min.js"></script>	
-	<script type="text/javascript" src="./javascripts/bootbox/bootbox.min.js"></script>
-	<script type="text/javascript" src="/socket.io/socket.io.js"></script> 
-	<script type="text/javascript" src="./vmodel_utility.js"></script>
-	<script type="text/javascript" src="./data_game.js"></script>
-    <script type="text/javascript" src="./model_game_socket.js"></script>
-    <script type="text/javascript" src="./model_game_controller.js"></script>
-    <script type="text/javascript" src="./model_game_rendering.js"></script>
-    <script type="text/javascript" src="./model_game_items.js"></script>
-	<script type="text/javascript" src="./model_game_client.js"></script>
-    <script type="text/javascript" src="./vmodel_game.js"></script>
-	<script type="text/javascript" src="./javascripts/createjs/events/Event.js"></script>
-	<script type="text/javascript" src="./javascripts/createjs/events/EventDispatcher.js"></script>
-	<script type="text/javascript" src="./javascripts/createjs/utils/IndexOf.js"></script>
-	<script type="text/javascript" src="./javascripts/easeljs/utils/UID.js"></script>
-	<script type="text/javascript" src="./javascripts/easeljs/utils/Ticker.js"></script>
-	<script type="text/javascript" src="./javascripts/easeljs/geom/Matrix2D.js"></script>
-	<script type="text/javascript" src="./javascripts/easeljs/geom/Point.js"></script>
-	<script type="text/javascript" src="./javascripts/easeljs/geom/Rectangle.js"></script>
-	<script type="text/javascript" src="./javascripts/easeljs/display/Shadow.js"></script>
-	<script type="text/javascript" src="./javascripts/easeljs/display/SpriteSheet.js"></script>
-	<script type="text/javascript" src="./javascripts/easeljs/display/Graphics.js"></script>
-	<script type="text/javascript" src="./javascripts/easeljs/display/DisplayObject.js"></script>
-	<script type="text/javascript" src="./javascripts/easeljs/display/Container.js"></script>
-	<script type="text/javascript" src="./javascripts/easeljs/display/Stage.js"></script>
-	<script type="text/javascript" src="./javascripts/easeljs/display/Bitmap.js"></script>
-	<script type="text/javascript" src="./javascripts/easeljs/display/Sprite.js"></script>
-	<script type="text/javascript" src="./javascripts/easeljs/display/BitmapAnimation.js"></script>
-	<script type="text/javascript" src="./javascripts/easeljs/display/BitmapText.js"></script>
-	<script type="text/javascript" src="./javascripts/easeljs/display/Shape.js"></script>
-	<script type="text/javascript" src="./javascripts/easeljs/display/Text.js"></script>
-	<script type="text/javascript" src="./javascripts/easeljs/display/DOMElement.js"></script>
-	<script type="text/javascript" src="./javascripts/easeljs/events/MouseEvent.js"></script>
-	<script type="text/javascript" src="./javascripts/easeljs/filters/Filter.js"></script>
-	<script type="text/javascript" src="./javascripts/easeljs/ui/ButtonHelper.js"></script>
-	<script type="text/javascript" src="./javascripts/easeljs/ui/Touch.js"></script>
-	<script type="text/javascript" src="./javascripts/easeljs/utils/SpriteSheetUtils.js"></script>
-	<script type="text/javascript" src="./javascripts/easeljs/utils/SpriteSheetBuilder.js"></script>
-	<script type="text/javascript" src="./javascripts/createjs/events/Event.js"></script>
-	<script type="text/javascript" src="./javascripts/createjs/events/EventDispatcher.js"></script>
-	<script type="text/javascript" src="./javascripts/tweenjs/Tween.js"></script>
-	<script type="text/javascript" src="./javascripts/tweenjs/Ease.js"></script>
+    </div>
+  </section>
+  <section id="section-services" class="section pad-bot10" style="color: #141823">
+    <div class="row">
+      <div class="col-md-1">
+      </div>
+      <div class="col-md-4 left-side" style="margin-right: 10px; margin-top: 10px">
+        <h4 align="center" style="margin-top: 20px">
+          <p style="font-weight: bold;">
+            <u style="font-size: 110%">Make a statement</u> or ask a question by selecting one from list below
+          </p>
+        </h4>
+        <div class="list-group" style="border: solid 1px; cursor: pointer">
+          <a class="list-group-item" style="font-weight: bold" id="q1">
+            <div class="row">
+              <div class="col-md-5">
+                <li>Are you interested in</li>
+              </div>
+              <div class="col-md-4">
+                <select class="form-control" style="width: 100%" id="q11">
+                  <option>---</option>
+                  <option>Painting</option>
+                  <option>Lamp</option>
+                  <option>Records</option>
+              </select>
+              </div>
+              <div class="col-md-3">
+                  ?
+              </div>
+            </div>
+          </a>
+          <a class="list-group-item" style="font-weight: bold" id="s2">
+            <div class="row">
+              <div class="col-md-5">
+                <li>I am interested in</li>
+              </div>
+              <div class="col-md-4">
+                <select class="form-control" style="width: 100%" id="s21">
+                  <option>---</option>
+                  <option>Painting</option>
+                  <option>Lamp</option>
+                  <option>Records</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <select class="form-control" style="width: 100%" id="s22">
+                  <option>---</option>
+                  <option>a lot.</option>
+                  <option>somewhat.</option>
+                  <option>a little.</option>
+                  <option>not at all.</option>
+                </select>
+              </div>
+            </div>
+          </a>
+          <a class="list-group-item" style="font-weight: bold" id="s3"><li>Your offer was unfair.</li></a>
+          <a class="list-group-item" style="font-weight: bold" id="s4"><li>Lets make offers that are good for both of us.</li></a>
+          <a class="list-group-item" style="font-weight: bold" id="s5"><li>I gave a little, you should give a little.</li></a>
+          <a class="list-group-item" style="font-weight: bold" id="s6"><li>This is my final offer.</li></a>
+          <a class="list-group-item" style="font-weight: bold" id="s7"><li>Your previous offer is not good enough.</li></a>
+        </div>
+        <p id="selected-statement" style="color: black; margin-left: 10px; font-weight: bold; font-size: 17px">You have not selected anything.</p>
+      </div>
+      <div class="col-md-6 something" style="margin-left: 10px; margin-top: 10px">
+        <h4 align="center" style="margin-top: 20px">
+           <p style="font-weight: bold"><u style="font-size: 110%">Make an offer</u> by dragging the items on table to your side or opponent's side. </p>
+        </h4>
+        <div align="left">
+          <canvas id="gameCanvas" width="800" height="450" style="border: 1px solid #000000"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="row" align="left" style="margin-top: 15px; border-color: rgba(128, 128, 128, 0.5); background-color: white; border-style: groove; border-width: 1.5px">
+      <div class="col-md-4" align="center" />
+      <div class="col-md-5" align="left">
+        <p id="game-message" style="color: chocolate; font-size: 120%; font-weight: bold"></p>
+        <p id="game-state" style="color: blue; font-size: 120%; font-weight: bold">Game State </p>
+      </div>
+    </div>
+    <div class="row" id="nextstagediv" style="visibility: hidden" style="margin-top: 10px">
+      <div class="col-md-4 col-md-offset-4">
+        <form action="finish" method="post">
+          <button id="next-stage" class="btn btn-danger" style="width: 100%; margin-top: 20px">Click Here to Get Your Reward Code
+          </button>
+          <!-- hidden variable -->
+          <input id="player-id" name="user_id" type="hidden" value='<%=user_id%>' />
+          <!-- hidden variable -->
+          <input name="from" type="hidden" value='game' />
+          <!-- hidden variable -->
+          <input id="submit-data" name="game_data" type="hidden" />
+        </form>
+      </div>
+    </div>
+    <div class="row" style="visibility: hidden">
+      <div class="col-md-4 col-md-offset-1">
+        <textarea disabled rows="5" style="width: 100%; line-height: 1.4; border: 0px inset black; background-color: white; resize: none; color: black;" id="logger">Welcome to auction war! - Logger</textarea>
+        <label id="player-side" style="visibility: hidden"><%=player_side%></label>
+      </div>
+      <div class="col-md-2 col-md-offset-2">
+        <div id="acceptdiv" style="visibility: hidden" align="left">
+          <button type="button" class="btn btn-danger btn-block" style="width: 100%" id="accept">Accept Offer</button>
+          <br/>
+          <p style="font-size:110%; color: red; font-weight: bold;" align="left">
+          Attention: if you select this action, your turn will finish. <br/>
+          If both of you accept the offer, game will finish. </p>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div id="submitdiv" style="visibility: visible;" align="left">
+          <button type="button" class="btn btn-success btn-block" style="width: 100%" id="submit">Submit Turn</button>
+          <br/>
+          <p id="submit-error" style="color: red; margin-left: 10px; font-weight: bold"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <script type="text/javascript" src="./javascripts/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="./javascripts/bootstrap/bootstrap.min.js"></script>
+  <script type="text/javascript" src="./javascripts/bootbox/bootbox.min.js"></script>
+  <script type="text/javascript" src="./data_game.js"></script>
+  <script type="text/javascript" src="./initializer_utility.js"></script>
+  <script type="text/javascript" src="./initializer_game_manager.js"></script>
+  <script type="text/javascript" src="./initializer_game_items.js"></script>
+  <script type="text/javascript" src="./initializer_game_controller.js"></script>
+  <script type="text/javascript" src="./initializer_game_rendering.js"></script>
+  <script type="text/javascript" src="./initializer_game.js"></script>
+  <script type="text/javascript" src="./javascripts/createjs/events/Event.js"></script>
+  <script type="text/javascript" src="./javascripts/createjs/events/EventDispatcher.js"></script>
+  <script type="text/javascript" src="./javascripts/createjs/utils/IndexOf.js"></script>
+  <script type="text/javascript" src="./javascripts/easeljs/utils/UID.js"></script>
+  <script type="text/javascript" src="./javascripts/easeljs/utils/Ticker.js"></script>
+  <script type="text/javascript" src="./javascripts/easeljs/geom/Matrix2D.js"></script>
+  <script type="text/javascript" src="./javascripts/easeljs/geom/Point.js"></script>
+  <script type="text/javascript" src="./javascripts/easeljs/geom/Rectangle.js"></script>
+  <script type="text/javascript" src="./javascripts/easeljs/display/Shadow.js"></script>
+  <script type="text/javascript" src="./javascripts/easeljs/display/SpriteSheet.js"></script>
+  <script type="text/javascript" src="./javascripts/easeljs/display/Graphics.js"></script>
+  <script type="text/javascript" src="./javascripts/easeljs/display/DisplayObject.js"></script>
+  <script type="text/javascript" src="./javascripts/easeljs/display/Container.js"></script>
+  <script type="text/javascript" src="./javascripts/easeljs/display/Stage.js"></script>
+  <script type="text/javascript" src="./javascripts/easeljs/display/Bitmap.js"></script>
+  <script type="text/javascript" src="./javascripts/easeljs/display/Sprite.js"></script>
+  <script type="text/javascript" src="./javascripts/easeljs/display/BitmapAnimation.js"></script>
+  <script type="text/javascript" src="./javascripts/easeljs/display/BitmapText.js"></script>
+  <script type="text/javascript" src="./javascripts/easeljs/display/Shape.js"></script>
+  <script type="text/javascript" src="./javascripts/easeljs/display/Text.js"></script>
+  <script type="text/javascript" src="./javascripts/easeljs/display/DOMElement.js"></script>
+  <script type="text/javascript" src="./javascripts/easeljs/events/MouseEvent.js"></script>
+  <script type="text/javascript" src="./javascripts/easeljs/filters/Filter.js"></script>
+  <script type="text/javascript" src="./javascripts/easeljs/ui/ButtonHelper.js"></script>
+  <script type="text/javascript" src="./javascripts/easeljs/ui/Touch.js"></script>
+  <script type="text/javascript" src="./javascripts/easeljs/utils/SpriteSheetUtils.js"></script>
+  <script type="text/javascript" src="./javascripts/easeljs/utils/SpriteSheetBuilder.js"></script>
+  <script type="text/javascript" src="./javascripts/createjs/events/Event.js"></script>
+  <script type="text/javascript" src="./javascripts/createjs/events/EventDispatcher.js"></script>
+  <script type="text/javascript" src="./javascripts/tweenjs/Tween.js"></script>
+  <script type="text/javascript" src="./javascripts/tweenjs/Ease.js"></script>
 </body>
 </html>

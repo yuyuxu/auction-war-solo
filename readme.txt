@@ -152,3 +152,17 @@ quiz page really can use questionnaire
 when to assign role
 ai
 change the text on the introduction page
+
+- log
+shouldn't user.log be outside of user model
+
+- please start putting comments
+/**
+ * This module is the game manager
+ *  - maintain game global variables
+ *  - manage flow of game
+ * Notes about reset:
+ *  - ResetTimer (reset game state message)
+ *  - ResetInterface (reset css, html controllers)
+ *  - ResetTurn (reset in game variables)
+ */

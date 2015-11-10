@@ -1,3 +1,4 @@
+// constants for game page
 const ImageItems = ["./images/item1.png",
                     "./images/item2.png",
                     "./images/item3.png"];
@@ -16,4 +17,3 @@ const LayoutNoGridY = 3;
 const LayoutSidePlayer = 2;
 const LayoutSideNeutral = 1;
 const LayoutSideOpponent = 0;
-const TestNoTurns = 2;
