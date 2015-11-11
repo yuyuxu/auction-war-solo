@@ -2,7 +2,6 @@
 var ManagerSceneItem = {
   curr_items: {},
 
-  // model for item
   Item: function(type) {
     this.category = type;
     this.curr_location = LayoutSideNeutral;
@@ -31,7 +30,7 @@ var ManagerSceneItem = {
 
   // other item related logic
   // export items into JSON string
-  ExportItemsInformation: function(type) {
+  ExportItemsInformation: function() {
     return JSON.stringify(this.curr_items);
   },
 

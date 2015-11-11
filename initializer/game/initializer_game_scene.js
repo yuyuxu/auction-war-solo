@@ -26,22 +26,22 @@ var ManagerScene = {
   Init: function() {
     // setup scene
     var canvas = document.getElementById('game-canvas');
-    stage = new createjs.Stage(canvas);
+    this.stage = new createjs.Stage(canvas);
 
     // setup canvas
-    canvas_default_width = stage.canvas.width;
-    canvas_default_height = stage.canvas.height;
-    $(window).resize(UpdateCanvas);
+    this.canvas_default_width = canvas.width;
+    this.canvas_default_height = canvas.height;
+    $(window).resize(this.UpdateCanvas);
 
     // easeljs setting
-    createjs.Touch.enable(stage);
-    stage.enableMouseOver(10);
-    stage.mouseMoveOutside = true;
-    document.onkeydown = HandleKeyDown;
+    createjs.Touch.enable(this.stage);
+    this.stage.enableMouseOver(10);
+    this.stage.mouseMoveOutside = true;
+    document.onkeydown = this.HandleKeyDown;
 
     // background
-    var img_bg = new createjs.Bitmap(ImageBackground);
-    stage.addChild(img_bg);
+    var image_background = new createjs.Bitmap(ImageBackground);
+    this.stage.addChild(image_background);
     var label_side_you = new createjs.Text(': You',
                                            '40px Arial',
                                            '#000000');
@@ -50,6 +50,7 @@ var ManagerScene = {
     label_side_you.textBaseline = 'bottom';
     label_side_you.textAlign = 'center';
     label_side_you.alpha = 0.2;
+
     var label_side_opponent = new createjs.Text('Area: Opponent',
                                                 '40px Arial', '#000000');
     label_side_opponent.x = 0.5 * canvas.width;
@@ -57,6 +58,7 @@ var ManagerScene = {
     label_side_opponent.textBaseline = 'top';
     label_side_opponent.textAlign = 'center';
     label_side_opponent.alpha = 0.2;
+
     var label_side_neutral = new createjs.Text('Area: Neutral',
                                                '40px Arial',
                                                '#000000');
@@ -66,67 +68,69 @@ var ManagerScene = {
     label_side_neutral.textBaseline = 'bottom';
     label_side_neutral.textAlign = 'center';
     label_side_neutral.alpha = 0.2;
-    stage.addChild(label_side_you);
-    stage.addChild(label_side_opponent);
-    stage.addChild(label_side_neutral);
+    this.stage.addChild(label_side_you);
+    this.stage.addChild(label_side_opponent);
+    this.stage.addChild(label_side_neutral);
+
     stage_hit_area = new createjs.Shape();
     stage_hit_area.graphics.beginFill('#FFF').drawRect(0, 0,
                                                        canvas.width,
                                                        canvas.height);
     stage_hit_area.alpha = 0.01;
-    stage.addChild(stage_hit_area);
+    this.stage.addChild(stage_hit_area);
 
     // main play ground container
-    container_grid = new createjs.Container();
-    container_grid.width = canvas.width;
-    container_grid.height = canvas.height - LayoutStatusBarY;
-    container_grid.x = 0;
-    container_grid.y = LayoutStatusBarY;
-    stage.addChild(container_grid);
+    this.container_grid = new createjs.Container();
+    this.container_grid.width = canvas.width;
+    this.container_grid.height = canvas.height - LayoutStatusBarY;
+    this.container_grid.x = 0;
+    this.container_grid.y = LayoutStatusBarY;
+    this.stage.addChild(this.container_grid);
 
     // status container
-    container_status = new createjs.Container();
-    container_status.width = canvas.width;
-    container_status.height = LayoutStatusBarY;
-    stage.addChild(container_status);
+    this.container_status = new createjs.Container();
+    this.container_status.width = canvas.width;
+    this.container_status.height = LayoutStatusBarY;
+    this.stage.addChild(this.container_status);
 
     // turn label
-    label_turn = new createjs.Text('', 'bold 24px Arial', '#ff0000');
-    label_turn.x = 10;
-    label_turn.y = 0.5 * container_status.height;
-    label_turn.textBaseline = 'top';
-    label_turn.textAlign = 'left';
-    container_status.addChild(label_turn);
+    this.label_turn = new createjs.Text('', 'bold 24px Arial', '#ff0000');
+    this.label_turn.x = 10;
+    this.label_turn.y = 0.5 * this.container_status.height;
+    this.label_turn.textBaseline = 'top';
+    this.label_turn.textAlign = 'left';
+    this.container_status.addChild(this.label_turn);
 
     // popup window container
-    container_popup = new createjs.Container();
-    container_popup.width = LayoutPopupW;
-    container_popup.height = LayoutPopupH;
-    container_popup.x = 0.5 * container_grid.width - LayoutPopupW * 0.5;
-    container_popup.y = 5;
-    label_popup = new createjs.Text('', 'bold 24px Arial', '#0033ff');
-    label_popup.x = container_popup.width * 0.5;
-    label_popup.y = container_popup.height * 0.5;
-    label_popup.textBaseline = 'middle';
-    label_popup.textAlign = 'center';
-    container_popup.alpha = 0;
-    container_popup.addChild(label_popup);
-    stage.addChild(container_popup);
+    this.container_popup = new createjs.Container();
+    this.container_popup.width = LayoutPopupW;
+    this.container_popup.height = LayoutPopupH;
+    this.container_popup.x = 0.5 * this.container_grid.width -
+                             LayoutPopupW * 0.5;
+    this.container_popup.y = 5;
+    this.label_popup = new createjs.Text('', 'bold 24px Arial', '#0033ff');
+    this.label_popup.x = this.container_popup.width * 0.5;
+    this.label_popup.y = this.container_popup.height * 0.5;
+    this.label_popup.textBaseline = 'middle';
+    this.label_popup.textAlign = 'center';
+    this.container_popup.alpha = 0;
+    this.container_popup.addChild(this.label_popup);
+    this.stage.addChild(this.container_popup);
 
     // items
-    SetupItem(ManagerSceneItem.CreateItem(0));
-    SetupItem(ManagerSceneItem.CreateItem(1));
-    SetupItem(ManagerSceneItem.CreateItem(1));
-    SetupItem(ManagerSceneItem.CreateItem(2));
-    SetupItem(ManagerSceneItem.CreateItem(2));
-    SetupItem(ManagerSceneItem.CreateItem(2));
+    this.SetupItem(ManagerSceneItem.CreateItem(0));
+    this.SetupItem(ManagerSceneItem.CreateItem(1));
+    this.SetupItem(ManagerSceneItem.CreateItem(1));
+    this.SetupItem(ManagerSceneItem.CreateItem(2));
+    this.SetupItem(ManagerSceneItem.CreateItem(2));
+    this.SetupItem(ManagerSceneItem.CreateItem(2));
 
     // simulation loop
     createjs.Ticker.setFPS(SimulationFPS);
-    createjs.Ticker.addEventListener('tick', Tick);
+    createjs.Ticker.addEventListener('tick', this.Tick);
 
     // redraw
-    Redraw();
+    this.Redraw();
   },
 
   // type - 0: item1 1: item2 2: item3;
@@ -147,40 +151,40 @@ var ManagerScene = {
     }
     item.icon.addChild(item_image);
     item.icon.addChild(hit_area);
-    container_grid.addChild(item.icon);
-    hit_area.on('mousedown', MousedownIcon, null, false, item);
-    hit_area.on('mouseover', MouseOverIcon, null, false, item);
-    hit_area.on('pressup', ReleaseIcon, null, false, item);
-    hit_area.on('pressmove', PressmoveIcon, null, false, item);
+    this.container_grid.addChild(item.icon);
+    hit_area.on('mousedown', this.MousedownIcon, null, false, item);
+    hit_area.on('mouseover', this.MouseOverIcon, null, false, item);
+    hit_area.on('pressup', this.ReleaseIcon, null, false, item);
+    hit_area.on('pressmove', this.PressmoveIcon, null, false, item);
 
-    stage.update();
+    this.stage.update();
   },
 
   Redraw: function() {
-    UpdateCanvas();
-    UpdateGridSize();
-    UpdateItemLocation();
+    this.UpdateCanvas();
+    this.UpdateGridSize();
+    this.UpdateItemLocation();
 
-    stage.update();
+    this.stage.update();
   },
 
- // update scene components
+  // update scene components
+  // lost of binding
   UpdateCanvas: function() {
     var jCanvas = $('#game-canvas');
     var jParent = $(jCanvas).parent();
     jCanvas.attr('width', $(jParent).width());
 
     var tw = $(jParent).width();
-    var th = $(jParent).height();
-    ManagerScene.stage.scaleX = tw / canvas_default_width;
+    ManagerScene.stage.scaleX = tw / ManagerScene.canvas_default_width;
     ManagerScene.stage.scaleY = ManagerScene.stage.scaleX;
     jCanvas.attr('height', ManagerScene.stage.scaleY *
-                           canvas_default_height);
+                           ManagerScene.canvas_default_height);
   },
 
   UpdateGridSize: function() {
-    grid_width = container_grid.width / LayoutNoGridX;
-    grid_height = container_grid.height / LayoutNoGridY;
+    this.grid_width = this.container_grid.width / LayoutNoGridX;
+    this.grid_height = this.container_grid.height / LayoutNoGridY;
   },
 
   UpdateItemLocation: function() {
@@ -189,15 +193,14 @@ var ManagerScene = {
       var item_array = ManagerSceneItem.curr_items[k];
       for (var i = 0; i < num_items; i++) {
         var item = item_array[i];
-        item.icon.x = ManagerScene.GetLocationX(k, i, num_items) -
-                      ManagerScene.GetCenterOffset(item)[0];
-        item.icon.y =
-          ManagerScene.GetLocationY(item_array[i].curr_location) -
-          ManagerScene.GetCenterOffset(item)[1];
+        item.icon.x = this.GetLocationX(k, i, num_items) -
+                      this.GetCenterOffset(item)[0];
+        item.icon.y = this.GetLocationY(item_array[i].curr_location) -
+                      this.GetCenterOffset(item)[1];
       }
     }
 
-    stage.update();
+    this.stage.update();
   },
 
   // move current items given target items
@@ -246,11 +249,11 @@ var ManagerScene = {
                    GetCenterOffset(item)[1];
     var duration = EffectMoveSpeed *
                    Math.abs(target_y - current_y) /
-                   grid_height;
+                   this.grid_height;
     createjs.Tween.get(item.icon, {loop: false})
       .to({y: target_y}, duration)
 
-    stage.update();
+    this.stage.update();
   },
 
   // scene component effect
@@ -265,24 +268,24 @@ var ManagerScene = {
         .to({alpha: input_value}, EffectDefaultTransition)
     }
 
-    stage.update();
+    this.stage.update();
   },
 
   // transparent - 1: no , 0: yes
   EnableComponentInGame: function(type) {
     if (type == 'game') {
-      SetComponentEffect(container_grid,
-                         'alpha',
-                         1,
-                         container_grid.alpha);
+      this.SetComponentEffect(this.container_grid,
+                              'alpha',
+                              1,
+                              this.container_grid.alpha);
     } else if (type == 'none') {
-      SetComponentEffect(container_grid,
-                         'alpha',
-                         EffectDefaultTransparency,
-                         container_grid.alpha);
+      this.SetComponentEffect(this.container_grid,
+                              'alpha',
+                              EffectDefaultTransparency,
+                              this.container_grid.alpha);
     }
 
-    stage.update();
+    this.stage.update();
   },
 
   // label
@@ -292,11 +295,13 @@ var ManagerScene = {
 
   // render helper functions
   GetLocationX: function(x, which_item, num_items) {
-    return grid_width * (which_item + 1) / (num_items + 1) + grid_width * x;
+    var location_x = this.grid_width * (which_item + 1) / (num_items + 1) +
+                     this.grid_width * x;
+    return location_x;
   },
 
   GetLocationY: function(y) {
-    return grid_height * (y + 0.5);
+    return this.grid_height * (y + 0.5);
   },
 
   // return [x, y] offset
@@ -308,7 +313,7 @@ var ManagerScene = {
   },
 
   // timer related functions
-  // again here, ManagerScene is needed because lost of binding
+  // lost of binding
   Tick: function(evt) {
     ManagerScene.stage.update(evt);
     ManagerScene.HandleTimer(createjs.Ticker.getTime());
@@ -317,55 +322,57 @@ var ManagerScene = {
   StartTimer: function(duration,
                        tick_cb, tick_params,
                        finish_cb, finish_params) {
-    ResetTimer();
-    timer_start = createjs.Ticker.getTime() / 1000;
-    timer_duration = duration;
-    timer_tick_callback = tick_cb;
-    timer_tick_callback_params = tick_params;
-    timer_finish_callback = finish_cb;
-    timer_finish_callback_params = finish_params;
+    this.timer_start = createjs.Ticker.getTime() / 1000;
+    this.timer_duration = duration;
+    this.timer_prev_seconds = -1;
+    this.timer_tick_callback = tick_cb;
+    this.timer_tick_callback_params = tick_params;
+    this.timer_finish_callback = finish_cb;
+    this.timer_finish_callback_params = finish_params;
   },
 
   ResetTimer: function() {
-    timer_start = -1;
-    timer_duration = -1;
-    timer_prev_seconds = -1;
-    timer_tick_callback = null;
-    timer_tick_callback_params = null;
-    timer_finish_callback = null;
-    timer_finish_callback_params = null;
+    this.timer_start = -1;
+    this.timer_duration = -1;
+    this.timer_prev_seconds = -1;
+    this.timer_tick_callback = null;
+    this.timer_tick_callback_params = null;
+    this.timer_finish_callback = null;
+    this.timer_finish_callback_params = null;
   },
 
   // tick cb is called once per second
   // finish cb is called after duration is passed
+  // lost of binding
   HandleTimer: function(t) {
     // check if timer has started
-    if (timer_start < 0) {
+    if (ManagerScene.timer_start < 0) {
       return;
     }
     // check whether duration has passed
-    var seconds_gone = Math.ceil((t - timer_start) / 1000.0);
-    if (timer_duration > 0 && seconds_gone >= timer_duration) {
-      if (timer_finish_callback != null) {
-        timer_finish_callback(timer_finish_callback_params);
+    var seconds_gone = Math.ceil((t - ManagerScene.timer_start) / 1000.0);
+    if (ManagerScene.timer_duration > 0 &&
+        seconds_gone >= ManagerScene.timer_duration) {
+      if (ManagerScene.timer_finish_callback != null) {
+        ManagerScene.timer_finish_callback(
+          ManagerScene.timer_finish_callback_params);
       }
-      ResetTimer();
+      ManagerScene.ResetTimer();
     }
     // check if customized ticking should happen
-    if (timer_prev_seconds < 0) {
-      timer_prev_seconds = seconds_gone;
-    } else if (timer_prev_seconds != seconds_gone) {
-      timer_prev_seconds = seconds_gone;
-      if (timer_tick_callback != null) {
-        timer_tick_callback(seconds_gone, timer_tick_callback_params);
+    if (ManagerScene.timer_prev_seconds < 0) {
+      ManagerScene.timer_prev_seconds = seconds_gone;
+    } else if (ManagerScene.timer_prev_seconds != seconds_gone) {
+      ManagerScene.timer_prev_seconds = seconds_gone;
+      if (ManagerScene.timer_tick_callback != null) {
+        ManagerScene.timer_tick_callback(seconds_gone,
+          ManagerScene.timer_tick_callback_params);
       }
     }
   },
 
   HandlerTickerGameStateMessage: function(seconds_gone, params) {
     if (params == null || params.length != 1) {
-      InitializerUtility('HandlerTickerGameStateMessage: ' +
-                         'display_message invalid');
       return;
     }
 
@@ -395,27 +402,29 @@ var ManagerScene = {
     data.offset = {x: o.x - evt.stageX, y: data.icon.y - evt.stageY};
   },
 
+
+  // lost of binding
   PressmoveIcon: function(evt, data) {
     var o = evt.target;
     o.cursor = 'pointer';
     data.icon.y = evt.stageY + data.offset.y;
     if (data.icon.y < 0) {
       data.icon.y = 0;
-    } else if (data.icon.y > (grid_height * LayoutNoGridY)) {
-      data.icon.y = grid_height * LayoutNoGridY;
+    } else if (data.icon.y > (ManagerScene.grid_height * LayoutNoGridY)) {
+      data.icon.y = ManagerScene.grid_height * LayoutNoGridY;
     }
   },
 
+  // lost of binding
   ReleaseIcon: function(evt, data) {
     var o = evt.target;
     o.cursor = 'arrow';
-    var location = Math.floor(data.icon.y / grid_height);
+    var location = Math.floor(data.icon.y / ManagerScene.grid_height);
     if (location >= LayoutNoGridY) {
       location = LayoutNoGridY - 1;
     }
     if (data.curr_location != location) {
       data.curr_location = location;
-      GamePageHelper.ShowAccept('#accept-div', false);
     }
     data.icon.y = ManagerScene.GetLocationY(location) -
                   ManagerScene.GetCenterOffset(data)[1];

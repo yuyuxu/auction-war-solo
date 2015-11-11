@@ -7,7 +7,7 @@ var ManagerGame = {
 
   Init: function(player_id, type) {
     // set game type
-    game_type = type;
+    this.game_type = type;
 
     // init scene
     ManagerScene.Init();
@@ -19,43 +19,55 @@ var ManagerGame = {
     ManagerPlayer.Init(player_id);
 
     // start game flow
-    FlowMatchMaking();
+    this.FlowMatchMaking();
   },
 
-  GetNextPlayer: function() {
+  GetCurrentPlayer: function() {
+    if (this.whose_turn < 0) {
+      InitializerUtility.Log('GetCurrentPlayer whose_turn has not init yet.');
+      return null;
+    }
 
-  }
+    return ManagerPlayer[this.whose_turn];
+  },
 
   FlowMatchMaking: function() {
-    if (type == GameLocal) {
+    if (this.game_type == HumanVsScripted) {
       ManagerScene.EnableComponentInGame('none');
+      var matching_time = Math.random() * 60;
+      InitializerUtility.Log('FlowMatchMaking: game start in ' +
+                             matching_time + ' seconds (' +
+                             this.game_type + ')');
       ManagerScene.StartTimer(
-        Math.random() * 60,
+        matching_time,
         ManagerScene.HandlerGameStateMessage,
         ['Please wait while we are finding an opponent for you '],
-        FlowLoadGame,
+        this.FlowLoadGame,
         null);
     } else {
-      InitializerUtility.Log('FlowMatchMaking game type not supported ' +
-                             game_type);
+      InitializerUtility.Log('FlowMatchMaking game type not yet supported ' +
+                             this.game_type);
     }
   },
 
+  // lost in binding
   FlowLoadGame: function() {
-    if (type == GameLocal) {
-      PageTitleNotification.On('Opponent Found...');
+    if (ManagerGame.game_type == HumanVsScripted) {
+      PageTitleNotification.On('Opponent Found ...');
+      ManagerScene.EnableComponentInGame('none');
       ManagerScene.StartTimer(
         Math.random() * 15,
         ManagerScene.HandlerGameStateMessage,
         ['Yes you are ready! Just wait for your opponent to get ready '],
-        FlowStep,
+        ManagerGame.FlowStep,
         ['Your Turn ...', '', null]);
     } else {
       InitializerUtility.Log('FlowLoadGame game type not supported ' +
-                             game_type);
+                             ManagerGame.game_type);
     }
   },
 
+  // lost in binding
   FlowStep: function(params) {
     if (params.length != 2) {
       InitializerUtility.Log('FLowRunTurn error: params size has to be 2, ' +
@@ -64,17 +76,18 @@ var ManagerGame = {
     }
 
     // compute which player's turn is this step
-    if (whose_turn < 0) {
-      whose_turn = StartPlayer;
+    if (ManagerGame.whose_turn < 0) {
+      ManagerGame.whose_turn = StartPlayer;
     } else {
-      whose_turn = (whose_turn + 1) % ManagerPlayer.players.length;
+      ManagerGame.whose_turn = (ManagerGame.whose_turn + 1) %
+                               ManagerPlayer.players.length;
     }
 
     // update items
     ManagerScene.MoveItems(params[1], 'reverse');
 
     // update page notice, game page, scene component and animation
-    if (ManagerPlayer.players[whose_turn].player_type == TypePlayer) {
+    if (ManagerGame.GetCurrentPlayer().player_type == TypePlayer) {
       PageTitleNotification.On('Your Turn ...');
       GamePageHelper.Reset();
       GamePageHelper.DisplayMessage(params[0]);
@@ -96,14 +109,14 @@ var ManagerGame = {
     }
 
     // player logic
-    ManagerPlayer.players[whose_turn].StartTurn();
+    ManagerGame.GetCurrentPlayer().StartTurn();
   },
 
   FlowFinishGame: function() {
     this.is_game_finished = true;
 
-    ModuleGameController.ShowDiv('#next-stage-div', true);
-    ModuleGameController.ShowDiv('#submit-div', false);
+    ManagerController.ShowDiv('#next-stage-div', true);
+    ManagerController.ShowDiv('#submit-div', false);
     GamePageHelper.DisplayMessage('game-state', 'Game Finished!');
 
     var submit_data = ManagerController.action_history;

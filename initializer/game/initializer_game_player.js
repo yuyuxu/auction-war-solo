@@ -1,25 +1,28 @@
 var ManagerPlayer = {
   players: [],
 
-  Init: function(player_id, game_type) {
+  Init: function(player_id) {
     if (ManagerGame.game_type == HumanVsScripted) {
-      CreatePlayer(player_id, TypePlayer);
-      CreatePlayer('scripted', TypeScripted);
+      this.CreatePlayer(player_id, TypePlayer);
+      this.CreatePlayer('scripted', TypeScripted);
     } else {
       InitializerUtility.Log('ManagerPlayer init: game type not supported ' +
-                             game_type);
+                             ManagerGame.game_type);
     }
   },
 
   Player: function(id, type) {
     this.player_id = id;
     this.player_type = type;
+    this.indicate_finish = false;
 
     this.StartTurn = function() {
       if (this.player_type == TypePlayer) {
         // do nothing
       } else if (this.player_type == TypeScripted) {
         // simulate one step
+        this.indicate_finish = true;
+        this.FinishTurn(ManagerSceneItem.curr_items, 'Hello World!');
       } else {
         InitializerUtility.Log('Player StartTurn: player type not supported ' +
                                this.player_type);
@@ -32,8 +35,17 @@ var ManagerPlayer = {
   },
 
   CreatePlayer: function(id, type) {
-    players.push(new Player(id, type));
+    this.players.push(new this.Player(id, type));
     InitializerUtility.Log('CreatePlayer: created new player ' +
                            id + ' ' + type);
   },
+
+  PlayersFinished: function() {
+    for (var i = 0; i < this.players.length; ++i) {
+      if (this.players[i].indicate_finish == false) {
+        return false;
+      }
+    }
+    return true;
+  }
 };

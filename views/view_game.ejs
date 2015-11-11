@@ -42,7 +42,7 @@
     <div class="row">
       <div class="col-md-1">
       </div>
-      <div class="col-md-4 left-side" style="margin-right: 10px; margin-top: 10px">
+      <div class="col-md-4 left-side col-xs-9" style="margin-right: 10px; margin-top: 10px">
         <h4 align="center" style="margin-top: 20px">
           <p style="font-weight: bold;">
             <u style="font-size: 110%">Make a statement</u> or ask a question by selecting one from list below
@@ -99,7 +99,7 @@
         </div>
         <p id="selected-statement" style="color: black; margin-left: 10px; font-weight: bold; font-size: 17px">You have not selected anything.</p>
       </div>
-      <div class="col-md-6 something" style="margin-left: 10px; margin-top: 10px">
+      <div class="col-md-6 something col-xs-9" style="margin-left: 10px; margin-top: 10px">
         <h4 align="center" style="margin-top: 20px">
            <p style="font-weight: bold"><u style="font-size: 110%">Make an offer</u> by dragging the items on table to your side or opponent's side. </p>
         </h4>
@@ -109,10 +109,10 @@
       </div>
     </div>
     <div class="row" align="left" style="margin-top: 15px; border-color: rgba(128, 128, 128, 0.5); background-color: white; border-style: groove; border-width: 1.5px">
-      <div class="col-md-4" align="center" />
-      <div class="col-md-5" align="left">
+      <div class="col-md-4" align="center"></div>
+      <div class="col-md-5" align="center">
+        <p id="game-state" style="color: blue; font-size: 120%; font-weight: bold">Game State</p>
         <p id="game-message" style="color: chocolate; font-size: 120%; font-weight: bold"></p>
-        <p id="game-state" style="color: blue; font-size: 120%; font-weight: bold">Game State </p>
       </div>
     </div>
     <div class="row" id="next-stage-div" style="visibility: hidden" style="margin-top: 10px">
@@ -132,21 +132,23 @@
     <div class="row" style="visibility: hidden">
       <div class="col-md-4 col-md-offset-1">
         <textarea disabled rows="5" style="width: 100%; line-height: 1.4; border: 0px inset black; background-color: white; resize: none; color: black;" id="logger">Welcome to auction war! - Logger</textarea>
+        <!-- hidden variable -->
         <label id="player-role" style="visibility: hidden"><%=player_role%></label>
       </div>
-      <div class="col-md-2 col-md-offset-2">
-        <div id="accept-div" style="visibility: hidden" align="left">
-          <button type="button" class="btn btn-danger btn-block" style="width: 100%" id="accept">Accept Offer</button>
-          <br/>
-          <p style="font-size:110%; color: red; font-weight: bold;" align="left">
-          Attention: if you select this action, your turn will finish. <br/>
-          If both of you accept the offer, game will finish. </p>
+      <div class="col-md-2 col-md-offset-1">
+        <div id="accept-div" style="visibility: visible" align="left">
+          <button id="accept" type="button" class="btn btn-danger btn-block" style="width: 100%">Accept Offer</button>
+          <p id="accept-comment1" style="font-size:100%; font-weight: bold; margin-left: 10px; margin-top: 5px; visibility: visible" align="left">
+          If you select this action, your turn will finish.
+          </p>
+          <p id="accept-comment2" style="font-size:100%; font-weight: bold; margin-left: 10px; margin-top: 5px; visibility: hidden" align="left">
+          If both of you accept the offer, game will finish.
+          </p>
         </div>
       </div>
       <div class="col-md-2">
         <div id="submit-div" style="visibility: visible;" align="left">
-          <button type="button" class="btn btn-success btn-block" style="width: 100%" id="submit">Submit Turn</button>
-          <br/>
+          <button id="submit" type="button" class="btn btn-success btn-block" style="width: 100%">Submit Turn</button>
           <p id="submit-error" style="color: red; margin-left: 10px; font-weight: bold" />
         </div>
       </div>

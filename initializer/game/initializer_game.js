@@ -20,21 +20,15 @@
 }
 
 var GamePageHelper = {
-  Reset: function(type) {
-    if (type == 'disable') {
-      $('#accept-div').css('visibility', 'hidden');
+  Reset: function() {
+    if (ManagerPlayer.PlayersFinished()) {
+      $('#accept').text('Accept Offer & Finish Game');
+      $('#accept-comment1').css('visibility', 'hidden');
+      $('#accept-comment2').css('visibility', 'visible');
     } else {
-      is_full_partition = ManagerItem.IsItemSplit();
-      if (!is_full_partition) {
-        $('#accept-div').css('visibility', 'hidden');
-      } else {
-        $('#accept-div').css('visibility', 'visible');
-        if (ModuleGame.has_opponent_accepted_offer) {
-          $('#accept').text('Accept Offer & Finish Game');
-        } else {
-          $('#accept').text('Accept Offer');
-        }
-      }
+      $('#accept').text('Accept Offer');
+      $('#accept-comment1').css('visibility', 'visible');
+      $('#accept-comment2').css('visibility', 'hidden');
     }
 
     $('#submit-error').text('');
@@ -59,16 +53,15 @@ var GamePageHelper = {
     }
   },
 
-  // display message
   DisplayMessage: function(message, type) {
     if (ManagerGame.is_game_finished) {
       return;
     }
 
     if (type == 'game-state') {
-      $("#game-state").text(message);
+      $('#game-state').text(message);
     } else if (type == 'game-message') {
-      $("#game-message").text(message);
+      $('#game-message').text(message);
     }
   },
 };
@@ -79,9 +72,10 @@ var ManagerController = {
   action_history: [],
 
   Init: function() {
+    // all bellwo has lost of binding problem
     $('#reset').click(function() {
       // reset to previous location
-      ManagerItem.ResetLocation();
+      ManagerSceneItem.ResetLocation();
       ManagerScene.UpdateItemLocation();
       ManagerController.Log('reset', []);
     });
@@ -89,58 +83,71 @@ var ManagerController = {
     $('#accept').click(function() {
       // clean up current turn
       ManagerController.Log('accept', []);
-      ResetVariables();
+      ManagerController.ResetVariables();
 
       // call player finish turn
-      ManagerPlayer[ManagerGame.whose_turn].FinishTurn();
+      var current_player = ManagerGame.GetCurrentPlayer();
+      if (current_player != null) {
+        current_player.indicate_finish = true;
+        current_player.FinishTurn(ManagerSceneItem.curr_items,
+                                  ManagerController.curr_turn_statement);
+      }
     });
 
     $('#submit').click(function() {
       // clean up current turn
-      var item_moved = ManagerItem.BackupLocation();
-      if (item_moved || curr_turn_statement != '') {
-        var item_information_str = ManagerItem.ExportItemsInformation();
+      var item_moved = ManagerSceneItem.BackupLocation();
+      if (item_moved || ManagerController.curr_turn_statement != '') {
+        var item_information_str = ManagerSceneItem.ExportItemsInformation();
         ManagerController.Log('submit',
-                              [item_information_str, curr_turn_statement]);
+                              [item_information_str,
+                               ManagerController.curr_turn_statement]);
       } else {
         $('#submit-error').text('You need to take at least one action. ' +
                                 'Please select a valid statement/question, ' +
                                 'or/and drag items on the take to ' +
                                 'make an offer.');
       }
-      ResetVariables();
+      ManagerController.ResetVariables();
 
       // call player finish turn
-      ManagerPlayer[ManagerGame.whose_turn].FinishTurn();
+      var current_player = ManagerGame.GetCurrentPlayer();
+      if (current_player != null) {
+        current_player.indicate_finish = false;
+        current_player.FinishTurn(ManagerSceneItem.curr_items,
+                                  ManagerController.curr_turn_statement);
+      }
     });
 
     // user actions on the questions and statements
     $('#s3, #s4, #s5, #s6, #s7').click(function() {
-      curr_turn_statement = $(this).text();
+      ManagerController.curr_turn_statement = $(this).text();
       $('#selected-statement').css('color', 'green');
-      $('#selected-statement').text('You selected: ' + curr_turn_statement);
+      $('#selected-statement').text('You selected: ' +
+                                    ManagerController.curr_turn_statement);
     });
 
     $('#q1').click(function() {
-      curr_turn_statement = 'Are you interested in ';
+      ManagerController.curr_turn_statement = 'Are you interested in ';
 
       var selected = document.getElementById('q11');
       var select = selected.options[selected.selectedIndex].value;
 
       if (select == '---') {
-        curr_turn_statement = '';
+        ManagerController.curr_turn_statement = '';
         $('#selected-statement').css('color', 'red');
         $('#selected-statement').text('Warning: Please select at least one of items.');
         return;
       }
 
-      curr_turn_statement += select + ' ?';
+      ManagerController.curr_turn_statement += select + ' ?';
       $('#selected-statement').css('color', 'green');
-      $('#selected-statement').text('You selected: ' + curr_turn_statement);
+      $('#selected-statement').text('You selected: ' +
+                                    ManagerController.curr_turn_statement);
     });
 
     $('#s2').click(function() {
-      curr_turn_statement = 'I am interested in ';
+      ManagerController.curr_turn_statement = 'I am interested in ';
       var selected = document.getElementById('s21');
       var select = selected.options[selected.selectedIndex].value;
       var selected_attitude = document.getElementById('s22');
@@ -148,45 +155,47 @@ var ManagerController = {
         selected_attitude.options[selected_attitude.selectedIndex].value;
 
       if (select == '---') {
-        curr_turn_statement = '';
+        ManagerController.curr_turn_statement = '';
         $('#selected-statement').css('color', 'red');
         $('#selected-statement').text('Warning: Please select at least ' +
                                       'one item.');
         return;
       }
       if (attitude == '---') {
-        curr_turn_statement = '';
+        ManagerController.curr_turn_statement = '';
         $('#selected-statement').css('color', 'red');
-        $('#selected-statement').text('Warning: Please select at least one attitude.');
+        $('#selected-statement').text('Warning: Please select at least ' +
+                                      'one attitude.');
         return;
       }
 
-      curr_turn_statement += select + ' ' + attitude;
+      ManagerController.curr_turn_statement += select + ' ' + attitude;
       $('#selected-statement').css('color', 'green');
-      $('#selected-statement').text('You selected: ' + curr_turn_statement);
+      $('#selected-statement').text('You selected: ' +
+                                    ManagerController.curr_turn_statement);
     });
   },
 
   Log: function(action, param) {
-    this.curr_turn_action['action'] = action;
-    this.curr_turn_action['params'] = param;
-    this.curr_turn_action['time'] = GetTimeHMS();
-    this.curr_turn_action['player_id'] = ModuleGame.player_id;
-    this.curr_turn_action['player_game_name'] = ModuleGame.player_game_name;
-    var curr_turn_action_str = JSON.stringify(this.curr_turn_action);
-    ManagerController.action_history.push(curr_turn_action_str);
+    ManagerController.curr_turn_action['player_id'] = ManagerGame.player_id;
+    ManagerController.curr_turn_action['time'] =
+      InitializerUtility.GetTimeHMS();
+    ManagerController.curr_turn_action['action'] = action;
+    ManagerController.curr_turn_action['params'] = param;
+    var action_str = JSON.stringify(ManagerController.curr_turn_action);
+    ManagerController.action_history.push(action_str);
   },
 
   ResetVariables: function() {
-    curr_turn_statement: '',
-    curr_turn_action: {},
+    ManagerController.curr_turn_statement = '';
+    ManagerController.curr_turn_action = {};
   }
 };
 
 $(document).ready(function() {
   // load page, init game
   window.onload = function() {
-    ModuleGame.Init();
+    ManagerGame.Init($('#player-id').val(), HumanVsScripted);
   };
 
   // if focus on this page, turn off page title notification
@@ -195,7 +204,7 @@ $(document).ready(function() {
   });
 
   // leaving page, submit data
-  $( "#next-stage" ).click(function() {
-    $("#next-stage").closest('form').submit();
+  $('#next-stage').click(function() {
+    $('#next-stage').closest('form').submit();
   });
 });
