@@ -18,8 +18,10 @@ var ManagerScene = {
   timer_start: -1,
   timer_duration: -1,
   timer_prev_seconds: -1,
-  timer_callback: null,
-  timer_callback_params: null,
+  timer_tick_callback: null,
+  timer_tick_callback_params: null,
+  timer_finish_callback: null,
+  timer_finish_callback_params: null,
 
   Init: function() {
     // setup scene
@@ -122,6 +124,9 @@ var ManagerScene = {
     // simulation loop
     createjs.Ticker.setFPS(SimulationFPS);
     createjs.Ticker.addEventListener('tick', Tick);
+
+    // redraw
+    Redraw();
   },
 
   // type - 0: item1 1: item2 2: item3;
@@ -167,9 +172,9 @@ var ManagerScene = {
 
     var tw = $(jParent).width();
     var th = $(jParent).height();
-    ModuleGameRendering.stage.scaleX = tw / canvas_default_width;
-    ModuleGameRendering.stage.scaleY = ModuleGameRendering.stage.scaleX;
-    jCanvas.attr('height', ModuleGameRendering.stage.scaleY *
+    ManagerScene.stage.scaleX = tw / canvas_default_width;
+    ManagerScene.stage.scaleY = ManagerScene.stage.scaleX;
+    jCanvas.attr('height', ManagerScene.stage.scaleY *
                            canvas_default_height);
   },
 
@@ -180,15 +185,15 @@ var ManagerScene = {
 
   UpdateItemLocation: function() {
     for (var k in ManagerSceneItem.curr_items) {
-      var no_items = ManagerSceneItem.curr_items[k].length;
+      var num_items = ManagerSceneItem.curr_items[k].length;
       var item_array = ManagerSceneItem.curr_items[k];
-      for (var i = 0; i < no_items; i++) {
+      for (var i = 0; i < num_items; i++) {
         var item = item_array[i];
-        item.icon.x = ModuleGameRendering.GetLocationX(k, i, no_items) -
-                      ModuleGameRendering.GetCenterOffset(item)[0];
+        item.icon.x = ManagerScene.GetLocationX(k, i, num_items) -
+                      ManagerScene.GetCenterOffset(item)[0];
         item.icon.y =
-          ModuleGameRendering.GetLocationY(item_array[i].curr_location) -
-          ModuleGameRendering.GetCenterOffset(item)[1];
+          ManagerScene.GetLocationY(item_array[i].curr_location) -
+          ManagerScene.GetCenterOffset(item)[1];
       }
     }
 
@@ -286,8 +291,8 @@ var ManagerScene = {
   },
 
   // render helper functions
-  GetLocationX: function(x, which_item, no_items) {
-    return grid_width * (which_item + 1) / (no_items + 1) + grid_width * x;
+  GetLocationX: function(x, which_item, num_items) {
+    return grid_width * (which_item + 1) / (num_items + 1) + grid_width * x;
   },
 
   GetLocationY: function(y) {
@@ -309,67 +314,70 @@ var ManagerScene = {
     ManagerScene.HandleTimer(createjs.Ticker.getTime());
   },
 
-  StartTimer: function(duration, cb, params) {
+  StartTimer: function(duration,
+                       tick_cb, tick_params,
+                       finish_cb, finish_params) {
     ResetTimer();
     timer_start = createjs.Ticker.getTime() / 1000;
     timer_duration = duration;
-    timer_callback = cb;
-    timer_callback_params = params;
+    timer_tick_callback = tick_cb;
+    timer_tick_callback_params = tick_params;
+    timer_finish_callback = finish_cb;
+    timer_finish_callback_params = finish_params;
   },
 
   ResetTimer: function() {
     timer_start = -1;
     timer_duration = -1;
-    timer_callback = null;
     timer_prev_seconds = -1;
-    timer_callback_params = null;
+    timer_tick_callback = null;
+    timer_tick_callback_params = null;
+    timer_finish_callback = null;
+    timer_finish_callback_params = null;
   },
 
+  // tick cb is called once per second
+  // finish cb is called after duration is passed
   HandleTimer: function(t) {
-    if (timer_start < 0) return;
-    var seconds_gone = Math.ceil((t - timer_start) / 1000.0);
-    timer_callback(seconds_gone, timer_callback_params);
-  },
-
-  // handlers
-  HandlerCountDown: function(seconds_gone, params) {
-    if (seconds_gone > timer_duration) {
-      ResetTimer();
-    }
-    if (timer_prev_seconds < 0) {
-      timer_prev_seconds = seconds_gone;
-    } else {
-      if (timer_prev_seconds != seconds_gone) {
-        timer_prev_seconds = seconds_gone;
-        var display_message = 'Game start in ' + seconds_gone + ' Seconds';
-        ManagerController.DisplayMessage('game-state', display_message);
-      }
-    }
-  },
-
-  HandlerLabelAnimation: function(seconds_gone, params) {
-    if (params == null || params.length == 0) {
-      InitializerUtility('HandlerLabelAnimation: callback params is empty');
+    // check if timer has started
+    if (timer_start < 0) {
       return;
     }
-
-    if (timer_duration > 0 && seconds_gone > timer_duration) {
+    // check whether duration has passed
+    var seconds_gone = Math.ceil((t - timer_start) / 1000.0);
+    if (timer_duration > 0 && seconds_gone >= timer_duration) {
+      if (timer_finish_callback != null) {
+        timer_finish_callback(timer_finish_callback_params);
+      }
       ResetTimer();
     }
-
-    if (timer_prev_seconds < 0)  {
+    // check if customized ticking should happen
+    if (timer_prev_seconds < 0) {
       timer_prev_seconds = seconds_gone;
     } else if (timer_prev_seconds != seconds_gone) {
       timer_prev_seconds = seconds_gone;
-      var display_message = params[0];
-      var no_dots = seconds_gone % EffectNoDots;
-      for (var i = 0; i < no_dots; i++) {
-        display_message += '.';
+      if (timer_tick_callback != null) {
+        timer_tick_callback(seconds_gone, timer_tick_callback_params);
       }
-      ManagerController.DisplayMessage('game-state', display_message);
     }
   },
 
+  HandlerTickerGameStateMessage: function(seconds_gone, params) {
+    if (params == null || params.length != 1) {
+      InitializerUtility('HandlerTickerGameStateMessage: ' +
+                         'display_message invalid');
+      return;
+    }
+
+    var num_dots = seconds_gone % EffectNoDots;
+    for (var i = 0; i < num_dots; ++i) {
+      display_message += '.';
+    }
+
+    GamePageHelper.DisplayMessage('game-state', params[0]);
+  },
+
+  // game keyboard
   HandleKeyDown: function(e) {
     if (!e) {
       var e = window.event;
@@ -407,9 +415,9 @@ var ManagerScene = {
     }
     if (data.curr_location != location) {
       data.curr_location = location;
-      ManagerController.ShowAccept('#accept-div', false);
+      GamePageHelper.ShowAccept('#accept-div', false);
     }
-    data.icon.y = ModuleGameRendering.GetLocationY(location) -
-                  ModuleGameRendering.GetCenterOffset(data)[1];
+    data.icon.y = ManagerScene.GetLocationY(location) -
+                  ManagerScene.GetCenterOffset(data)[1];
   },
 };

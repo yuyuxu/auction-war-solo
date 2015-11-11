@@ -1,89 +1,112 @@
 // This module is the game manager for 2 player game,
 // it manages the game state/flow, game players
 var ManagerGame = {
-  // player information
-  player_id: '',
-  opponent_id: '',
-  player_game_name: '',
-  opponent_game_name: '',
+  game_type: -1,
+  whose_turn: -1,
+  is_game_finished: false,
 
-  // game status
-  is_your_turn: false,
-  game_finished: false,
-  has_opponent_accepted_offer: false,
+  Init: function(player_id, type) {
+    // set game type
+    game_type = type;
 
-  Init: function() {
     // init scene
     ManagerScene.Init();
 
     // setup game controller
-    ModuleGameController.Init();
+    ManagerController.Init();
 
-    // setup game players
-    ModuleGameListener.Init();
+    // setup plyaer according to game type
+    ManagerPlayer.Init(player_id);
 
     // start game flow
     FlowMatchMaking();
-
-    // redraw
-    ManagerScene.Redraw();
   },
 
-  ResetTurn: function() {
-    ModuleGameController.curr_turn_statement = '';
-    ModuleGameController.curr_turn_action = {};
-    is_your_turn = false;
-  },
+  GetNextPlayer: function() {
+
+  }
 
   FlowMatchMaking: function() {
-    var params = {
-      player_id: this.player_id,
-    };
-    ModuleGameEventSocket.Trigger('from-client:c', params);
-    ModuleGameRendering.EnableCompInGame('none');
-    ModuleGameRendering.StartTimer(-1, ModuleGameRendering.HandlerLabelAnimation, ['Please wait while we are finding an opponent for you ']);
+    if (type == GameLocal) {
+      ManagerScene.EnableComponentInGame('none');
+      ManagerScene.StartTimer(
+        Math.random() * 60,
+        ManagerScene.HandlerGameStateMessage,
+        ['Please wait while we are finding an opponent for you '],
+        FlowLoadGame,
+        null);
+    } else {
+      InitializerUtility.Log('FlowMatchMaking game type not supported ' +
+                             game_type);
+    }
   },
 
   FlowLoadGame: function() {
-    PageTitleNotification.On('Opponent Found...');
-    var params = {
-      player_id: this.player_id,
-    };
-
-    PageTitleNotification.Off();
-    ModuleGameEventSocket.Trigger('from-client:loaded-game', params);
-    ModuleGameRendering.StartTimer(-1, ModuleGameRendering.HandlerLabelAnimation, ['Yes you are ready! Just wait for your opponent to get ready ']);
+    if (type == GameLocal) {
+      PageTitleNotification.On('Opponent Found...');
+      ManagerScene.StartTimer(
+        Math.random() * 15,
+        ManagerScene.HandlerGameStateMessage,
+        ['Yes you are ready! Just wait for your opponent to get ready '],
+        FlowStep,
+        ['Your Turn ...', '', null]);
+    } else {
+      InitializerUtility.Log('FlowLoadGame game type not supported ' +
+                             game_type);
+    }
   },
 
-  FlowWaitTurn: function() {
-    ClientLog(ModuleGame.player_id + ' ' + 'FlowWaitTurn');
-    this.is_your_turn = false;
-    ModuleGameRendering.StartTimer(-1, ModuleGameRendering.HandlerLabelAnimation, ['Please wait for you turn ']);
-  },
+  FlowStep: function(params) {
+    if (params.length != 2) {
+      InitializerUtility.Log('FLowRunTurn error: params size has to be 2, ' +
+                             '[game page message, items]');
+      return;
+    }
 
-  FlowStartTurn: function(message) {
-    PageTitleNotification.On('Your Turn...');
-    ClientLog(ModuleGame.player_id + ' ' + 'FlowStartTurn');
+    // compute which player's turn is this step
+    if (whose_turn < 0) {
+      whose_turn = StartPlayer;
+    } else {
+      whose_turn = (whose_turn + 1) % ManagerPlayer.players.length;
+    }
 
-    this.is_your_turn = true;
-    ModuleGameController.ResetInterface();
-    ModuleGameRendering.EnableCompInGame('game');
-    ModuleGameRendering.StartTimer(-1, ModuleGameRendering.HandlerLabelAnimation, ['Your turn ']);
-    ModuleGameRendering.Display('game-message', message);
-  },
+    // update items
+    ManagerScene.MoveItems(params[1], 'reverse');
 
-  FlowUpdateTurn: function(items) {
-    ModuleGameItems.MoveItems('reverse', items);
+    // update page notice, game page, scene component and animation
+    if (ManagerPlayer.players[whose_turn].player_type == TypePlayer) {
+      PageTitleNotification.On('Your Turn ...');
+      GamePageHelper.Reset();
+      GamePageHelper.DisplayMessage(params[0]);
+      ManagerScene.EnableComponentInGame('game');
+      ManagerScene.StartTimer(-1,
+                              ManagerScene.HandlerGameStateMessage,
+                              null,
+                              null,
+                              null);
+    } else {
+      PageTitleNotification.On('Wait for Your Turn ...');
+      GamePageHelper.Reset();
+      ManagerScene.EnableComponentInGame('none');
+      ManagerScene.StartTimer(-1,
+                              ManagerScene.HandlerGameStateMessage,
+                              ['Please wait for you turn '],
+                              null,
+                              null);
+    }
+
+    // player logic
+    ManagerPlayer.players[whose_turn].StartTurn();
   },
 
   FlowFinishGame: function() {
-    // Debug
-    var r = confirm('Game Finished...');
+    this.is_game_finished = true;
+
     ModuleGameController.ShowDiv('#next-stage-div', true);
     ModuleGameController.ShowDiv('#submit-div', false);
-    ModuleGameRendering.Display('game-state', 'Game Finished!');
-    this.game_finished = true;
-    var submit_data = ModuleGameController.action_history;
+    GamePageHelper.DisplayMessage('game-state', 'Game Finished!');
+
+    var submit_data = ManagerController.action_history;
     $('#submit-data').val(submit_data);
-  }
+  },
 };

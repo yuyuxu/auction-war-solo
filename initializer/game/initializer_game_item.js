@@ -1,7 +1,6 @@
 // This module deals with game items
 var ManagerSceneItem = {
   curr_items: {},
-  has_moved_items: false,
 
   // model for item
   Item: function(type) {
@@ -95,14 +94,17 @@ var ManagerSceneItem = {
 
   // backup current items location to previous items location
   BackupLocation: function() {
+    var item_has_moved = false;
     for (var k in this.curr_items) {
       var item_array = this.curr_items[k];
       for (var i = 0; i < item_array.length; i++) {
         var item = item_array[i];
         if (item.prev_location != item.curr_location) {
           item.prev_location = item.curr_location;
+          item_has_moved = true;
         }
       }
     }
+    return item_has_moved;
   },
 };

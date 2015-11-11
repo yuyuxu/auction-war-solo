@@ -170,3 +170,10 @@ shouldn't user.log be outside of user model
 - about game
 right now i'm using mvc framework for the game front end, the models are embedded in the intializers
 all the initializers are managers
+whether ai should be deployed on client side or server side? so far i'm putting ai in front end
+so far game is divided into vs local and vs remote
+for local, there's different type of players
+for remote, there's different type of players on server side
+ticker function is called currently 1 second each time
+merge in the human vs human game
+match making really should be outside on the other page
