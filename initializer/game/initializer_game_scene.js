@@ -42,7 +42,7 @@ var ManagerScene = {
     // background
     var image_background = new createjs.Bitmap(ImageBackground);
     this.stage.addChild(image_background);
-    var label_side_you = new createjs.Text(': You',
+    var label_side_you = new createjs.Text('Area: You',
                                            '40px Arial',
                                            '#000000');
     label_side_you.x = 0.5 * canvas.width;

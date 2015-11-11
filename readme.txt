@@ -177,3 +177,7 @@ for remote, there's different type of players on server side
 ticker function is called currently 1 second each time
 merge in the human vs human game
 match making really should be outside on the other page
+
+- font
+except sections with questions and study: george (default)
+others should all use "font-family: Lato"

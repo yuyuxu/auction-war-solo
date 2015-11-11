@@ -38,21 +38,21 @@
       </div>
     </div>
   </section>
-  <section id="section-services" class="section pad-bot10" style="color: #141823">
+  <section id="section-services" class="section pad-bot10" style="color: #141823; font-family: Lato">
     <div class="row">
       <div class="col-md-1">
       </div>
       <div class="col-md-4 left-side col-xs-9" style="margin-right: 10px; margin-top: 10px">
         <h4 align="center" style="margin-top: 20px">
-          <p style="font-weight: bold;">
-            <u style="font-size: 110%">Make a statement</u> or ask a question by selecting one from list below
+          <p style="font-weight: bold; font-family: Lato">
+            Make a statement or ask a question <br /> by selecting one from list below
           </p>
         </h4>
-        <div class="list-group" style="border: solid 1px; cursor: pointer">
+        <div class="list-group" style="border: solid 1px; cursor: pointer;">
           <a class="list-group-item" style="font-weight: bold" id="q1">
             <div class="row">
               <div class="col-md-5">
-                <li>Are you interested in</li>
+                <li style="min-width: 100px">Are you interested in</li>
               </div>
               <div class="col-md-4">
                 <select class="form-control" style="width: 100%" id="q11">
@@ -70,7 +70,7 @@
           <a class="list-group-item" style="font-weight: bold" id="s2">
             <div class="row">
               <div class="col-md-5">
-                <li>I am interested in</li>
+                <li style="min-width: 100px">I am interested in</li>
               </div>
               <div class="col-md-4">
                 <select class="form-control" style="width: 100%" id="s21">
@@ -91,17 +91,19 @@
               </div>
             </div>
           </a>
-          <a class="list-group-item" style="font-weight: bold" id="s3"><li>Your offer was unfair.</li></a>
-          <a class="list-group-item" style="font-weight: bold" id="s4"><li>Lets make offers that are good for both of us.</li></a>
-          <a class="list-group-item" style="font-weight: bold" id="s5"><li>I gave a little, you should give a little.</li></a>
-          <a class="list-group-item" style="font-weight: bold" id="s6"><li>This is my final offer.</li></a>
-          <a class="list-group-item" style="font-weight: bold" id="s7"><li>Your previous offer is not good enough.</li></a>
+          <a class="list-group-item" style="font-weight: bold" id="s3"><li style="min-width: 100px">Your offer was unfair.</li></a>
+          <a class="list-group-item" style="font-weight: bold" id="s4"><li style="min-width: 100px">Lets make offers that are good for both of us.</li></a>
+          <a class="list-group-item" style="font-weight: bold" id="s5"><li style="min-width: 100px">I gave a little, you should give a little.</li></a>
+          <a class="list-group-item" style="font-weight: bold" id="s6"><li style="min-width: 100px">This is my final offer.</li></a>
+          <a class="list-group-item" style="font-weight: bold" id="s7"><li style="min-width: 100px">Your previous offer is not good enough.</li></a>
         </div>
         <p id="selected-statement" style="color: black; margin-left: 10px; font-weight: bold; font-size: 17px">You have not selected anything.</p>
       </div>
       <div class="col-md-6 something col-xs-9" style="margin-left: 10px; margin-top: 10px">
         <h4 align="center" style="margin-top: 20px">
-           <p style="font-weight: bold"><u style="font-size: 110%">Make an offer</u> by dragging the items on table to your side or opponent's side. </p>
+          <p style="font-weight: bold; font-family: Lato">
+            Make an offer<br /> by dragging the items on table to your side or opponent's side
+          </p>
         </h4>
         <div align="left">
           <canvas id="game-canvas" width="800" height="450" style="border: 1px solid #000000"></canvas>
@@ -115,22 +117,8 @@
         <p id="game-message" style="color: chocolate; font-size: 120%; font-weight: bold"></p>
       </div>
     </div>
-    <div class="row" id="next-stage-div" style="visibility: hidden" style="margin-top: 10px">
-      <div class="col-md-4 col-md-offset-4">
-        <form action="finish" method="post">
-          <button id="next-stage" class="btn btn-danger" style="width: 100%; margin-top: 20px">Click Here to Get Your Reward Code
-          </button>
-          <!-- hidden variable -->
-          <input id="player-id" name="user_id" type="hidden" value='<%=user_id%>' />
-          <!-- hidden variable -->
-          <input name="from" type="hidden" value='game' />
-          <!-- hidden variable -->
-          <input id="submit-data" name="game_data" type="hidden" />
-        </form>
-      </div>
-    </div>
-    <div class="row" style="visibility: hidden">
-      <div class="col-md-4 col-md-offset-1">
+    <div class="row" style="margin-top: 20px">
+      <div class="col-md-4 col-md-offset-1" style="visibility: hidden">
         <textarea disabled rows="5" style="width: 100%; line-height: 1.4; border: 0px inset black; background-color: white; resize: none; color: black;" id="logger">Welcome to auction war! - Logger</textarea>
         <!-- hidden variable -->
         <label id="player-role" style="visibility: hidden"><%=player_role%></label>
@@ -151,6 +139,20 @@
           <button id="submit" type="button" class="btn btn-success btn-block" style="width: 100%">Submit Turn</button>
           <p id="submit-error" style="color: red; margin-left: 10px; font-weight: bold" />
         </div>
+      </div>
+    </div>
+    <div class="row" id="next-stage-div" style="visibility: hidden" style="margin-top: 10px">
+      <div class="col-md-4 col-md-offset-4">
+        <form action="finish" method="post">
+          <button id="next-stage" class="btn btn-danger" style="width: 100%; margin-top: 20px">Click Here to Get Your Reward Code
+          </button>
+          <!-- hidden variable -->
+          <input id="player-id" name="user_id" type="hidden" value='<%=user_id%>' />
+          <!-- hidden variable -->
+          <input name="from" type="hidden" value='game' />
+          <!-- hidden variable -->
+          <input id="submit-data" name="game_data" type="hidden" />
+        </form>
       </div>
     </div>
   </section>
