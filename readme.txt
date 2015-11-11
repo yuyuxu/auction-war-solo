@@ -166,3 +166,7 @@ shouldn't user.log be outside of user model
  *  - ResetInterface (reset css, html controllers)
  *  - ResetTurn (reset in game variables)
  */
+
+- about game
+right now i'm using mvc framework for the game front end, the models are embedded in the intializers
+all the initializers are managers

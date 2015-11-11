@@ -1,40 +1,32 @@
-// This module is the game manager
-// manager the game state/flow, game players
-var ModuleGame = {
+// This module is the game manager for 2 player game,
+// it manages the game state/flow, game players
+var ManagerGame = {
+  // player information
   player_id: '',
   opponent_id: '',
   player_game_name: '',
   opponent_game_name: '',
 
+  // game status
   is_your_turn: false,
   game_finished: false,
   has_opponent_accepted_offer: false,
 
   Init: function() {
-    // setup scene & item
-    ModuleGameRendering.SetupScene();
-    this.LoadItems();
+    // init scene
+    ManagerScene.Init();
 
-    // setup game communication
-    this.player_id = $('#player-id').val();
-    var static_page = false;
-    if (!static_page) ModuleGameEventSocket.Init();
+    // setup game controller
     ModuleGameController.Init();
 
-    // initial game
-    this.FlowMatchMaking();
+    // setup game players
+    ModuleGameListener.Init();
+
+    // start game flow
+    FlowMatchMaking();
 
     // redraw
-    ModuleGameRendering.Redraw();
-  },
-
-  LoadItems: function() {
-    ModuleGameRendering.SetupItem(ModuleGameItems.CreateItem(0));
-    ModuleGameRendering.SetupItem(ModuleGameItems.CreateItem(1));
-    ModuleGameRendering.SetupItem(ModuleGameItems.CreateItem(1));
-    ModuleGameRendering.SetupItem(ModuleGameItems.CreateItem(2));
-    ModuleGameRendering.SetupItem(ModuleGameItems.CreateItem(2));
-    ModuleGameRendering.SetupItem(ModuleGameItems.CreateItem(2));
+    ManagerScene.Redraw();
   },
 
   ResetTurn: function() {
@@ -58,8 +50,6 @@ var ModuleGame = {
       player_id: this.player_id,
     };
 
-    // Debug
-    var r = confirm('Opponent Found...');
     PageTitleNotification.Off();
     ModuleGameEventSocket.Trigger('from-client:loaded-game', params);
     ModuleGameRendering.StartTimer(-1, ModuleGameRendering.HandlerLabelAnimation, ['Yes you are ready! Just wait for your opponent to get ready ']);
@@ -72,25 +62,14 @@ var ModuleGame = {
   },
 
   FlowStartTurn: function(message) {
-    // Debug
-    var r = confirm('Your Turn is Ready...');
     PageTitleNotification.On('Your Turn...');
     ClientLog(ModuleGame.player_id + ' ' + 'FlowStartTurn');
+
     this.is_your_turn = true;
     ModuleGameController.ResetInterface();
     ModuleGameRendering.EnableCompInGame('game');
     ModuleGameRendering.StartTimer(-1, ModuleGameRendering.HandlerLabelAnimation, ['Your turn ']);
     ModuleGameRendering.Display('game-message', message);
-
-    // testing framework
-    if (this.is_testing) {
-      if (this.testing_turn_count >= TestNoTurns)
-        ModuleGameController.MediatorActions('accept', []);
-      else {
-        ModuleGameController.MediatorActions('submit', [[2, 2, 2, 2, 2, 2], 'Suck it!']);
-        this.testing_turn_count = this.testing_turn_count + 1;
-      }
-    }
   },
 
   FlowUpdateTurn: function(items) {
@@ -100,16 +79,11 @@ var ModuleGame = {
   FlowFinishGame: function() {
     // Debug
     var r = confirm('Game Finished...');
-    ModuleGameController.ShowDiv('#nextstagediv', true);
-    ModuleGameController.ShowDiv('#submitdiv', false);
+    ModuleGameController.ShowDiv('#next-stage-div', true);
+    ModuleGameController.ShowDiv('#submit-div', false);
     ModuleGameRendering.Display('game-state', 'Game Finished!');
     this.game_finished = true;
     var submit_data = ModuleGameController.action_history;
     $('#submit-data').val(submit_data);
-
-    // testing framework
-    if (this.is_testing) {
-      $('#nextstage').trigger('click');
-    }
   }
 };
