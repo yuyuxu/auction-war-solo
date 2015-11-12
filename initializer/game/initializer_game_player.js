@@ -22,7 +22,8 @@ var ManagerPlayer = {
       } else if (this.player_type == TypeScripted) {
         // simulate one step
         this.indicate_finish = true;
-        this.FinishTurn(ManagerSceneItem.curr_items, 'Hello World!');
+        this.FinishTurn(ManagerSceneItem.ExportItemLocations('reverse'),
+                        'Hello World!');
       } else {
         InitializerUtility.Log('Player StartTurn: player type not supported ' +
                                this.player_type);

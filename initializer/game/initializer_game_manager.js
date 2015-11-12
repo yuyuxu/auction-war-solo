@@ -35,7 +35,7 @@ var ManagerGame = {
   FlowMatchMaking: function() {
     if (this.game_type == HumanVsScripted) {
       ManagerScene.EnableComponentInGame('none');
-      var wait_time = Math.random() * 10;
+      var wait_time = Math.random() * RandomWaitingTime;
       InitializerUtility.Log('FlowMatchMaking: game start in ' +
                              wait_time + ' seconds (' +
                              this.game_type + ')');
@@ -56,7 +56,7 @@ var ManagerGame = {
     if (ManagerGame.game_type == HumanVsScripted) {
       PageTitleNotification.On('Opponent Found ...');
       ManagerScene.EnableComponentInGame('none');
-      var wait_time = Math.random() * 10;
+      var wait_time = Math.random() * RandomWaitingTime;
       InitializerUtility.Log('FlowLoadGame: game start in ' +
                              wait_time + ' seconds (' +
                              ManagerGame.game_type + ')');
@@ -74,8 +74,12 @@ var ManagerGame = {
 
   // lost of binding
   FlowStep: function(params) {
+    // validation
+    if (ManagerGame.is_game_finished) {
+      InitializerUtility.Log('FlowStep error: game is already finished');
+    }
     if (params.length != 2) {
-      InitializerUtility.Log('FLowRunTurn error: params size has to be 2, ' +
+      InitializerUtility.Log('FlowStep error: params size has to be 2, ' +
                              '[items, game page message]');
       return;
     }
@@ -87,12 +91,11 @@ var ManagerGame = {
       ManagerGame.whose_turn = (ManagerGame.whose_turn + 1) %
                                ManagerPlayer.players.length;
     }
-
     InitializerUtility.Log('FlowStep: whose_turn ' + ManagerGame.whose_turn);
 
     // update items
     if (params[0] != null) {
-      ManagerScene.MoveItems(params[1], 'reverse');
+      ManagerScene.MoveItems(params[0], 'reverse');
     }
 
     // update page notice, game page, scene component and animation
@@ -119,12 +122,16 @@ var ManagerGame = {
   },
 
   FlowFinishGame: function() {
+    InitializerUtility.Log('FlowFinishGame game finished ');
     this.is_game_finished = true;
 
     PageTitleNotification.On('Game Finished ...');
-    ManagerController.ShowDiv('#next-stage-div', true);
-    ManagerController.ShowDiv('#submit-div', false);
+    ManagerScene.EnableComponentInGame('none');
+
+    GamePageHelper.Reset();
     GamePageHelper.DisplayMessage('game-state', 'Game Finished!');
+    GamePageHelper.DisplayDiv('#next-stage-div', true);
+    GamePageHelper.DisplayDiv('#curr-stage-div', false);
 
     var submit_data = ManagerController.action_history;
     $('#submit-data').val(submit_data);

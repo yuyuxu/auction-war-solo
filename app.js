@@ -30,7 +30,7 @@ app.use(require('./routes/controller_questionnaire'));
 app.use(require('./routes/controller_introduction'));
 app.use(require('./routes/controller_quiz'));
 app.use(require('./routes/controller_game'));
-// app.use(require('./routes/controller_finish'));
+app.use(require('./routes/controller_finish'));
 
 // mount function that catches 404 and forward it to error handler
 app.use(function(req, res, next) {

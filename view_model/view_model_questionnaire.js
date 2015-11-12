@@ -36,8 +36,8 @@ var VModelQuestionnaire = {
   },
 
   Description: function(data) {
-    this.description_image = "";
-    this.description_text = "";
+    this.description_image = '';
+    this.description_text = '';
     if (data.length > 1) {
       this.description_image = data[1];
     }

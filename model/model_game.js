@@ -18,7 +18,7 @@ function Game (game_id, array_user_ids) {
 }
 
 Game.prototype.Init = function () {
-	for (var i = 0; i < this.users.length; i++)	
+	for (var i = 0; i < this.users.length; i++)
 		this.users_status.push('');
 }
 
@@ -98,18 +98,18 @@ Game.prototype.Submit = function (data) {
 	var next_user_id = this.GetOtherUserId(data['player_id']);
 	if (next_user_id == '')	LoggerModel.error('Game submit err: next_user_id %s is not valid. ' + next_user_id);
 
-	data['time'] = Utility.GetTimeHMS();
+	data['time'] = Utility.GetFullTime();
 	this.game_history.push(JSON.stringify(data));
 
 	var action = data['action_type'];
 	if (action == 'accept') {
-		LoggerModel.info('Set game status to accept. ' + data['player_id']);		
+		LoggerModel.info('Set game status to accept. ' + data['player_id']);
 		this.SetStatus(data['player_id'], 'accept');
 	}
 	else {
 		this.SetStatus(data['player_id'], 'game');
 	}
-	
+
 	if (this.GetSameStatus() == 'accept') {
 		var this_game = this;
 		var user_ids = this.users;
@@ -130,7 +130,7 @@ Game.prototype.Submit = function (data) {
 			}
 		});
 	}
-	else {	
+	else {
 		params = {
 			player_id : next_user_id,
 			action_type: data['action_type'],

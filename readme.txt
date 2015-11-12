@@ -196,7 +196,9 @@ callback order
       ManagerScene.ResetTimer();
       finish_cb(finish_params);
     }
-
+submit item location is always reversed, update is default (alwayas export locations)
+submit-div and accept div can very well be merged into one div
+difference between display:none and visibilily hidden
 
 - font
 except sections with questions and study: george (default)
@@ -204,3 +206,15 @@ others should all use "font-family: Lato"
 
 - circular reference json... ?
 http://makandracards.com/makandra/28847-dealing-with-typeerror-converting-circular-structure-to-json-on-javascript
+
+-test
+inside controller_login
+  // res.render('view_game.ejs', {user_id: 'dummy',
+  //                              player_role: 'type-0'});
+
+- uncomment
+pages checking is answer complete
+set log on both end to false
+
+- todo
+still have to refine log to make it easier for post processing

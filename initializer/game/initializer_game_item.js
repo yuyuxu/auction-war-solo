@@ -29,17 +29,17 @@ var ManagerSceneItem = {
   },
 
   // other item related logic
-  // copy items
-  ExportItems: function() {
-    var copied = {};
+  ExportItemLocations: function(type) {
+    var item_locations = {};
     for (var k in this.curr_items) {
-      copied[k] = [];
+      item_locations[k] = [];
       var item_array = this.curr_items[k];
       for (var i = 0; i < item_array.length; ++i) {
-        copied.push(item_array[i]);
+        item_locations[k][i] = item_array[i].export_location(type);
       }
     }
-    return copied;
+
+    return item_locations;
   },
 
   AreItemsSplit: function() {

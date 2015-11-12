@@ -12,7 +12,7 @@ const SimulationFPS = 30;
 const EffectSelectScale = 1.1;
 const EffectMoveSpeed = 100;
 const EffectDefaultWait = 50;
-const EffectDefaultTransition = 50;
+const EffectDefaultTransition = 0;
 const EffectDefaultTransparency = 0.5;
 const EffectNoDots = 15;
 
@@ -38,3 +38,7 @@ const HumanVsSocket = 1;
 
 // game starting player
 const StartPlayer = TypeScripted;
+
+// scripted player related
+// note: time unit is second
+const RandomWaitingTime = 1;

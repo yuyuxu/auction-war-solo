@@ -7,6 +7,7 @@
 
   On: function(notification, interval_speed) {
     var _this = this;
+    _this.Off();
     _this.interval = setInterval(function() {
        document.title = (_this.original_title == document.title) ?
                         notification : _this.original_title;
@@ -23,25 +24,23 @@ var GamePageHelper = {
   Reset: function() {
     if (ManagerPlayer.PlayersFinished()) {
       $('#accept').text('Accept Offer & Finish Game');
-      $('#accept-comment1').css('visibility', 'hidden');
-      $('#accept-comment2').css('visibility', 'visible');
+      $('#accept-comment1').css('display', 'none');
+      $('#accept-comment2').css('display', 'inline');
     } else {
       $('#accept').text('Accept Offer');
-      $('#accept-comment1').css('visibility', 'visible');
-      $('#accept-comment2').css('visibility', 'hidden');
+      $('#accept-comment1').css('display', 'inline');
+      $('#accept-comment2').css('display', 'none');
     }
 
     $('#submit-error').text('');
     $('#game-message').text('');
   },
 
-  EnableDiv: function(name, flag) {
+  DisplayDiv: function(name, flag) {
     if (flag) {
-      $(name).fadeTo(EffectDefaultTransition, 1);
-      $(name).css('pointer-events', 'auto');
+      $(name).css('display', 'inline');
     } else {
-      $(name).fadeTo(EffectDefaultTransition, 0.3);
-      $(name).css('pointer-events', 'none');
+      $(name).css('display', 'none');
     }
   },
 
@@ -81,6 +80,11 @@ var ManagerController = {
     });
 
     $('#accept').click(function() {
+      if (ManagerPlayer.PlayersFinished()) {
+        ManagerGame.FlowFinishGame();
+        return;
+      }
+
       // clean up current turn
       ManagerController.Log('accept', []);
       ManagerController.ResetVariables();
@@ -89,8 +93,9 @@ var ManagerController = {
       var current_player = ManagerGame.GetCurrentPlayer();
       if (current_player != null) {
         current_player.indicate_finish = true;
-        current_player.FinishTurn(ManagerSceneItem.curr_items,
-                                  ManagerController.curr_turn_statement);
+        current_player.FinishTurn(
+          ManagerSceneItem.ExportItemLocations('reverse'),
+          ManagerController.curr_turn_statement);
       }
     });
 
@@ -98,7 +103,7 @@ var ManagerController = {
       // clean up current turn
       var item_moved = ManagerSceneItem.BackupLocation();
       if (item_moved || ManagerController.curr_turn_statement != '') {
-        var item_information_str = ManagerSceneItem.ExportItemsInformation();
+        var item_information_str = ManagerSceneItem.ExportItemLocations();
         ManagerController.Log('submit',
                               [item_information_str,
                                ManagerController.curr_turn_statement]);
@@ -111,11 +116,13 @@ var ManagerController = {
       ManagerController.ResetVariables();
 
       // call player finish turn
+      InitializerUtility.Log('submit turn: ' + ManagerGame.whose_turn);
       var current_player = ManagerGame.GetCurrentPlayer();
       if (current_player != null) {
         current_player.indicate_finish = false;
-        current_player.FinishTurn(ManagerSceneItem.curr_items,
-                                  ManagerController.curr_turn_statement);
+        current_player.FinishTurn(
+          ManagerSceneItem.ExportItemLocations('reverse'),
+          ManagerController.curr_turn_statement);
       }
     });
 
@@ -179,7 +186,7 @@ var ManagerController = {
   Log: function(action, param) {
     ManagerController.curr_turn_action['player_id'] = ManagerGame.player_id;
     ManagerController.curr_turn_action['time'] =
-      InitializerUtility.GetTimeHMS();
+      InitializerUtility.GetFullTime();
     ManagerController.curr_turn_action['action'] = action;
     ManagerController.curr_turn_action['params'] = param;
     var action_str = JSON.stringify(ManagerController.curr_turn_action);
@@ -205,6 +212,8 @@ $(document).ready(function() {
 
   // leaving page, submit data
   $('#next-stage').click(function() {
+    $('submit-data').val(
+      JSON.stringify(ManagerSceneItem.ExportItemsInformation));
     $('#next-stage').closest('form').submit();
   });
 });

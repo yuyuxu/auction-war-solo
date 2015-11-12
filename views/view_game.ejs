@@ -114,26 +114,26 @@
       <div class="col-md-4" align="center"></div>
       <div class="col-md-5" align="center">
         <h4 style="margin-bottom: 5px; margin-top: 10px">
-          <p style="color: black; font-size: 100%; font-weight: bold; font-family: Lato; margin-bottom: 0px"><u>Game State</u></p>
+          <p style="color: black; font-size: 100%; font-weight: bold; font-family: Lato; margin-bottom: 0px">- Game State -</p>
         </h4>
         <p id="game-state" style="color: blue; font-size: 110%; font-weight: bold; margin-top: 0px; margin-bottom: 0px"></p>
         <hr style="margin: 1px; padding: 0px" />
         <p id="game-message" style="color: chocolate; font-size: 110%; font-weight: bold; margin-top: 0px; margin-bottom: 5px"></p>
       </div>
     </div>
-    <div class="row" style="margin-top: 20px">
+    <div id="curr-stage-div" class="row" style="margin-top: 20px">
       <div class="col-md-4 col-md-offset-1" style="visibility: hidden">
         <textarea disabled rows="5" style="width: 100%; line-height: 1.4; border: 0px inset black; background-color: white; resize: none; color: black;" id="logger">Welcome to auction war! - Logger</textarea>
         <!-- hidden variable -->
         <label id="player-role" style="visibility: hidden"><%=player_role%></label>
       </div>
-      <div class="col-md-2 col-md-offset-2">
-        <div id="accept-div" style="visibility: visible" align="left">
+      <div class="col-md-2 col-md-offset-2" style="display: inline">
+        <div id="accept-div" style="visibility: visible;" align="left">
           <button id="accept" type="button" class="btn btn-danger btn-block" style="width: 100%">Accept Offer</button>
-          <p id="accept-comment1" style="font-size:100%; font-weight: bold; margin-left: 10px; margin-top: 5px; visibility: visible" align="left">
+          <p id="accept-comment1" style="font-size:100%; font-weight: bold; margin-top: 5px; display: inline" align="left">
           If you select this action, your turn will finish.
           </p>
-          <p id="accept-comment2" style="font-size:100%; font-weight: bold; margin-left: 10px; margin-top: 5px; visibility: hidden" align="left">
+          <p id="accept-comment2" style="font-size:100%; font-weight: bold; margin-top: 5px; display: none" align="left">
           If both of you accept the offer, game will finish.
           </p>
         </div>
@@ -145,7 +145,7 @@
         </div>
       </div>
     </div>
-    <div class="row" id="next-stage-div" style="visibility: hidden" style="margin-top: 10px">
+    <div class="row" id="next-stage-div" style="display: none" style="margin-top: 10px">
       <div class="col-md-4 col-md-offset-4">
         <form action="finish" method="post">
           <button id="next-stage" class="btn btn-danger" style="width: 100%; margin-top: 20px">Click Here to Get Your Reward Code

@@ -87,14 +87,6 @@ const SVOInstrument = [
      "receive, in this case, (50, 60, 40) points for option (A, B, C) " +
      "respectively. The second row (Other gets) represents number of points " +
      "that others will get, in this case (50, 30, 0) for option (A, B, C). "],
-   // ["In the following example, the first row (You get) represents " +
-   //  "the number of points that you will receive while the second row " +
-   //  "(Other gets) represents the number of points that the other person " +
-   //  "will receive. If you chose A, you would receive 50 points and " +
-   //  "the other person would receive 50 points. If you chose B, you would " +
-   //  "receive 60 points and the other person would receive 30 points. And if " +
-   //  "you chose C, you would receive 40 points and the other person would " +
-   //  "receive 0 point.", "./images/SVOExample.png"],
    ["Please keep in mind that there are no right or wrong answers, " +
     "choose the option that you find most attractive. Also, remember that " +
     "the points are valuable, the more you get, the better for you. " +

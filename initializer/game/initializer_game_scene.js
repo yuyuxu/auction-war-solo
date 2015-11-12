@@ -204,16 +204,19 @@ var ManagerScene = {
   },
 
   // move current items given target items
-  MoveItems: function(items, type) {
-    if (items == null) {
-      InitializerUtility.Log('MoveItems error: target items are invalid');
+  MoveItems: function(target_item_locations, type) {
+    InitializerUtility.Log('MoveItems: ' +
+                           JSON.stringify(target_item_locations));
+    if (target_item_locations == null) {
+      InitializerUtility.Log('MoveItems error: target_item_locations ' +
+                             'are invalid');
       return;
     }
 
     for (var k in ManagerSceneItem.curr_items) {
       var item_array = ManagerSceneItem.curr_items[k];
-      var item_array_target = items[k];
-      if (item_array.length != item_array_target.length) {
+      var target_locations = target_item_locations[k];
+      if (item_array.length != target_locations.length) {
         InitializerUtility.Log('MoveItems warning: item lists size not same');
         continue;
       }
@@ -221,9 +224,9 @@ var ManagerScene = {
       for (var i = 0; i < item_array.length; ++i) {
         if (type == 'reverse') {
           this.MoveItem(item_array[i],
-                        LayoutNoGridY - item_array_target[i] - 1);
+                        LayoutNoGridY - target_locations[i] - 1);
         } else {
-          this.MoveItem(item_array[i], item_array_target[i]);
+          this.MoveItem(item_array[i], target_locations[i]);
         }
       }
     }
@@ -258,7 +261,8 @@ var ManagerScene = {
 
   // scene component effect
   SetComponentEffect: function(component, type, input_value, curr_value) {
-    if (curr_value != null && curr_value == input_value) {
+    if (curr_value == input_value) {
+      InitializerUtility.Log('SetComponentEffect: input value == curr value');
       return;
     }
 
@@ -273,19 +277,18 @@ var ManagerScene = {
 
   // transparent - 1: no , 0: yes
   EnableComponentInGame: function(type) {
+    InitializerUtility.Log('EnableComponentInGame: type is ' + type);
     if (type == 'game') {
       this.SetComponentEffect(this.container_grid,
                               'alpha',
                               1,
                               this.container_grid.alpha);
-    } else if (type == 'none') {
+    } else {
       this.SetComponentEffect(this.container_grid,
                               'alpha',
                               EffectDefaultTransparency,
                               this.container_grid.alpha);
     }
-
-    this.stage.update();
   },
 
   // label

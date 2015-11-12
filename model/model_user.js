@@ -85,7 +85,7 @@ User.prototype.FinishedGame = function() {
 
 User.prototype.Log = function(type, data) {
   data['type'] = type;
-  data['time'] = timer.GetTimeHMS();
+  data['time'] = timer.GetFullTime();
   data_str = JSON.stringify(data);
   data_str += '\n';
 
