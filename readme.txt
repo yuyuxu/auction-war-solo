@@ -177,7 +177,30 @@ for remote, there's different type of players on server side
 ticker function is called currently 1 second each time
 merge in the human vs human game
 match making really should be outside on the other page
+maybe i should separate flow even more, in game manager, we have flowstep in which we should probably have GamePageHelper.Step(), ManagerScene.Step();
+	also the controls can be separated out more.. This is for sure needed
+callback order
+    // check whether duration has passed
+    // the order of resetting timer and finish_cb is strictly like this
+    // because finish_cb might have logic related to timer, putting it after
+    // reset timer would cancel those logics
+    if (ManagerScene.timer_duration > 0 &&
+        time_gone > ManagerScene.timer_duration) {
+      var finish_cb = null;
+      var finish_params = null;
+      if (ManagerScene.timer_finish_callback != null) {
+        finish_cb = ManagerScene.timer_finish_callback;
+        finish_params = ManagerScene.timer_finish_callback_params;
+      }
+
+      ManagerScene.ResetTimer();
+      finish_cb(finish_params);
+    }
+
 
 - font
 except sections with questions and study: george (default)
 others should all use "font-family: Lato"
+
+- circular reference json... ?
+http://makandracards.com/makandra/28847-dealing-with-typeerror-converting-circular-structure-to-json-on-javascript

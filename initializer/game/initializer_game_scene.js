@@ -49,7 +49,7 @@ var ManagerScene = {
     label_side_you.y = canvas.height - 20;
     label_side_you.textBaseline = 'bottom';
     label_side_you.textAlign = 'center';
-    label_side_you.alpha = 0.2;
+    label_side_you.alpha = 0.1;
 
     var label_side_opponent = new createjs.Text('Area: Opponent',
                                                 '40px Arial', '#000000');
@@ -57,7 +57,7 @@ var ManagerScene = {
     label_side_opponent.y = LayoutStatusBarY + 20;
     label_side_opponent.textBaseline = 'top';
     label_side_opponent.textAlign = 'center';
-    label_side_opponent.alpha = 0.2;
+    label_side_opponent.alpha = 0.1;
 
     var label_side_neutral = new createjs.Text('Area: Neutral',
                                                '40px Arial',
@@ -67,7 +67,7 @@ var ManagerScene = {
       (label_side_you.y + label_side_opponent.y) * 0.5 + 20;
     label_side_neutral.textBaseline = 'bottom';
     label_side_neutral.textAlign = 'center';
-    label_side_neutral.alpha = 0.2;
+    label_side_neutral.alpha = 0.1;
     this.stage.addChild(label_side_you);
     this.stage.addChild(label_side_opponent);
     this.stage.addChild(label_side_neutral);
@@ -144,9 +144,9 @@ var ManagerScene = {
       item.icon.y -= 0.5 * item_image.image.height;
       item.icon.width = item_image.image.width;
       item.icon.height = item_image.image.height;
-      hit_area.graphics.beginFill('#FFF').drawRect(0, 0,
-                                                   item_image.image.width,
-                                                   item_image.image.height);
+      hit_area.graphics.beginFill('#FFF').drawRect(-3, -3,
+                                                   item_image.image.width + 6,
+                                                   item_image.image.height + 6);
       hit_area.alpha = 0.01;
     }
     item.icon.addChild(item_image);
@@ -220,10 +220,10 @@ var ManagerScene = {
 
       for (var i = 0; i < item_array.length; ++i) {
         if (type == 'reverse') {
-          MoveItem(item_array[i],
-                   LayoutNoGridY - item_array_target[i] - 1);
+          this.MoveItem(item_array[i],
+                        LayoutNoGridY - item_array_target[i] - 1);
         } else {
-          MoveItem(item_array[i], item_array_target[i]);
+          this.MoveItem(item_array[i], item_array_target[i]);
         }
       }
     }
@@ -245,8 +245,8 @@ var ManagerScene = {
 
     // move
     var current_y = item.icon.y;
-    var target_y = GetLocationY(item.curr_location) -
-                   GetCenterOffset(item)[1];
+    var target_y = this.GetLocationY(item.curr_location) -
+                   this.GetCenterOffset(item)[1];
     var duration = EffectMoveSpeed *
                    Math.abs(target_y - current_y) /
                    this.grid_height;
@@ -329,6 +329,9 @@ var ManagerScene = {
     this.timer_tick_callback_params = tick_params;
     this.timer_finish_callback = finish_cb;
     this.timer_finish_callback_params = finish_params;
+    InitializerUtility.Log('StartTimer: second ' + this.timer_start + ' ' +
+                           this.timer_duration + ' ' +
+                           this.timer_tick_callback_params);
   },
 
   ResetTimer: function() {
@@ -349,15 +352,25 @@ var ManagerScene = {
     if (ManagerScene.timer_start < 0) {
       return;
     }
+
+    var time_gone = t / 1000.0 - ManagerScene.timer_start;
+    var seconds_gone = Math.ceil(time_gone);
+
     // check whether duration has passed
-    var seconds_gone = Math.ceil((t - ManagerScene.timer_start) / 1000.0);
+    // the order of resetting timer and finish_cb is strictly like this
+    // because finish_cb might have logic related to timer, putting it after
+    // reset timer would cancel those logics
     if (ManagerScene.timer_duration > 0 &&
-        seconds_gone >= ManagerScene.timer_duration) {
+        time_gone > ManagerScene.timer_duration) {
+      var finish_cb = null;
+      var finish_params = null;
       if (ManagerScene.timer_finish_callback != null) {
-        ManagerScene.timer_finish_callback(
-          ManagerScene.timer_finish_callback_params);
+        finish_cb = ManagerScene.timer_finish_callback;
+        finish_params = ManagerScene.timer_finish_callback_params;
       }
+
       ManagerScene.ResetTimer();
+      finish_cb(finish_params);
     }
     // check if customized ticking should happen
     if (ManagerScene.timer_prev_seconds < 0) {
@@ -375,13 +388,12 @@ var ManagerScene = {
     if (params == null || params.length != 1) {
       return;
     }
-
+    var display_message = params[0];
     var num_dots = seconds_gone % EffectNoDots;
     for (var i = 0; i < num_dots; ++i) {
       display_message += '.';
     }
-
-    GamePageHelper.DisplayMessage('game-state', params[0]);
+    GamePageHelper.DisplayMessage('game-state', display_message);
   },
 
   // game keyboard

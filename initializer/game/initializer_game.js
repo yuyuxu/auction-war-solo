@@ -53,7 +53,7 @@ var GamePageHelper = {
     }
   },
 
-  DisplayMessage: function(message, type) {
+  DisplayMessage: function(type, message) {
     if (ManagerGame.is_game_finished) {
       return;
     }
@@ -122,7 +122,7 @@ var ManagerController = {
     // user actions on the questions and statements
     $('#s3, #s4, #s5, #s6, #s7').click(function() {
       ManagerController.curr_turn_statement = $(this).text();
-      $('#selected-statement').css('color', 'green');
+      $('#selected-statement').css('color', 'blue');
       $('#selected-statement').text('You selected: ' +
                                     ManagerController.curr_turn_statement);
     });
@@ -141,7 +141,7 @@ var ManagerController = {
       }
 
       ManagerController.curr_turn_statement += select + ' ?';
-      $('#selected-statement').css('color', 'green');
+      $('#selected-statement').css('color', 'blue');
       $('#selected-statement').text('You selected: ' +
                                     ManagerController.curr_turn_statement);
     });
@@ -170,7 +170,7 @@ var ManagerController = {
       }
 
       ManagerController.curr_turn_statement += select + ' ' + attitude;
-      $('#selected-statement').css('color', 'green');
+      $('#selected-statement').css('color', 'blue');
       $('#selected-statement').text('You selected: ' +
                                     ManagerController.curr_turn_statement);
     });

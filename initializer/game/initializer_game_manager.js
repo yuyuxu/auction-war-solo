@@ -28,19 +28,20 @@ var ManagerGame = {
       return null;
     }
 
-    return ManagerPlayer[this.whose_turn];
+    return ManagerPlayer.players[this.whose_turn];
   },
 
+  // lost of binding
   FlowMatchMaking: function() {
     if (this.game_type == HumanVsScripted) {
       ManagerScene.EnableComponentInGame('none');
-      var matching_time = Math.random() * 60;
+      var wait_time = Math.random() * 10;
       InitializerUtility.Log('FlowMatchMaking: game start in ' +
-                             matching_time + ' seconds (' +
+                             wait_time + ' seconds (' +
                              this.game_type + ')');
       ManagerScene.StartTimer(
-        matching_time,
-        ManagerScene.HandlerGameStateMessage,
+        wait_time,
+        ManagerScene.HandlerTickerGameStateMessage,
         ['Please wait while we are finding an opponent for you '],
         this.FlowLoadGame,
         null);
@@ -50,28 +51,32 @@ var ManagerGame = {
     }
   },
 
-  // lost in binding
+  // lost of binding
   FlowLoadGame: function() {
     if (ManagerGame.game_type == HumanVsScripted) {
       PageTitleNotification.On('Opponent Found ...');
       ManagerScene.EnableComponentInGame('none');
+      var wait_time = Math.random() * 10;
+      InitializerUtility.Log('FlowLoadGame: game start in ' +
+                             wait_time + ' seconds (' +
+                             ManagerGame.game_type + ')');
       ManagerScene.StartTimer(
-        Math.random() * 15,
-        ManagerScene.HandlerGameStateMessage,
-        ['Yes you are ready! Just wait for your opponent to get ready '],
+        wait_time,
+        ManagerScene.HandlerTickerGameStateMessage,
+        ['You are ready. Please wait for your opponent to get ready '],
         ManagerGame.FlowStep,
-        ['Your Turn ...', '', null]);
+        [null, '']);
     } else {
       InitializerUtility.Log('FlowLoadGame game type not supported ' +
                              ManagerGame.game_type);
     }
   },
 
-  // lost in binding
+  // lost of binding
   FlowStep: function(params) {
     if (params.length != 2) {
       InitializerUtility.Log('FLowRunTurn error: params size has to be 2, ' +
-                             '[game page message, items]');
+                             '[items, game page message]');
       return;
     }
 
@@ -83,29 +88,30 @@ var ManagerGame = {
                                ManagerPlayer.players.length;
     }
 
+    InitializerUtility.Log('FlowStep: whose_turn ' + ManagerGame.whose_turn);
+
     // update items
-    ManagerScene.MoveItems(params[1], 'reverse');
+    if (params[0] != null) {
+      ManagerScene.MoveItems(params[1], 'reverse');
+    }
 
     // update page notice, game page, scene component and animation
     if (ManagerGame.GetCurrentPlayer().player_type == TypePlayer) {
       PageTitleNotification.On('Your Turn ...');
-      GamePageHelper.Reset();
-      GamePageHelper.DisplayMessage(params[0]);
+      ManagerScene.ResetTimer();
       ManagerScene.EnableComponentInGame('game');
-      ManagerScene.StartTimer(-1,
-                              ManagerScene.HandlerGameStateMessage,
-                              null,
-                              null,
-                              null);
+      GamePageHelper.Reset();
+      GamePageHelper.DisplayMessage('game-message', params[1]);
+      GamePageHelper.DisplayMessage('game-state', 'Your turn');
     } else {
       PageTitleNotification.On('Wait for Your Turn ...');
-      GamePageHelper.Reset();
       ManagerScene.EnableComponentInGame('none');
       ManagerScene.StartTimer(-1,
-                              ManagerScene.HandlerGameStateMessage,
+                              ManagerScene.HandlerTickerGameStateMessage,
                               ['Please wait for you turn '],
                               null,
                               null);
+      GamePageHelper.Reset();
     }
 
     // player logic
@@ -115,6 +121,7 @@ var ManagerGame = {
   FlowFinishGame: function() {
     this.is_game_finished = true;
 
+    PageTitleNotification.On('Game Finished ...');
     ManagerController.ShowDiv('#next-stage-div', true);
     ManagerController.ShowDiv('#submit-div', false);
     GamePageHelper.DisplayMessage('game-state', 'Game Finished!');

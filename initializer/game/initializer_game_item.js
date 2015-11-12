@@ -29,9 +29,17 @@ var ManagerSceneItem = {
   },
 
   // other item related logic
-  // export items into JSON string
-  ExportItemsInformation: function() {
-    return JSON.stringify(this.curr_items);
+  // copy items
+  ExportItems: function() {
+    var copied = {};
+    for (var k in this.curr_items) {
+      copied[k] = [];
+      var item_array = this.curr_items[k];
+      for (var i = 0; i < item_array.length; ++i) {
+        copied.push(item_array[i]);
+      }
+    }
+    return copied;
   },
 
   AreItemsSplit: function() {

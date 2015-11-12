@@ -45,7 +45,7 @@
       <div class="col-md-4 left-side col-xs-9" style="margin-right: 10px; margin-top: 10px">
         <h4 align="center" style="margin-top: 20px">
           <p style="font-weight: bold; font-family: Lato">
-            Make a statement or ask a question <br /> by selecting one from list below
+           <u>Make a statement or ask a question </u><br /> by selecting one from list below
           </p>
         </h4>
         <div class="list-group" style="border: solid 1px; cursor: pointer;">
@@ -102,7 +102,7 @@
       <div class="col-md-6 something col-xs-9" style="margin-left: 10px; margin-top: 10px">
         <h4 align="center" style="margin-top: 20px">
           <p style="font-weight: bold; font-family: Lato">
-            Make an offer<br /> by dragging the items on table to your side or opponent's side
+            <u>Make an offer</u><br /> by dragging the items on table to your side or opponent's side
           </p>
         </h4>
         <div align="left">
@@ -113,8 +113,12 @@
     <div class="row" align="left" style="margin-top: 15px; border-color: rgba(128, 128, 128, 0.5); background-color: white; border-style: groove; border-width: 1.5px">
       <div class="col-md-4" align="center"></div>
       <div class="col-md-5" align="center">
-        <p id="game-state" style="color: blue; font-size: 120%; font-weight: bold">Game State</p>
-        <p id="game-message" style="color: chocolate; font-size: 120%; font-weight: bold"></p>
+        <h4 style="margin-bottom: 5px; margin-top: 10px">
+          <p style="color: black; font-size: 100%; font-weight: bold; font-family: Lato; margin-bottom: 0px"><u>Game State</u></p>
+        </h4>
+        <p id="game-state" style="color: blue; font-size: 110%; font-weight: bold; margin-top: 0px; margin-bottom: 0px"></p>
+        <hr style="margin: 1px; padding: 0px" />
+        <p id="game-message" style="color: chocolate; font-size: 110%; font-weight: bold; margin-top: 0px; margin-bottom: 5px"></p>
       </div>
     </div>
     <div class="row" style="margin-top: 20px">
@@ -123,7 +127,7 @@
         <!-- hidden variable -->
         <label id="player-role" style="visibility: hidden"><%=player_role%></label>
       </div>
-      <div class="col-md-2 col-md-offset-1">
+      <div class="col-md-2 col-md-offset-2">
         <div id="accept-div" style="visibility: visible" align="left">
           <button id="accept" type="button" class="btn btn-danger btn-block" style="width: 100%">Accept Offer</button>
           <p id="accept-comment1" style="font-size:100%; font-weight: bold; margin-left: 10px; margin-top: 5px; visibility: visible" align="left">
@@ -161,9 +165,9 @@
   <script type="text/javascript" src="./javascripts/bootbox/bootbox.min.js"></script>
   <script type="text/javascript" src="./data_game.js"></script>
   <script type="text/javascript" src="./initializer_utility.js"></script>
+  <script type="text/javascript" src="./initializer_game_scene.js"></script>
   <script type="text/javascript" src="./initializer_game_manager.js"></script>
   <script type="text/javascript" src="./initializer_game_player.js"></script>
-  <script type="text/javascript" src="./initializer_game_scene.js"></script>
   <script type="text/javascript" src="./initializer_game_item.js"></script>
   <script type="text/javascript" src="./initializer_game.js"></script>
   <script type="text/javascript" src="./javascripts/createjs/events/Event.js"></script>
