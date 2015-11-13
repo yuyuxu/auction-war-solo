@@ -1,3 +1,21 @@
+=== How to use this?
+
+=== Overview of the system (file structure etc.)
+
+=== Formats and standards
+- #front end | scripts etc
+- server | request post data
+- server | request post data
+- utility | log
+- database | json format
+
+=== Todo Feature List
+
+=== Contacts
+
+
+
+
 Tech Notes:
 - Tried using node fiber for async, give assertion error.
 - For including other files, client models uses dynamic script loading; server models uses export method.
@@ -218,3 +236,28 @@ set log on both end to false
 
 - todo
 still have to refine log to make it easier for post processing
+
+- items
+how to communicate item locations ????? should use complete map
+should item icon be put inside here? needs double check
+
+- animation....
+
+  // scene component effect
+  SetComponentEffect: function(component, type, input_value, curr_value) {
+    InitializerUtility.Log('SetComponentEffect input_value: ' + input_value +
+                           ' curr_value: ' + curr_value + ' type: ' + type);
+
+    // // animation doesn't work if the ai comes back immediately
+    // if (type == 'alpha') {
+    //   createjs.Tween.get(component, {loop: false})
+    //     .wait(EffectDefaultWait)
+    //     .to({alpha: input_value}, EffectDefaultTransition)
+    // }
+    component.alpha = input_value;
+    this.stage.update();
+  },
+
+- misc
+really have to look into standards
+it's nice to write parameters into params so it's flexible, but documentation is important in this case

@@ -7,15 +7,6 @@ var ManagerSceneItem = {
     this.curr_location = LayoutSideNeutral;
     this.prev_location = LayoutSideNeutral;
     this.icon = null;
-
-    this.export_location = function(type) {
-      if (type == 'reverse') {
-        // export location in reversed order
-        return (LayoutNoGridY - this.curr_location - 1);
-      } else {
-        return this.curr_location;
-      }
-    };
   },
 
   // create item helper
@@ -29,13 +20,13 @@ var ManagerSceneItem = {
   },
 
   // other item related logic
-  ExportItemLocations: function(type) {
+  ExportItemLocations: function() {
     var item_locations = {};
     for (var k in this.curr_items) {
       item_locations[k] = [];
       var item_array = this.curr_items[k];
       for (var i = 0; i < item_array.length; ++i) {
-        item_locations[k][i] = item_array[i].export_location(type);
+        item_locations[k][i] = item_array[i].curr_location;
       }
     }
 

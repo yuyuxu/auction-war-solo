@@ -204,7 +204,28 @@ var ManagerScene = {
   },
 
   // move current items given target items
-  MoveItems: function(target_item_locations, type) {
+  MoveNeutralItems: function() {
+    var current_player = ManagerGame.GetCurrentPlayer();
+    InitializerUtility.Log('MoveNeutralItems: current player ' +
+                            JSON.stringify(current_player));
+
+    var target = LayoutNoGridY - current_player.player_side - 1;
+    InitializerUtility.Log('MoveNeutralItems: target ' + target);
+    for (var k in ManagerSceneItem.curr_items) {
+      var item_array = ManagerSceneItem.curr_items[k];
+      for (var i = 0; i < item_array.length; ++i) {
+        if (item_array[i].curr_location == LayoutSideNeutral) {
+          InitializerUtility.Log('MoveNeutralItems: item' +
+                                 k + ' ' + i);
+          this.MoveItem(item_array[i], target);
+        }
+      }
+    }
+
+    this.stage.update();
+  },
+
+  MoveItems: function(target_item_locations) {
     InitializerUtility.Log('MoveItems: ' +
                            JSON.stringify(target_item_locations));
     if (target_item_locations == null) {
@@ -222,12 +243,7 @@ var ManagerScene = {
       }
 
       for (var i = 0; i < item_array.length; ++i) {
-        if (type == 'reverse') {
-          this.MoveItem(item_array[i],
-                        LayoutNoGridY - target_locations[i] - 1);
-        } else {
-          this.MoveItem(item_array[i], target_locations[i]);
-        }
+        this.MoveItem(item_array[i], target_locations[i]);
       }
     }
   },
@@ -246,32 +262,34 @@ var ManagerScene = {
     item.prev_location = item.curr_location;
     item.curr_location = target;
 
-    // move
+    // where to move to
     var current_y = item.icon.y;
     var target_y = this.GetLocationY(item.curr_location) -
                    this.GetCenterOffset(item)[1];
+
+    // animation doesn't work if the ai comes back immediately
     var duration = EffectMoveSpeed *
                    Math.abs(target_y - current_y) /
                    this.grid_height;
     createjs.Tween.get(item.icon, {loop: false})
       .to({y: target_y}, duration)
+    // item.icon.y = target_y;
 
     this.stage.update();
   },
 
   // scene component effect
   SetComponentEffect: function(component, type, input_value, curr_value) {
-    if (curr_value == input_value) {
-      InitializerUtility.Log('SetComponentEffect: input value == curr value');
-      return;
-    }
+    InitializerUtility.Log('SetComponentEffect input_value: ' + input_value +
+                           ' curr_value: ' + curr_value + ' type: ' + type);
 
+    // // animation doesn't work if the ai comes back immediately
     if (type == 'alpha') {
       createjs.Tween.get(component, {loop: false})
         .wait(EffectDefaultWait)
         .to({alpha: input_value}, EffectDefaultTransition)
     }
-
+    // component.alpha = input_value;
     this.stage.update();
   },
 
@@ -443,5 +461,6 @@ var ManagerScene = {
     }
     data.icon.y = ManagerScene.GetLocationY(location) -
                   ManagerScene.GetCenterOffset(data)[1];
+    GamePageHelper.ShowDiv('#accept-div', false);
   },
 };

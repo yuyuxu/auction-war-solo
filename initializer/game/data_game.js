@@ -11,8 +11,8 @@ const SimulationFPS = 30;
 // note: speed unit is milliseconds
 const EffectSelectScale = 1.1;
 const EffectMoveSpeed = 100;
-const EffectDefaultWait = 50;
-const EffectDefaultTransition = 0;
+const EffectDefaultWait = 10;
+const EffectDefaultTransition = 10;
 const EffectDefaultTransparency = 0.5;
 const EffectNoDots = 15;
 
@@ -37,8 +37,35 @@ const HumanVsScripted = 0;
 const HumanVsSocket = 1;
 
 // game starting player
-const StartPlayer = TypeScripted;
+const StartPlayer = TypePlayer;
 
-// scripted player related
+// game scripted player related
 // note: time unit is second
-const RandomWaitingTime = 1;
+const RandomWaitingTime = 5;
+// value painting:1, lamp: 2, record: 4
+const ScriptConcession = [
+  // turn 1, value 12
+  {"0": [LayoutSidePlayer],
+   "1": [LayoutSidePlayer, LayoutSidePlayer],
+   "2": [LayoutSideOpponent, LayoutSideOpponent, LayoutSideOpponent]},
+  // turn 2, value 12
+  {"0": [LayoutSidePlayer],
+   "1": [LayoutSideOpponent, LayoutSideOpponent],
+   "2": [LayoutSideOpponent, LayoutSideOpponent, LayoutSidePlayer]},
+  // turn 3, value 11
+  {"0": [LayoutSideOpponent],
+   "1": [LayoutSidePlayer, LayoutSideOpponent],
+   "2": [LayoutSideOpponent, LayoutSideOpponent, LayoutSidePlayer]},
+  // turn 4, value 10
+  {"0": [LayoutSidePlayer],
+   "1": [LayoutSidePlayer, LayoutSideOpponent],
+   "2": [LayoutSideOpponent, LayoutSideOpponent, LayoutSidePlayer]},
+  // turn 5, value 9
+  {"0": [LayoutSideOpponent],
+   "1": [LayoutSideOpponent, LayoutSideOpponent],
+   "2": [LayoutSideOpponent, LayoutSidePlayer, LayoutSidePlayer]},
+  // turn 6, value 8
+  {"0": [LayoutSidePlayer],
+   "1": [LayoutSideOpponent, LayoutSideOpponent],
+   "2": [LayoutSideOpponent, LayoutSidePlayer, LayoutSidePlayer]},
+];

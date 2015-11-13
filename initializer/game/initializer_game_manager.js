@@ -95,7 +95,7 @@ var ManagerGame = {
 
     // update items
     if (params[0] != null) {
-      ManagerScene.MoveItems(params[0], 'reverse');
+      ManagerScene.MoveItems(params[0]);
     }
 
     // update page notice, game page, scene component and animation
@@ -123,7 +123,6 @@ var ManagerGame = {
 
   FlowFinishGame: function() {
     InitializerUtility.Log('FlowFinishGame game finished ');
-    this.is_game_finished = true;
 
     PageTitleNotification.On('Game Finished ...');
     ManagerScene.EnableComponentInGame('none');
@@ -135,5 +134,7 @@ var ManagerGame = {
 
     var submit_data = ManagerController.action_history;
     $('#submit-data').val(submit_data);
+
+    this.is_game_finished = true;
   },
 };

@@ -31,7 +31,7 @@ var GamePageHelper = {
       $('#accept-comment1').css('display', 'inline');
       $('#accept-comment2').css('display', 'none');
     }
-
+    this.ShowDiv('#accept-div', true);
     $('#submit-error').text('');
     $('#game-message').text('');
   },
@@ -94,16 +94,19 @@ var ManagerController = {
       if (current_player != null) {
         current_player.indicate_finish = true;
         current_player.FinishTurn(
-          ManagerSceneItem.ExportItemLocations('reverse'),
-          ManagerController.curr_turn_statement);
+          [ManagerSceneItem.ExportItemLocations(),
+           ManagerController.curr_turn_statement]);
       }
     });
 
     $('#submit').click(function() {
       // clean up current turn
+      GamePageHelper.ShowDiv('#accept-div', false);
+
       var item_moved = ManagerSceneItem.BackupLocation();
       if (item_moved || ManagerController.curr_turn_statement != '') {
         var item_information_str = ManagerSceneItem.ExportItemLocations();
+        ManagerScene.MoveNeutralItems();
         ManagerController.Log('submit',
                               [item_information_str,
                                ManagerController.curr_turn_statement]);
@@ -121,8 +124,8 @@ var ManagerController = {
       if (current_player != null) {
         current_player.indicate_finish = false;
         current_player.FinishTurn(
-          ManagerSceneItem.ExportItemLocations('reverse'),
-          ManagerController.curr_turn_statement);
+          [ManagerSceneItem.ExportItemLocations(),
+           ManagerController.curr_turn_statement]);
       }
     });
 
