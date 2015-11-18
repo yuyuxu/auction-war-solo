@@ -1,17 +1,17 @@
-## What is this project ?
+### What is this project ?
 This is a full web application for research purpose.
 It contains several measurements and a negotiation game.
 
 
-## How to use it ?
+### How to use it ?
 1. Install node js.
 2. Go to "root/src" folder and open node js command window.
 3. Type in "node app".
 
 
-## About the system
-### File Structure
-#### "src" folder
+### About the system
+#### File Structure
+##### "src" folder
 * data_access (back end): data access objects.
 * model (back end): models for the app.
 * routes (back end): controller logic.
@@ -26,8 +26,8 @@ It contains several measurements and a negotiation game.
   * constants (front end): constants for front end.
   * utility (front end): basic utility functions like get time and logging.
 
-### Some custom standards used in the app
-#### page loading / routing (front/back end)
+#### Some custom standards used in the app
+##### page loading / routing (front/back end)
 Http request form contents / page loading content from http request
   * user_id
   * from
@@ -38,7 +38,7 @@ Http request form contents / page loading content from http request
     * game_data
     * reward_code
 
-#### logging (front/back end)
+##### logging (front/back end)
 * General logging format
   "[function name] [type]: [log content]"
   type: "", "error/err", "warning"
@@ -48,12 +48,13 @@ Http request form contents / page loading content from http request
 * front end logging
 
 
-#### Font (front end)
+##### Font (front end)
 default: "george" for questions and study
 others: "font-family: Lato" for others
 
-#### database (back end)
+##### database (back end)
 * putItem
+    ```
     var param = {
       TableName: 'auction-war-solo-users',
       Item: {
@@ -65,8 +66,10 @@ others: "font-family: Lato" for others
         reward: {S: '*'}
       },
     }
+    ```
 
 * deleteItem
+    ```
     var param = {
       TableName: 'auction-war-solo-users',
       Key: {
@@ -75,8 +78,10 @@ others: "font-family: Lato" for others
         }
       },
     }
+    ```
 
 * getItem
+    ```
     var param = {
       TableName: 'auction-war-solo-users',
       Key: {
@@ -86,8 +91,10 @@ others: "font-family: Lato" for others
       },
       AttributesToGet: attributes,
     }
+    ```
 
 * updateItem
+    ```
     var param = {
       TableName: 'auction-war-solo-users',
       Key: {
@@ -97,9 +104,11 @@ others: "font-family: Lato" for others
       },
       AttributeUpdates: attribute_keys,
     }
+    ```
 
-## Todo feature list1
+### Todo feature list1
 - [ ] Look into how to extract data from database. Currently not very clean.
+      ```
       User.prototype.LoadData = function (data) {
         this.cache['questionnaire'] = data['Item']['questionnaire']['S'];
         this.cache['role'] = data['Item']['role']['S'];
@@ -107,6 +116,7 @@ others: "font-family: Lato" for others
         this.cache['game'] = data['Item']['game']['S'];
         this.cache['reward'] = data['Item']['reward']['S'];
       }
+      ```
 - [ ] Put user.log outside user model and into InitializerUtility.Log, add log
       to file function.
 - [ ] Start putting comment into the code.
@@ -116,10 +126,11 @@ others: "font-family: Lato" for others
 - [ ] Different browser support.
 - [ ] Add admin page as tools for the app with authentication (optional).
 - [ ] Looking into session cache for better performance (optional).
+- [ ] Integrating human vs human app.
 
 
-## Appendix
-### Notes
+### Appendix
+#### Notes
 * Form data is used to communicate between front end and back end.
   Restful API is not used since this web app is not a service.
 
