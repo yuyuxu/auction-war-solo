@@ -106,7 +106,7 @@ others: "font-family: Lato" for others
     }
     ```
 
-### Todo feature list1
+### Todo feature list
 - [ ] Look into how to extract data from database. Currently not very clean.
     ```
     User.prototype.LoadData = function (data) {
@@ -141,33 +141,33 @@ others: "font-family: Lato" for others
 ### Appendix
 #### Notes
 * Form data is used to communicate between front end and back end.
-  Restful API is not used since this web app is not a service.
+  - Restful API is not used since this web app is not a service.
 
 * AWS DynamoDB doesn't support emtpy string as input (11/18/2015).
 
 * Database cell all uses string which contains JSON objects.
-  Note that for some other databases, JSON objects don't have to be serialized
-  but directly passed.
+  - Note that for some other databases, JSON objects don't have to be
+    serialized but directly passed.
 
 * Understanding the web app architecture in great granuality.
-  Model: model for back end.
-  Control: routing.
-  View: abstract view that fits into MVC framework, can be furthur
-        divided into follow components.
-    View Model: view model for front end page.
-    Model: front end model, which sometimes is coupled with backend model
-           it can be either static model or not.
-    View: actually view
+  - Model: model for back end.
+  - Control: routing.
+  - View: abstract view that fits into MVC framework, can be furthur
+          divided into follow components.
+    - View Model: view model for front end page.
+    - Model: front end model, which sometimes is coupled with backend model
+             it can be either static model or not.
+    - View: actually view
 
 * Game page color coding.
-    Black: just plain text
-    Blue: game state
-    Red: important / warning / error
-    Green: correct
+  - Black: just plain text
+  - Blue: game state
+  - Red: important / warning / error
+  - Green: correct
 
 * Javascript binding lost can happen pretty frequently, in which case,
   "this" cannot be used.
-    self vs this: http://alistapart.com/article/getoutbindingsituations
+  - self vs this: http://alistapart.com/article/getoutbindingsituations
 
 * Code style currently follows c++ style guide instead of javascript
   style guide.
@@ -176,8 +176,8 @@ others: "font-family: Lato" for others
   http://stackoverflow.com/questions/10869276/how-to-deal-with-cyclic-dependencies-in-node-js
 
 * Knockout js:
-  ko table cannot be bundled on tr (11/18/2015).
-  View model is able to emit event.
+  - ko table cannot be bundled on tr (11/18/2015).
+  - View model is able to emit event.
 
 * Circular reference json:
   http://makandracards.com/makandra/28847-dealing-with-typeerror-converting-circular-structure-to-json-on-javascript
