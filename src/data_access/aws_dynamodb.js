@@ -1,21 +1,13 @@
 var AWS = require('aws-sdk');
 var logger = require('../utility/logger');
 
+/** Model (static) representing amazon AWS database. */
 ModuleAWSDB = {
+
+  /** AWS database object. */
   ddb: null,
 
-  // helper functions for the database
-  MakeId: function() {
-    var text = '';
-    var dictionary = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var id_length = 10;
-
-    for (var i = 0; i < id_length; i++) {
-      text += dictionary.charAt(Math.floor(Math.random() * dictionary.length));
-    }
-    return text;
-  },
-
+  /** Default callback function. */
   DefaultCallback: function(err, data) {
     if (err) {
       logger.Log('DefaultCallback Error: ' + data);
