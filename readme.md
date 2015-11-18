@@ -108,24 +108,33 @@ others: "font-family: Lato" for others
 
 ### Todo feature list1
 - [ ] Look into how to extract data from database. Currently not very clean.
-      ```
-      User.prototype.LoadData = function (data) {
-        this.cache['questionnaire'] = data['Item']['questionnaire']['S'];
-        this.cache['role'] = data['Item']['role']['S'];
-        this.cache['quiz'] = data['Item']['quiz']['S'];
-        this.cache['game'] = data['Item']['game']['S'];
-        this.cache['reward'] = data['Item']['reward']['S'];
-      }
-      ```
+    ```
+    User.prototype.LoadData = function (data) {
+      this.cache['questionnaire'] = data['Item']['questionnaire']['S'];
+      this.cache['role'] = data['Item']['role']['S'];
+      this.cache['quiz'] = data['Item']['quiz']['S'];
+      this.cache['game'] = data['Item']['game']['S'];
+      this.cache['reward'] = data['Item']['reward']['S'];
+    }
+    ```
+
 - [ ] Put user.log outside user model and into InitializerUtility.Log, add log
       to file function.
+
 - [ ] Start putting comment into the code.
+
 - [ ] Gradually writing front end pages into ko view model instead of jquery.
+
 - [ ] Add unit test.
+
 - [ ] Add integration test.
+
 - [ ] Different browser support.
+
 - [ ] Add admin page as tools for the app with authentication (optional).
+
 - [ ] Looking into session cache for better performance (optional).
+
 - [ ] Integrating human vs human app.
 
 
