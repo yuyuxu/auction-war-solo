@@ -39,13 +39,13 @@ Http request form contents / page loading content from http request
     * reward_code
 
 ##### logging (front/back end)
-* General logging format
-  "[function name] [type]: [log content]"
-  type: "", "error/err", "warning"
+General logging format
+  - "[function name] [type]: [log content]"
+  - type: "", "error/err", "warning"
 
-* Back end logging
+Back end logging
 
-* front end logging
+front end logging
 
 
 ##### Font (front end)
@@ -167,9 +167,9 @@ others: "font-family: Lato" for others
 
 * Javascript binding lost can happen pretty frequently, in which case,
   "this" cannot be used.
-  - self vs this: http://alistapart.com/article/getoutbindingsituations
+  - "self" vs "this": http://alistapart.com/article/getoutbindingsituations
 
-* Code style currently follows c++ style guide instead of javascript
+* Code style currently follows C++ style guide instead of javascript
   style guide.
 
 * Javascript circular dependencies:
@@ -179,7 +179,6 @@ others: "font-family: Lato" for others
   - ko table cannot be bundled on tr (11/18/2015).
   - View model is able to emit event.
 
-* Circular reference json:
-  http://makandracards.com/makandra/28847-dealing-with-typeerror-converting-circular-structure-to-json-on-javascript
+* Circular reference json: http://makandracards.com/makandra/28847-dealing-with-typeerror-converting-circular-structure-to-json-on-javascript
 
 * Game scene animation is cancelled for code simplicity.
