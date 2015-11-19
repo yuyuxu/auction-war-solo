@@ -1,6 +1,8 @@
 ### What is this project ?
 This is a full web application for research purpose.
+
 It contains several measurements and a negotiation game.
+
 The game currently is human vs. a scripted opponent.
 
 ### How to use it ?
@@ -139,11 +141,12 @@ Front end logging:
       this.cache['reward'] = data['Item']['reward']['S'];
     }
     ```
-  *Solution: * Moved this piece of logic into database.
+  *Solution:* Moved this piece of logic into database.
 
 - [x] Put user.log outside user model and into logger.Log, add log
       to file function.
-  *Solution: * Moved this piece of logic into logger.
+
+  *Solution:* Moved this piece of logic into logger.
 
 - [ ] Finish initializer_questionnaire/IsAnswerCompleted.
 
