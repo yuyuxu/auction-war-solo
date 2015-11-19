@@ -1,10 +1,33 @@
-// This module is the game manager for 2 player game,
-// it manages the game state/flow, game players
+/** Model (static, front end, game) that manages the game,
+ * this is the main entrance from the initializer.
+ * Specifically, it manage the game flow and players.
+ * So far assume there's only one game in current game page.
+ */
 var ManagerGame = {
+  /** Current game type.
+   * @type {integer}
+   */
   game_type: -1,
+
+  /** Whose turn is it.
+   * @type {integer}
+   */
   whose_turn: -1,
+
+  /** List of players.
+   * @type {Array.<Player>}
+   */
+  players: [],
+
+  /** Game flow indicator, whether if it's finished.
+   * @type {boolean}
+   */
   is_game_finished: false,
 
+  /** API. Init current game.
+   * @param {string} player_id - the id of current player.
+   * @param {integer} type - type of the game, it's a constant.
+   */
   Init: function(player_id, type) {
     // set game type
     this.game_type = type;
@@ -13,7 +36,7 @@ var ManagerGame = {
     ManagerScene.Init();
 
     // setup game controller
-    ManagerController.Init();
+    ControllerGamePage.Init();
 
     // setup plyaer according to game type
     ManagerPlayer.Init(player_id);
@@ -22,9 +45,19 @@ var ManagerGame = {
     this.FlowMatchMaking();
   },
 
+  CreatePlayer: function(player_id) {
+    if (ManagerGame.game_type == HumanVsScripted) {
+      this.CreatePlayer(player_id, TypePlayer, LayoutSidePlayer);
+      this.CreatePlayer('scripted', TypeScripted, LayoutSideOpponent);
+    } else {
+      Logger.Log('ManagerPlayer init: game type not supported ' +
+                             ManagerGame.game_type);
+    }
+  },
+
   GetCurrentPlayer: function() {
     if (this.whose_turn < 0) {
-      InitializerUtility.Log('GetCurrentPlayer whose_turn has not init yet.');
+      Logger.Log('GetCurrentPlayer whose_turn has not init yet.');
       return null;
     }
 
@@ -36,7 +69,7 @@ var ManagerGame = {
     if (this.game_type == HumanVsScripted) {
       ManagerScene.EnableComponentInGame('none');
       var wait_time = Math.random() * RandomWaitingTime;
-      InitializerUtility.Log('FlowMatchMaking: game start in ' +
+      Logger.Log('FlowMatchMaking: game start in ' +
                              wait_time + ' seconds (' +
                              this.game_type + ')');
       ManagerScene.StartTimer(
@@ -46,7 +79,7 @@ var ManagerGame = {
         this.FlowLoadGame,
         null);
     } else {
-      InitializerUtility.Log('FlowMatchMaking game type not yet supported ' +
+      Logger.Log('FlowMatchMaking game type not yet supported ' +
                              this.game_type);
     }
   },
@@ -57,7 +90,7 @@ var ManagerGame = {
       PageTitleNotification.On('Opponent Found ...');
       ManagerScene.EnableComponentInGame('none');
       var wait_time = Math.random() * RandomWaitingTime;
-      InitializerUtility.Log('FlowLoadGame: game start in ' +
+      Logger.Log('FlowLoadGame: game start in ' +
                              wait_time + ' seconds (' +
                              ManagerGame.game_type + ')');
       ManagerScene.StartTimer(
@@ -67,7 +100,7 @@ var ManagerGame = {
         ManagerGame.FlowStep,
         [null, '']);
     } else {
-      InitializerUtility.Log('FlowLoadGame game type not supported ' +
+      Logger.Log('FlowLoadGame game type not supported ' +
                              ManagerGame.game_type);
     }
   },
@@ -76,10 +109,10 @@ var ManagerGame = {
   FlowStep: function(params) {
     // validation
     if (ManagerGame.is_game_finished) {
-      InitializerUtility.Log('FlowStep error: game is already finished');
+      Logger.Log('FlowStep error: game is already finished');
     }
     if (params.length != 2) {
-      InitializerUtility.Log('FlowStep error: params size has to be 2, ' +
+      Logger.Log('FlowStep error: params size has to be 2, ' +
                              '[items, game page message]');
       return;
     }
@@ -91,7 +124,7 @@ var ManagerGame = {
       ManagerGame.whose_turn = (ManagerGame.whose_turn + 1) %
                                ManagerPlayer.players.length;
     }
-    InitializerUtility.Log('FlowStep: whose_turn ' + ManagerGame.whose_turn);
+    Logger.Log('FlowStep: whose_turn ' + ManagerGame.whose_turn);
 
     // update items
     if (params[0] != null) {
@@ -103,9 +136,9 @@ var ManagerGame = {
       PageTitleNotification.On('Your Turn ...');
       ManagerScene.ResetTimer();
       ManagerScene.EnableComponentInGame('game');
-      GamePageHelper.Reset();
-      GamePageHelper.DisplayMessage('game-message', params[1]);
-      GamePageHelper.DisplayMessage('game-state', 'Your turn');
+      ViewGamePage.Reset();
+      ViewGamePage.DisplayMessage('game-message', params[1]);
+      ViewGamePage.DisplayMessage('game-state', 'Your turn');
     } else {
       PageTitleNotification.On('Wait for Your Turn ...');
       ManagerScene.EnableComponentInGame('none');
@@ -114,7 +147,7 @@ var ManagerGame = {
                               ['Please wait for you turn '],
                               null,
                               null);
-      GamePageHelper.Reset();
+      ViewGamePage.Reset();
     }
 
     // player logic
@@ -122,17 +155,17 @@ var ManagerGame = {
   },
 
   FlowFinishGame: function() {
-    InitializerUtility.Log('FlowFinishGame game finished ');
+    Logger.Log('FlowFinishGame game finished ');
 
     PageTitleNotification.On('Game Finished ...');
     ManagerScene.EnableComponentInGame('none');
 
-    GamePageHelper.Reset();
-    GamePageHelper.DisplayMessage('game-state', 'Game Finished!');
-    GamePageHelper.DisplayDiv('#next-stage-div', true);
-    GamePageHelper.DisplayDiv('#curr-stage-div', false);
+    ViewGamePage.Reset();
+    ViewGamePage.DisplayMessage('game-state', 'Game Finished!');
+    ViewGamePage.DisplayDiv('#next-stage-div', true);
+    ViewGamePage.DisplayDiv('#curr-stage-div', false);
 
-    var submit_data = ManagerController.action_history;
+    var submit_data = ControllerGamePage.action_history;
     $('#submit-data').val(submit_data);
 
     this.is_game_finished = true;

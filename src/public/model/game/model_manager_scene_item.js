@@ -1,17 +1,15 @@
-// This module deals with game items
+/** Model (static, front end, game) for front end items management. */
 var ManagerSceneItem = {
+  /** Map that store all the items
+   * @type {Object<integer, SceneItem>}
+   */
   curr_items: {},
 
-  Item: function(type) {
-    this.category = type;
-    this.curr_location = LayoutSideNeutral;
-    this.prev_location = LayoutSideNeutral;
-    this.icon = null;
-  },
-
-  // create item helper
+  /** API. Create item object.
+   * @param {string} type - type of the item.
+   */
   CreateItem: function(type) {
-    var item = new this.Item(type);
+    var item = new SceneItem(type);
     if (this.curr_items[type] == null) {
       this.curr_items[type] = [];
     }
@@ -19,7 +17,7 @@ var ManagerSceneItem = {
     return item;
   },
 
-  // other item related logic
+  /** API. Expert item locations. */
   ExportItemLocations: function() {
     var item_locations = {};
     for (var k in this.curr_items) {
@@ -33,6 +31,7 @@ var ManagerSceneItem = {
     return item_locations;
   },
 
+  /** API. Check if all the items are split. */
   AreItemsSplit: function() {
     for (var k in this.curr_items) {
       var item_array = this.curr_items[k];
@@ -46,6 +45,7 @@ var ManagerSceneItem = {
     return true;
   },
 
+  /** API. Check if all the items are all one sided. */
   AreItemsOneSided: function() {
     var side = -1;
     for (var k in this.curr_items) {
@@ -64,7 +64,7 @@ var ManagerSceneItem = {
     return side;
   },
 
-  // compare if two item list are the same
+  /** API. Compare two item array. */
   CompareItems: function(item_array1, item_array2) {
     if (item_array1 == null || item_array2 == null) {
       return false;
@@ -80,7 +80,7 @@ var ManagerSceneItem = {
     return true;
   },
 
-  // reset current items location to previous items location
+  /** API. Reset item locations to previous locations. */
   ResetLocation: function() {
     for (var k in this.curr_items) {
       for (var i = 0; i < this.curr_items[k].length; i++) {
@@ -90,7 +90,7 @@ var ManagerSceneItem = {
     }
   },
 
-  // backup current items location to previous items location
+  /** API. Backup item locations into previous locations. */
   BackupLocation: function() {
     var item_has_moved = false;
     for (var k in this.curr_items) {

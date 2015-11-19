@@ -10,10 +10,7 @@ const SimulationFPS = 30;
 
 // game scene effects
 // note: speed unit is milliseconds
-const EffectSelectScale = 1.1;
-const EffectMoveSpeed = 100;
 const EffectDefaultWait = 10;
-const EffectDefaultTransition = 10;
 const EffectDefaultTransparency = 0.5;
 const EffectNoDots = 15;
 

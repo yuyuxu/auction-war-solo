@@ -23,6 +23,7 @@ app.use(express.static(path.join(__dirname, 'public/assets')));
 app.use(express.static(path.join(__dirname, 'public/initializer')));
 app.use(express.static(path.join(__dirname, 'public/view_model')));
 app.use(express.static(path.join(__dirname, 'public/model')));
+app.use(express.static(path.join(__dirname, 'public/model/game')));
 app.use(express.static(path.join(__dirname, 'public/utility')));
 app.use(express.static(path.join(__dirname, 'public/constants')));
 

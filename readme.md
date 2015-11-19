@@ -40,7 +40,7 @@ Http request form contents / page loading content from http request:
     * game_data
     * reward_code
 
-###### logging (front/back end)
+###### Logging (front/back end)
 General logging format:
 - '[function name] [type]: [log content]'
 - type: '', 'error/err', 'warning'
@@ -55,6 +55,10 @@ Front end logging:
 - Log user general page behavior.
 - Log user in game page behavior.
 
+###### Game page
+- Item locations format: {category: [list of integer]}
+- Actions
+- Views
 
 ###### Font (front end)
 - Default: 'George' for questions and study.
@@ -152,6 +156,8 @@ Front end logging:
 
 - [ ] Uncomment initializer_quiz/IsSubmitDataValid.
 
+- [ ] Look into game timer, not very accurate.
+
 - [ ] Start putting comments into the code wherever it's necessary and
       export them use jsdoc.
 
@@ -221,3 +227,8 @@ Front end logging:
 * Circular reference json: http://makandracards.com/makandra/28847-dealing-with-typeerror-converting-circular-structure-to-json-on-javascript
 
 * Game scene animation is cancelled for code simplicity.
+
+* Game page has a lot of components inside. There's two way to communicate
+  between these components. One is to use subscription pattern, but it can be
+  messy and hard to know what's happending underneath. The other one is to use
+  mediator pattern, which is what's used here.

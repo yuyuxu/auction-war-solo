@@ -1,28 +1,26 @@
-// scene manager
+/** Model (static, front end, game) for front end game scene management. */
 var ManagerScene = {
+  // stage
   stage: null,
 
+  // canvas
   canvas_default_width: -1,
   canvas_default_height: -1,
 
+  // container
   container_grid: null,
   container_status: null,
   container_popup: null,
 
+  // label
   label_turn: null,
   label_popup: null,
 
+  // grid
   grid_width: -1,
   grid_height: -1,
 
-  timer_start: -1,
-  timer_duration: -1,
-  timer_prev_seconds: -1,
-  timer_tick_callback: null,
-  timer_tick_callback_params: null,
-  timer_finish_callback: null,
-  timer_finish_callback_params: null,
-
+  /** API. Init scene. */
   Init: function() {
     // setup scene
     var canvas = document.getElementById('game-canvas');
@@ -33,7 +31,7 @@ var ManagerScene = {
     this.canvas_default_height = canvas.height;
     $(window).resize(this.UpdateCanvas);
 
-    // easeljs setting
+    // easeljs stage setting
     createjs.Touch.enable(this.stage);
     this.stage.enableMouseOver(10);
     this.stage.mouseMoveOutside = true;
@@ -42,6 +40,8 @@ var ManagerScene = {
     // background
     var image_background = new createjs.Bitmap(ImageBackground);
     this.stage.addChild(image_background);
+
+    // label
     var label_side_you = new createjs.Text('Area: You',
                                            '40px Arial',
                                            '#000000');
@@ -72,6 +72,7 @@ var ManagerScene = {
     this.stage.addChild(label_side_opponent);
     this.stage.addChild(label_side_neutral);
 
+    // stage interaction
     stage_hit_area = new createjs.Shape();
     stage_hit_area.graphics.beginFill('#FFF').drawRect(0, 0,
                                                        canvas.width,
@@ -118,12 +119,12 @@ var ManagerScene = {
     this.stage.addChild(this.container_popup);
 
     // items
-    this.SetupItem(ManagerSceneItem.CreateItem(0));
-    this.SetupItem(ManagerSceneItem.CreateItem(1));
-    this.SetupItem(ManagerSceneItem.CreateItem(1));
-    this.SetupItem(ManagerSceneItem.CreateItem(2));
-    this.SetupItem(ManagerSceneItem.CreateItem(2));
-    this.SetupItem(ManagerSceneItem.CreateItem(2));
+    this.SetupItem(this.CreateItem(0));
+    this.SetupItem(this.CreateItem(1));
+    this.SetupItem(this.CreateItem(1));
+    this.SetupItem(this.CreateItem(2));
+    this.SetupItem(this.CreateItem(2));
+    this.SetupItem(this.CreateItem(2));
 
     // simulation loop
     createjs.Ticker.setFPS(SimulationFPS);
@@ -133,25 +134,27 @@ var ManagerScene = {
     this.Redraw();
   },
 
-  // type - 0: item1 1: item2 2: item3;
-  // transparent - 1: no , 0: yes
+  /** Setup scene item.
+   * type - 0: item1 1: item2 2: item3
+   * transparent - 1: no , 0: yes
+   */
   SetupItem: function(item) {
-    item.icon = new createjs.Container();
+    item.render['icon'] = new createjs.Container();
     var item_image = new createjs.Bitmap(ImageItems[item.category]);
     var hit_area = new createjs.Shape();
     item_image.image.onload = function() {
-      item.icon.x -= 0.5 * item_image.image.width;
-      item.icon.y -= 0.5 * item_image.image.height;
-      item.icon.width = item_image.image.width;
-      item.icon.height = item_image.image.height;
+      item.render['icon'].x -= 0.5 * item_image.image.width;
+      item.render['icon'].y -= 0.5 * item_image.image.height;
+      item.render['icon'].width = item_image.image.width;
+      item.render['icon'].height = item_image.image.height;
       hit_area.graphics.beginFill('#FFF').drawRect(-3, -3,
                                                    item_image.image.width + 6,
                                                    item_image.image.height + 6);
       hit_area.alpha = 0.01;
     }
-    item.icon.addChild(item_image);
-    item.icon.addChild(hit_area);
-    this.container_grid.addChild(item.icon);
+    item.render['icon'].addChild(item_image);
+    item.render['icon'].addChild(hit_area);
+    this.container_grid.addChild(item.render['icon']);
     hit_area.on('mousedown', this.MousedownIcon, null, false, item);
     hit_area.on('mouseover', this.MouseOverIcon, null, false, item);
     hit_area.on('pressup', this.ReleaseIcon, null, false, item);
@@ -160,6 +163,7 @@ var ManagerScene = {
     this.stage.update();
   },
 
+  /** Redraw game scene. */
   Redraw: function() {
     this.UpdateCanvas();
     this.UpdateGridSize();
@@ -168,8 +172,7 @@ var ManagerScene = {
     this.stage.update();
   },
 
-  // update scene components
-  // lost of binding
+  /** Update canvas size. */
   UpdateCanvas: function() {
     var jCanvas = $('#game-canvas');
     var jParent = $(jCanvas).parent();
@@ -182,41 +185,42 @@ var ManagerScene = {
                            ManagerScene.canvas_default_height);
   },
 
+  /** Update grid size. */
   UpdateGridSize: function() {
     this.grid_width = this.container_grid.width / LayoutNoGridX;
     this.grid_height = this.container_grid.height / LayoutNoGridY;
   },
 
+  /** Update item locations. */
   UpdateItemLocation: function() {
     for (var k in ManagerSceneItem.curr_items) {
       var num_items = ManagerSceneItem.curr_items[k].length;
       var item_array = ManagerSceneItem.curr_items[k];
       for (var i = 0; i < num_items; i++) {
         var item = item_array[i];
-        item.icon.x = this.GetLocationX(k, i, num_items) -
-                      this.GetCenterOffset(item)[0];
-        item.icon.y = this.GetLocationY(item_array[i].curr_location) -
-                      this.GetCenterOffset(item)[1];
+        item.render['icon'].x = this.GetLocationX(k, i, num_items) -
+                                this.GetCenterOffset(item)[0];
+        item.render['icon'].y = this.GetLocationY(item_array[i].curr_location) -
+                                this.GetCenterOffset(item)[1];
       }
     }
 
     this.stage.update();
   },
 
-  // move current items given target items
+  /** Move items logic. */
+  /** API. Move neutral items to corresponding locations. */
   MoveNeutralItems: function() {
     var current_player = ManagerGame.GetCurrentPlayer();
-    InitializerUtility.Log('MoveNeutralItems: current player ' +
-                            JSON.stringify(current_player));
-
+    Logger.Log('MoveNeutralItems: current player ' +
+               JSON.stringify(current_player));
     var target = LayoutNoGridY - current_player.player_side - 1;
-    InitializerUtility.Log('MoveNeutralItems: target ' + target);
+    Logger.Log('MoveNeutralItems: target ' + target);
     for (var k in ManagerSceneItem.curr_items) {
       var item_array = ManagerSceneItem.curr_items[k];
       for (var i = 0; i < item_array.length; ++i) {
         if (item_array[i].curr_location == LayoutSideNeutral) {
-          InitializerUtility.Log('MoveNeutralItems: item' +
-                                 k + ' ' + i);
+          Logger.Log('MoveNeutralItems: item' + k + ' ' + i);
           this.MoveItem(item_array[i], target);
         }
       }
@@ -225,12 +229,11 @@ var ManagerScene = {
     this.stage.update();
   },
 
+  /** API. Move items to target locations. */
   MoveItems: function(target_item_locations) {
-    InitializerUtility.Log('MoveItems: ' +
-                           JSON.stringify(target_item_locations));
+    Logger.Log('MoveItems: ' + JSON.stringify(target_item_locations));
     if (target_item_locations == null) {
-      InitializerUtility.Log('MoveItems error: target_item_locations ' +
-                             'are invalid');
+      Logger.Log('MoveItems error: target_item_locations are invalid');
       return;
     }
 
@@ -238,7 +241,7 @@ var ManagerScene = {
       var item_array = ManagerSceneItem.curr_items[k];
       var target_locations = target_item_locations[k];
       if (item_array.length != target_locations.length) {
-        InitializerUtility.Log('MoveItems warning: item lists size not same');
+        Logger.Log('MoveItems warning: item lists size not same');
         continue;
       }
 
@@ -248,10 +251,10 @@ var ManagerScene = {
     }
   },
 
-  // move one item
+  /** API. Move one item to target location. */
   MoveItem: function(item, target) {
     if (target < 0 || target > (LayoutNoGridY - 1)) {
-      InitializerUtility.Log(target + ' is not a valid location');
+      Logger.Log(target + ' is not a valid location');
       return;
     }
     if (target == item.curr_location) {
@@ -263,40 +266,33 @@ var ManagerScene = {
     item.curr_location = target;
 
     // where to move to
-    var current_y = item.icon.y;
+    var current_y = item.render['icon'].y;
     var target_y = this.GetLocationY(item.curr_location) -
                    this.GetCenterOffset(item)[1];
-
-    // animation doesn't work if the ai comes back immediately
-    var duration = EffectMoveSpeed *
-                   Math.abs(target_y - current_y) /
-                   this.grid_height;
-    createjs.Tween.get(item.icon, {loop: false})
-      .to({y: target_y}, duration)
-    // item.icon.y = target_y;
+    item.render['icon'].y = target_y;
 
     this.stage.update();
   },
 
-  // scene component effect
+  /** Component logic. */
+  /** API. Set component effect. */
   SetComponentEffect: function(component, type, input_value, curr_value) {
-    InitializerUtility.Log('SetComponentEffect input_value: ' + input_value +
-                           ' curr_value: ' + curr_value + ' type: ' + type);
+    Logger.Log('SetComponentEffect input_value: ' + input_value +
+               ' curr_value: ' + curr_value + ' type: ' + type);
 
-    // // animation doesn't work if the ai comes back immediately
     if (type == 'alpha') {
-      createjs.Tween.get(component, {loop: false})
-        .wait(EffectDefaultWait)
-        .to({alpha: input_value}, EffectDefaultTransition)
+      component.alpha = input_value;
     }
-    // component.alpha = input_value;
+
     this.stage.update();
   },
 
-  // transparent - 1: no , 0: yes
-  EnableComponentInGame: function(type) {
-    InitializerUtility.Log('EnableComponentInGame: type is ' + type);
-    if (type == 'game') {
+  /** API. Enable in game component.
+   * @param {boolean} type - enable or not.
+   */
+  EnableComponentInGame: function(flag) {
+    Logger.Log('EnableComponentInGame: type is ' + type);
+    if (flag) {
       this.SetComponentEffect(this.container_grid,
                               'alpha',
                               1,
@@ -309,100 +305,41 @@ var ManagerScene = {
     }
   },
 
-  // label
-  SetBackgroundLabel: function(index, label) {
-    stage.getChildAt(index).text = label;
-  },
 
-  // render helper functions
+  /** Helper functions. */
+  /** API. Helper function that get location x of item.
+   * @param {integer} x - which column.
+   * @param {integer} which_item - which item.
+   * @param {integer} num_items - total number of items.
+   */
   GetLocationX: function(x, which_item, num_items) {
     var location_x = this.grid_width * (which_item + 1) / (num_items + 1) +
                      this.grid_width * x;
     return location_x;
   },
 
+  /** API. Helper function that get location y of item.
+   * @param {integer} y - which row.
+   */
   GetLocationY: function(y) {
     return this.grid_height * (y + 0.5);
   },
 
-  // return [x, y] offset
+  /** API. Helper function that get center offset of an item.
+   * @param {Object} item - the item object.
+   */
   GetCenterOffset: function(item) {
     var offset = [];
-    offset.push(item.icon.getChildAt(0).image.width * 0.5);
-    offset.push(item.icon.getChildAt(0).image.height * 0.5);
+    offset.push(item.render['icon'].getChildAt(0).image.width * 0.5);
+    offset.push(item.render['icon'].getChildAt(0).image.height * 0.5);
     return offset;
   },
 
-  // timer related functions
-  // lost of binding
+  /** Timer logic. */
+  /** Timer callback function. */
   Tick: function(evt) {
     ManagerScene.stage.update(evt);
     ManagerScene.HandleTimer(createjs.Ticker.getTime());
-  },
-
-  StartTimer: function(duration,
-                       tick_cb, tick_params,
-                       finish_cb, finish_params) {
-    this.timer_start = createjs.Ticker.getTime() / 1000;
-    this.timer_duration = duration;
-    this.timer_prev_seconds = -1;
-    this.timer_tick_callback = tick_cb;
-    this.timer_tick_callback_params = tick_params;
-    this.timer_finish_callback = finish_cb;
-    this.timer_finish_callback_params = finish_params;
-    InitializerUtility.Log('StartTimer: second ' + this.timer_start + ' ' +
-                           this.timer_duration + ' ' +
-                           this.timer_tick_callback_params);
-  },
-
-  ResetTimer: function() {
-    this.timer_start = -1;
-    this.timer_duration = -1;
-    this.timer_prev_seconds = -1;
-    this.timer_tick_callback = null;
-    this.timer_tick_callback_params = null;
-    this.timer_finish_callback = null;
-    this.timer_finish_callback_params = null;
-  },
-
-  // tick cb is called once per second
-  // finish cb is called after duration is passed
-  // lost of binding
-  HandleTimer: function(t) {
-    // check if timer has started
-    if (ManagerScene.timer_start < 0) {
-      return;
-    }
-
-    var time_gone = t / 1000.0 - ManagerScene.timer_start;
-    var seconds_gone = Math.ceil(time_gone);
-
-    // check whether duration has passed
-    // the order of resetting timer and finish_cb is strictly like this
-    // because finish_cb might have logic related to timer, putting it after
-    // reset timer would cancel those logics
-    if (ManagerScene.timer_duration > 0 &&
-        time_gone > ManagerScene.timer_duration) {
-      var finish_cb = null;
-      var finish_params = null;
-      if (ManagerScene.timer_finish_callback != null) {
-        finish_cb = ManagerScene.timer_finish_callback;
-        finish_params = ManagerScene.timer_finish_callback_params;
-      }
-
-      ManagerScene.ResetTimer();
-      finish_cb(finish_params);
-    }
-    // check if customized ticking should happen
-    if (ManagerScene.timer_prev_seconds < 0) {
-      ManagerScene.timer_prev_seconds = seconds_gone;
-    } else if (ManagerScene.timer_prev_seconds != seconds_gone) {
-      ManagerScene.timer_prev_seconds = seconds_gone;
-      if (ManagerScene.timer_tick_callback != null) {
-        ManagerScene.timer_tick_callback(seconds_gone,
-          ManagerScene.timer_tick_callback_params);
-      }
-    }
   },
 
   HandlerTickerGameStateMessage: function(seconds_gone, params) {
@@ -414,10 +351,10 @@ var ManagerScene = {
     for (var i = 0; i < num_dots; ++i) {
       display_message += '.';
     }
-    GamePageHelper.DisplayMessage('game-state', display_message);
+    ViewGamePage.DisplayMessage('game-state', display_message);
   },
 
-  // game keyboard
+  /** Keyboard & mouse logic. */
   HandleKeyDown: function(e) {
     if (!e) {
       var e = window.event;
@@ -426,41 +363,40 @@ var ManagerScene = {
 
   MousedownIcon: function(evt, data) {
     var o = evt.target;
-    data.offset = {x: o.x - evt.stageX, y: data.icon.y - evt.stageY};
+    data.offset = {x: o.x - evt.stageX, y: data.render['icon'].y - evt.stageY};
   },
 
   MouseOverIcon: function(evt, data) {
     var o = evt.target;
     o.cursor = 'pointer';
-    data.offset = {x: o.x - evt.stageX, y: data.icon.y - evt.stageY};
+    data.offset = {x: o.x - evt.stageX, y: data.render['icon'].y - evt.stageY};
   },
 
-
-  // lost of binding
   PressmoveIcon: function(evt, data) {
+    // lost of binding
     var o = evt.target;
     o.cursor = 'pointer';
-    data.icon.y = evt.stageY + data.offset.y;
-    if (data.icon.y < 0) {
-      data.icon.y = 0;
-    } else if (data.icon.y > (ManagerScene.grid_height * LayoutNoGridY)) {
-      data.icon.y = ManagerScene.grid_height * LayoutNoGridY;
+    data.render['icon'].y = evt.stageY + data.offset.y;
+    if (data.render['icon'].y < 0) {
+      data.render['icon'].y = 0;
+    } else if (data.render['icon'].y > (ManagerScene.grid_height * LayoutNoGridY)) {
+      data.render['icon'].y = ManagerScene.grid_height * LayoutNoGridY;
     }
   },
 
-  // lost of binding
   ReleaseIcon: function(evt, data) {
+    // lost of binding
     var o = evt.target;
     o.cursor = 'arrow';
-    var location = Math.floor(data.icon.y / ManagerScene.grid_height);
+    var location = Math.floor(data.render['icon'].y / ManagerScene.grid_height);
     if (location >= LayoutNoGridY) {
       location = LayoutNoGridY - 1;
     }
     if (data.curr_location != location) {
       data.curr_location = location;
     }
-    data.icon.y = ManagerScene.GetLocationY(location) -
+    data.render['icon'].y = ManagerScene.GetLocationY(location) -
                   ManagerScene.GetCenterOffset(data)[1];
-    GamePageHelper.ShowDiv('#accept-div', false);
+    ViewGamePage.ShowDiv('#accept-div', false);
   },
 };
