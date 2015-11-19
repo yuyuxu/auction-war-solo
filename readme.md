@@ -13,7 +13,7 @@ The game currently is human vs. a scripted opponent.
 
 ### About the system
 #### File Structure
-##### 'src' folder
+###### 'src' folder
 * data_access (back end): data access objects.
 * model (back end): models for the app.
 * routes (back end): controller logic.
@@ -29,7 +29,7 @@ The game currently is human vs. a scripted opponent.
   * utility (front end): basic utility functions like get time and logging.
 
 #### Some custom standards used in the app
-##### page loading / routing (front/back end)
+###### page loading / routing (front/back end)
 Http request form contents / page loading content from http request:
   * from
   * user_id
@@ -40,7 +40,7 @@ Http request form contents / page loading content from http request:
     * game_data
     * reward_code
 
-##### logging (front/back end)
+###### logging (front/back end)
 General logging format:
 - '[function name] [type]: [log content]'
 - type: '', 'error/err', 'warning'
@@ -56,11 +56,11 @@ Front end logging:
 - Log user in game page behavior.
 
 
-##### Font (front end)
+###### Font (front end)
 - Default: 'George' for questions and study.
 - Others: 'font-family: Lato' for others.
 
-##### Aws dynamo database (back end)
+###### Aws dynamo database (back end)
 * Table 'auction-war-solo-users', all cell type are string.
   * user_id: key
   * questionnaire: attribute
