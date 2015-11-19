@@ -1,9 +1,8 @@
-/** Model (static, front end, game) that manages the game,
+/** Model (static, front end, game) that contains the game,
  * this is the main entrance from the initializer.
  * Specifically, it manage the game flow and players.
- * So far assume there's only one game in current game page.
  */
-var ManagerGame = {
+var Game = {
   /** Current game type.
    * @type {integer}
    */

@@ -232,3 +232,6 @@ Front end logging:
   between these components. One is to use subscription pattern, but it can be
   messy and hard to know what's happending underneath. The other one is to use
   mediator pattern, which is what's used here.
+
+* Game models have some lazy spots. For example, there's no ManagerGame and
+  Game is a static model instead of object model. Will look into it if needed.
