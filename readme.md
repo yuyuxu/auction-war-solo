@@ -1,17 +1,17 @@
 ### What is this project ?
 This is a full web application for research purpose.
 It contains several measurements and a negotiation game.
-
+The game currently is human vs. a scripted opponent.
 
 ### How to use it ?
 1. Install node js.
-2. Go to "root/src" folder and open node js command window.
-3. Type in "node app".
+2. Go to 'root/src' folder and open node js command window.
+3. Type in 'node app'.
 
 
 ### About the system
 #### File Structure
-##### "src" folder
+##### 'src' folder
 * data_access (back end): data access objects.
 * model (back end): models for the app.
 * routes (back end): controller logic.
@@ -28,10 +28,10 @@ It contains several measurements and a negotiation game.
 
 #### Some custom standards used in the app
 ##### page loading / routing (front/back end)
-Http request form contents / page loading content from http request
-  * user_id
+Http request form contents / page loading content from http request:
   * from
-  * page specific data
+  * user_id
+  * page specific data, for example:
     * questionnaire_data
     * quiz_data
     * player_role
@@ -39,20 +39,42 @@ Http request form contents / page loading content from http request
     * reward_code
 
 ##### logging (front/back end)
-General logging format
-  - "[function name] [type]: [log content]"
-  - type: "", "error/err", "warning"
+General logging format:
+- '[function name] [type]: [log content]'
+- type: '', 'error/err', 'warning'
 
-Back end logging
+Back end logging:
+- Log routing behavior and general data flow in the back end.
+  - from: which page gets here.
+  - to: which page this routes is going.
+  - tip: what database/model is updated etc..
 
-front end logging
+Front end logging:
+- Log user general page behavior.
+- Log user in game page behavior.
 
 
 ##### Font (front end)
-default: "george" for questions and study
-others: "font-family: Lato" for others
+- Default: 'George' for questions and study.
+- Others: 'font-family: Lato' for others.
 
-##### database (back end)
+##### Aws dynamo database (back end)
+* Table 'auction-war-solo-users', all cell type are string.
+  * user_id: key
+  * questionnaire: attribute
+    * format:
+    ```
+    {
+      'study no.': {
+        'answer number': 'answer value';
+      }
+    }
+    ```
+  * role: attribute
+    * format: 'type-0', 'type-1' etc.
+  * game: attribute
+  * reward: attribute
+
 * putItem
     ```
     var param = {
@@ -107,7 +129,7 @@ others: "font-family: Lato" for others
     ```
 
 ### Todo feature list
-- [ ] Look into how to extract data from database. Currently not very clean.
+- [x] Look into how to extract data from database. Currently not very clean.
     ```
     User.prototype.LoadData = function (data) {
       this.cache['questionnaire'] = data['Item']['questionnaire']['S'];
@@ -117,11 +139,18 @@ others: "font-family: Lato" for others
       this.cache['reward'] = data['Item']['reward']['S'];
     }
     ```
+  *Solution: * Moved this piece of logic into database.
 
-- [ ] Put user.log outside user model and into InitializerUtility.Log, add log
+- [x] Put user.log outside user model and into logger.Log, add log
       to file function.
+  *Solution: * Moved this piece of logic into logger.
 
-- [ ] Start putting comment into the code.
+- [ ] Finish initializer_questionnaire/IsAnswerCompleted.
+
+- [ ] Uncomment initializer_quiz/IsSubmitDataValid.
+
+- [ ] Start putting comments into the code wherever it's necessary and
+      export them use jsdoc.
 
 - [ ] Gradually writing front end pages into ko view model instead of jquery.
 
@@ -136,6 +165,13 @@ others: "font-family: Lato" for others
 - [ ] Looking into session cache for better performance (optional).
 
 - [ ] Integrating human vs human app.
+
+- [ ] Developing human vs ai app.
+  - What's missing in this human vs scripted game technically are:
+    - Socket.
+    - Manager game and game model (to match with back end model).
+    - Table game in database.
+    - Table users missing type (ai, human) field.
 
 
 ### Appendix
@@ -166,8 +202,8 @@ others: "font-family: Lato" for others
   - Green: correct
 
 * Javascript binding lost can happen pretty frequently, in which case,
-  "this" cannot be used.
-  - "self" vs "this": http://alistapart.com/article/getoutbindingsituations
+  'this' cannot be used.
+  - 'self' vs 'this': http://alistapart.com/article/getoutbindingsituations
 
 * Code style currently follows C++ style guide instead of javascript
   style guide.
