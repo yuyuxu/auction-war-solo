@@ -19,10 +19,12 @@ app.use(body_parser.urlencoded({extended: true}));
 app.use(cookie_parser());
 
 // mount static assets and scripts
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'initializer')));
-app.use(express.static(path.join(__dirname, 'initializer/game')));
-app.use(express.static(path.join(__dirname, 'view_model')));
+app.use(express.static(path.join(__dirname, 'public/assets')));
+app.use(express.static(path.join(__dirname, 'public/initializer')));
+app.use(express.static(path.join(__dirname, 'public/view_model')));
+app.use(express.static(path.join(__dirname, 'public/model')));
+app.use(express.static(path.join(__dirname, 'public/utility')));
+app.use(express.static(path.join(__dirname, 'public/constants')));
 
 // mount controller functions
 app.use(require('./routes/controller_login'));

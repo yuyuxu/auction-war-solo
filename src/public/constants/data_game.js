@@ -1,3 +1,4 @@
+/** Constants for game. */
 // game page
 const ImageItems = ['./images/item1.png',
                     './images/item2.png',

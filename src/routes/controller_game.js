@@ -1,6 +1,6 @@
 var express = require('express');
 var logger = require('../utility/logger');
-var manager_db = require('../data_access/aws_dynamodb');
+var table_users = require('../data_access/table_users');
 var manager_user = require('../model/model_manager_user').GetInstance();
 
 var router = express.Router();
@@ -36,16 +36,16 @@ router.post('/game', function(req, res, next) {
       return;
     } else {
       user.SetData('quiz', quiz_data);
-      manager_db.UpdatePlayerAttributes(turker_id,
-                                        {'quiz': quiz_data},
-                                        function(err, data) {
+      table_users.UpdateUserAttributes(turker_id,
+                                       {'quiz': quiz_data},
+                                       function(err, data) {
         if (err) {
-          logger.Log('/game error: UpdatePlayerAttributes error ' + err);
+          logger.Log('/game error: UpdateUserAttributes error ' + err);
           res.redirect('/');
           return;
         } else {
-          user.Log('controller', {from: 'quiz', to: 'game',
-                                  tip: 'updated database quiz data'});
+          logger.Log({type: 'controller', from: 'quiz', to: 'game',
+                      tip: 'updated database/model quiz data'});
           res.render('view_game.ejs', {user_id: turker_id,
                                        player_role: user.GetData('role')});
         }

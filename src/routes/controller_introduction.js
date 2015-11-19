@@ -1,6 +1,6 @@
 var express = require('express');
 var logger = require('../utility/logger');
-var manager_db = require('../data_access/aws_dynamodb');
+var table_users = require('../data_access/table_users');
 var manager_user = require('../model/model_manager_user').GetInstance();
 
 var router = express.Router();
@@ -35,17 +35,18 @@ router.post('/introduction', function(req, res) {
       logger.Log('/introduction: update database questionnaire and role');
       user.SetData('questionnaire', questionnaire_data);
       user.SetData('role', manager_user.AssignRole(turker_id));
-      manager_db.UpdatePlayerAttributes(turker_id,
-                                        {'questionnaire': questionnaire_data,
-                                         'role': user.GetData('role')},
-                                        function(err, data) {
+      table_users.UpdateUserAttributes(turker_id,
+                                       {'questionnaire': questionnaire_data,
+                                        'role': user.GetData('role')},
+                                       function(err, data) {
         if (err) {
           logger.Log('/introduction UpdatePlayerAttribute error: ' + err);
           res.redirect('/');
           return;
         } else {
-          user.Log('controller', {from: 'questionnaire', to: 'introduction',
-                                  tip: 'updated role and questionnaire_data'});
+          logger.Log({type: 'controller', from: 'questionnaire',
+                      to: 'introduction',
+                      tip: 'updated role and questionnaire_data'});
           res.render('view_introduction.ejs',
             {user_id: turker_id, player_role: user.GetData('role')});
         }
@@ -63,17 +64,17 @@ router.post('/introduction', function(req, res) {
       user.SetData('quiz', quiz_data);
       user.SetData('role', manager_user.AssignRole(turker_id));
       logger.Log('/introduction: update database questionnaire and role');
-      manager_db.UpdatePlayerAttributes(turker_id,
-                                        {'quiz': quiz_data,
-                                         'role': user.GetData('role')},
-                                        function(err, data) {
+      table_users.UpdateUserAttributes(turker_id,
+                                       {'quiz': quiz_data,
+                                        'role': user.GetData('role')},
+                                       function(err, data) {
         if (err) {
           logger.Log('/introduction UpdatePlayerAttribute error: ' + err);
           res.redirect('/');
           return;
         } else {
-          user.Log('controller', {from: 'quiz', to: 'introduction',
-                                  tip: 'updated role and quiz_data'});
+          logger.Log({type: 'controller', from: 'quiz', to: 'introduction',
+                      tip: 'updated role and quiz_data'});
           res.render('view_introduction.ejs',
             {user_id: turker_id, player_role: user.GetData('role')});
         }

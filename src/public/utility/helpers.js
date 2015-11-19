@@ -1,4 +1,4 @@
-var InitializerUtility = {
+var Logger = {
   enable_log: true,
 
   EnableLogger: function(flag) {

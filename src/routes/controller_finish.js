@@ -1,13 +1,14 @@
 var express = require('express');
 var logger = require('../utility/logger');
-var manager_db = require('../data_access/aws_dynamodb');
+var helpers = require('../utility/helpers');
+var table_users = require('../data_access/table_users');
 var manager_user = require('../model/model_manager_user').GetInstance();
 
 var router = express.Router();
 
 router.post('/finish', function (req, res) {
-  var turker_id = req.body.user_id;
   var from = req.body.from;
+  var turker_id = req.body.user_id;
   var game_data = req.body.game_data;
 
   // validation
@@ -29,16 +30,16 @@ router.post('/finish', function (req, res) {
   }
 
   if (from == 'game') {
-    var reward = manager_db.MakeId();
-    user.Log('controller', {from: 'game', to: 'finish',
-                            tip: 'updated game data and reward code'});
-    user.Log('data', {from: 'game', value: game_data});
-    manager_db.UpdatePlayerAttributes(turker_id,
-                                      {'game': game_data,
-                                       'reward': reward},
-                                      function(err, data) {
+    var reward = helpers.MakeId();
+    logger.Log({type: 'controller', from: 'game', to: 'finish',
+                tip: 'updated game data and reward code'});
+    logger.Log({type: 'data', from: 'game', value: game_data});
+    table_users.UpdateUserAttributes(turker_id,
+                                     {'game': game_data,
+                                      'reward': reward},
+                                     function(err, data) {
       if (err) {
-        logger.Log('/finish UpdatePlayerAttributes error: ' + err);
+        logger.Log('/finish UpdateUserAttributes error: ' + err);
         res.redirect('/');
         return;
       } else {

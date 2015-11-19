@@ -1,5 +1,6 @@
-/** Helper functions for quiz page jquery objects. */
-var QuizPageHelper = {
+/** Model (static, front end) for quiz page data. */
+var QuizPageData = {
+  /** Model (static, front end) for quiz page data. */
   GatherSubmitData : function() {
     submit_data = [];
     submit_data.push($('input[name=group0]:checked').val());
@@ -49,33 +50,3 @@ var QuizPageHelper = {
     }
   }
 };
-
-/** Initializer for quiz page. */
-$(document).ready(function() {
-  // load data when initializing the page
-  var quiz_data_str = $('#quiz_data_prev').val();
-  Logger.Log('quiz: laod data ' + quiz_data_str);
-  if (quiz_data_str != null && quiz_data_str != '*' && quiz_data_str != '') {
-    QuizPageHelper.LoadSubmitData(quiz_data_str);
-  }
-
-  // setup transition between stages
-  $('#prev-stage').click(function() {
-    var submit_data_str = QuizPageHelper.GatherSubmitData();
-    Logger.Log('quiz: submit prev page ' + submit_data_str);
-    $('#quiz_data_prev').val(submit_data_str);
-    $('#quiz_data_next').val(submit_data_str);
-    $('#prev-stage').closest('form').submit();
-  });
-  $('#next-stage').click(function() {
-    var submit_data_str = QuizPageHelper.GatherSubmitData();
-    Logger.Log('quiz: submit next page ' + submit_data_str);
-    $('#quiz_data_prev').val(submit_data_str);
-    $('#quiz_data_next').val(submit_data_str);
-    if (QuizPageHelper.IsSubmitDataValid() == true) {
-      $('#next-stage').closest('form').submit();
-    } else {
-      bootbox.alert('Answer is not correct, please retry.');
-    }
-  });
-});

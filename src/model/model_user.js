@@ -1,16 +1,17 @@
-var manager_db = require('../data_access/aws_dynamodb');
-var logger = require('../utility/logger');
-var timer = require('../utility/timer');
 var fs = require('fs');
 var path = require('path');
+var logger = require('../utility/logger');
 
-/**
- * User model
+/** Model (object) for user.
+ * @param {string} user_id - id of the user
  */
 function User(user_id) {
+  /** User id. */
   this.user_id = user_id;
 
-  // cached data for each page
+  /** User model data cache.
+   * @type {Object.<string, string>}
+   */
   this.cache = {
     questionnaire: '*',
     role: '*',
@@ -18,95 +19,64 @@ function User(user_id) {
     game: '*',
     reward: '*',
   };
-
-  // user behavior logged from server side
-  this.log_behaviors = [];
-  this.log_started = false;
 }
 
-User.prototype.LoadData = function(data) {
-  this.cache['questionnaire'] = data['Item']['questionnaire']['S'];
-  this.cache['role'] = data['Item']['role']['S'];
-  this.cache['quiz'] = data['Item']['quiz']['S'];
-  this.cache['game'] = data['Item']['game']['S'];
-  this.cache['reward'] = data['Item']['reward']['S'];
-}
-
-User.prototype.SetData = function(attribute, data) {
+/** Set data cache.
+ * @param {string} attribute - attribute name.
+ * @param {string} value - attribute value.
+ */
+User.prototype.SetData = function(attribute, value) {
   if (attribute == 'questionnaire') {
-    this.cache['questionnaire'] = data;
+    this.cache['questionnaire'] = value;
   }
   else if (attribute == 'role') {
-    this.cache['role'] = data;
+    this.cache['role'] = value;
   }
   else if (attribute == 'quiz') {
-    this.cache['quiz'] = data;
+    this.cache['quiz'] = value;
   }
   else if (attribute == 'game') {
-    this.cache['game'] = data;
+    this.cache['game'] = value;
   }
   else if (attribute == 'reward') {
-    this.cache['reward'] == data;
+    this.cache['reward'] == value;
   }
 }
 
+/** Get data cache.
+ * @param {string} attribute - attribute name.
+ */
 User.prototype.GetData = function(attribute) {
   if (attribute == 'questionnaire') {
     return this.cache['questionnaire'];
-  }
-  else if (attribute == 'role') {
+  } else if (attribute == 'role') {
     return this.cache['role'];
-  }
-  else if (attribute == 'quiz') {
+  } else if (attribute == 'quiz') {
     return this.cache['quiz'];
-  }
-  else if (attribute == 'game') {
+  } else if (attribute == 'game') {
     return this.cache['game'];
-  }
-  else if (attribute == 'reward') {
+  } else if (attribute == 'reward') {
     return this.cache['reward'];
+  } else {
+    logger.Log('User GetData Error: attribute not found ' + attribute);
+    return null;
   }
-  return null;
 }
 
+/** Get user game name. */
 User.prototype.GetGameName = function() {
   return this.cache['role'];
 }
 
+/** Check whether user has finished game. */
 User.prototype.FinishedGame = function() {
   if (this.cache.reward === '' || this.cache.reward === '*') {
     return false;
   } else {
     logger.Log('Game finished. User ' + this.user_id +
-             ' is getting reward: ' + this.cache.reward);
+               ' is getting reward: ' + this.cache.reward);
     return true;
   }
-}
-
-User.prototype.Log = function(type, data) {
-  data['type'] = type;
-  data['time'] = timer.GetFullTime();
-  data_str = JSON.stringify(data);
-  data_str += '\n';
-
-  var log_file = path.join(__dirname, '../bin/logs/' +
-                                      this.user_id +
-                                      '_server.json');
-  fs.exists(log_file, function(exists) {
-    if (!exists) {
-      fs.writeFile(log_file, data_str, function(err) {
-        if (err) {
-          logger.Log(err);
-        }
-      });
-    } else {
-      fs.appendFile(log_file, data_str, function(err) {
-        if (err) {
-          logger.Log(err);
-        }
-      });
-    }
-  });
 }
 
 module.exports = User;

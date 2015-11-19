@@ -1,3 +1,4 @@
+/** Constants for questionnaire. */
 /** Instrument data [List]
   data[0]: id/name of the instrument
   data[1]: [descriptions of the instrument/asset path]
@@ -6,7 +7,7 @@
             each cell contains a list of questions, e.g.
             [
              [cell11, cell12],
-              [cell21, cell22] (question 1)
+             [cell21, cell22] (question 1)
             ]
             where cell11 is a data point
   data[4]: [choice text]

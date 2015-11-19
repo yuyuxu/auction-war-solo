@@ -1,6 +1,5 @@
 var express = require('express');
 var logger = require('../utility/logger');
-var manager_db = require('../data_access/aws_dynamodb');
 var manager_user = require('../model/model_manager_user').GetInstance();
 
 var router = express.Router();
@@ -30,8 +29,8 @@ router.post('/quiz', function (req, res) {
 
   if (from == 'introduction') {
     logger.Log('/quiz: navigated here from page "introduction"');
-    user.Log('controller', {from: 'introduction', to: 'quiz',
-                        tip: 'load quiz data'});
+    logger.Log({type: 'controller', from: 'introduction', to: 'quiz',
+                tip: 'load quiz data'});
     res.render('view_quiz.ejs', {user_id: turker_id,
                                  player_role: user.GetData('role'),
                                  quiz_data: user.GetData('quiz')});

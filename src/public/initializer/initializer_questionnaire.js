@@ -1,48 +1,4 @@
-// questionnaire page cache module
-var QuestionnairePageCache = {
-  // answers, {page_id: {answer_index: answer_value}}
-  answers: {},
-
-  UpdateAnswer: function(page_id, answer_index, answer_value) {
-    // notice here QuestionnairePageCache is used instead of this
-    // because UpdateAnwser is used as a reference for callback function
-    // inside VModelQuestionnaire, therefore 'this' binding is lost
-    if (QuestionnairePageCache.answers[page_id] == null) {
-      QuestionnairePageCache.answers[page_id] = {};
-    }
-    QuestionnairePageCache.answers[page_id][answer_index] = answer_value;
-  },
-
-  IsAnswerCompleted: function(page_id) {
-    return true;
-    if (this.answers[page_id] == null) {
-      InitializerUtility.Log('IsAnswerCompleted warning: no answers cached');
-      return;
-    }
-    for (var i = 0; i < this.answers[page_id].length; ++i) {
-      if (this.answers[page_id][i] == null) {
-        return false;
-      }
-    }
-    return true;
-  },
-
-  GetAnswersString: function() {
-    var answers_str = JSON.stringify(this.answers);
-    return answers_str;
-  },
-
-  SetAnswersString: function(answers_str) {
-    if (answers_str == null || answers_str == '' || answers_str == '*') {
-      InitializerUtility.Log('SetAnswersString warning: answer ' +
-                             answers_str + ' is not a valid json string');
-      return;
-    }
-    this.answers = JSON.parse(answers_str);
-  },
-};
-
-// wizard module
+/** Third party wizard component. */
 var Wizard = {
   Setup: function() {
     $('#root-wizard').bootstrapWizard({
@@ -71,7 +27,7 @@ var Wizard = {
         } else {
           // submit data
           var answers_str = QuestionnairePageCache.GetAnswersString();
-          InitializerUtility.Log('submit data: ' + answers_str);
+          Logger.Log('submit data: ' + answers_str);
           $('#submit-data').val(answers_str);
           $('#submit-form').submit();
         }
@@ -105,7 +61,7 @@ var Wizard = {
                                         QuestionnairePageCache.answers[index],
                                         QuestionnairePageCache.UpdateAnswer);
         } else {
-          InitializerUtility.Log('Wizard onLast Error: index is ' + index);
+          Logger.Log('Wizard onLast Error: index is ' + index);
         }
       },
 
@@ -116,13 +72,15 @@ var Wizard = {
   }
 };
 
-// initialize page
+/** Initializer for questionnaire page. */
 $(document).ready(function() {
   // if database does contain data of this user_id, load it into answer
   // *notice here this has to happen before the wizard and view model is setup*
+  // before wizard because wizard will somehow wash away '#submit-data'
+  // before view_model because '#submit-data' is needed for view_model
   var answers_str = $('#submit-data').val();
-  InitializerUtility.Log('loading questionnaire page... ');
-  InitializerUtility.Log('answer is: ' + answers_str);
+  Logger.Log('loading questionnaire page...');
+  Logger.Log('answer is: ' + answers_str);
   QuestionnairePageCache.SetAnswersString(answers_str);
 
   // wizard
