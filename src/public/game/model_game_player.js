@@ -22,6 +22,12 @@ function Player(id, type, side) {
 }
 
 /** What player does when turn starts. */
+Player.prototype.GetPlayerId = function() {
+  return this.player_id;
+}
+
+
+/** What player does when turn starts. */
 Player.prototype.StartTurn = function() {
   this.turn_number = this.turn_number + 1;
   if (this.player_type == TypePlayer) {
@@ -41,9 +47,9 @@ Player.prototype.StartTurn = function() {
                JSON.stringify(item_locations) + ' wait time ' + wait_time);
 
     // after simulation
-    ManagerScene.StartTimer(
+    ManagerSceneTimer.StartTimer(
       wait_time,
-      ManagerScene.HandlerTickerGameStateMessage,
+      ManagerSceneTimer.HandlerTickerGameStateMessage,
       ['Wait for your turn '],
       this.FinishTurn,
       [item_locations, '']);

@@ -10,7 +10,7 @@ var app = express();
 
 // setup view engine and views
 app.engine('html', require('ejs').renderFile);
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'public/views'));
 app.set('view engine', 'ejs');
 
 // mount parsers
@@ -23,7 +23,7 @@ app.use(express.static(path.join(__dirname, 'public/assets')));
 app.use(express.static(path.join(__dirname, 'public/initializer')));
 app.use(express.static(path.join(__dirname, 'public/view_model')));
 app.use(express.static(path.join(__dirname, 'public/model')));
-app.use(express.static(path.join(__dirname, 'public/model/game')));
+app.use(express.static(path.join(__dirname, 'public/game')));
 app.use(express.static(path.join(__dirname, 'public/utility')));
 app.use(express.static(path.join(__dirname, 'public/constants')));
 

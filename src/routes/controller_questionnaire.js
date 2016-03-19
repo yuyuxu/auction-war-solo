@@ -1,5 +1,6 @@
 var express = require('express');
 var logger = require('../utility/logger');
+var database = require('../data_access/database');
 var table_users = require('../data_access/table_users');
 var manager_user = require('../model/model_manager_user').GetInstance();
 
@@ -54,7 +55,7 @@ router.post('/questionnaire', function(req, res) {
       } else {
         // the player does exist (database), fill model with corresponding data
         var user = manager_user.CreateUser(turker_id);
-        user.LoadData(data);
+        user.LoadData(database.ExtractData(data));
         if (user.FinishedGame() == true) {
           logger.Log('/questionnaire: grab user from database, game finished');
           // seems like the player has already played the game

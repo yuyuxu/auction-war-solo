@@ -119,12 +119,12 @@ var ManagerScene = {
     this.stage.addChild(this.container_popup);
 
     // items
-    this.SetupItem(this.CreateItem(0));
-    this.SetupItem(this.CreateItem(1));
-    this.SetupItem(this.CreateItem(1));
-    this.SetupItem(this.CreateItem(2));
-    this.SetupItem(this.CreateItem(2));
-    this.SetupItem(this.CreateItem(2));
+    this.SetupItem(ManagerSceneItem.CreateItem(0));
+    this.SetupItem(ManagerSceneItem.CreateItem(1));
+    this.SetupItem(ManagerSceneItem.CreateItem(1));
+    this.SetupItem(ManagerSceneItem.CreateItem(2));
+    this.SetupItem(ManagerSceneItem.CreateItem(2));
+    this.SetupItem(ManagerSceneItem.CreateItem(2));
 
     // simulation loop
     createjs.Ticker.setFPS(SimulationFPS);
@@ -288,11 +288,11 @@ var ManagerScene = {
   },
 
   /** API. Enable in game component.
-   * @param {boolean} type - enable or not.
+   * @param {string} type - how to enable components in game.
    */
-  EnableComponentInGame: function(flag) {
+  EnableComponentInGame: function(type) {
     Logger.Log('EnableComponentInGame: type is ' + type);
-    if (flag) {
+    if (type == 'game') {
       this.SetComponentEffect(this.container_grid,
                               'alpha',
                               1,
@@ -339,7 +339,7 @@ var ManagerScene = {
   /** Timer callback function. */
   Tick: function(evt) {
     ManagerScene.stage.update(evt);
-    ManagerScene.HandleTimer(createjs.Ticker.getTime());
+    ManagerSceneTimer.HandleTimer(createjs.Ticker.getTime());
   },
 
   HandlerTickerGameStateMessage: function(seconds_gone, params) {

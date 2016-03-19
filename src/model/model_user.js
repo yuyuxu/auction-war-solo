@@ -28,18 +28,16 @@ function User(user_id) {
 User.prototype.SetData = function(attribute, value) {
   if (attribute == 'questionnaire') {
     this.cache['questionnaire'] = value;
-  }
-  else if (attribute == 'role') {
+  } else if (attribute == 'role') {
     this.cache['role'] = value;
-  }
-  else if (attribute == 'quiz') {
+  } else if (attribute == 'quiz') {
     this.cache['quiz'] = value;
-  }
-  else if (attribute == 'game') {
+  } else if (attribute == 'game') {
     this.cache['game'] = value;
-  }
-  else if (attribute == 'reward') {
+  } else if (attribute == 'reward') {
     this.cache['reward'] == value;
+  } else {
+    logger.Log('User SetData Error: attribute not found ' + attribute);
   }
 }
 
@@ -60,6 +58,16 @@ User.prototype.GetData = function(attribute) {
   } else {
     logger.Log('User GetData Error: attribute not found ' + attribute);
     return null;
+  }
+}
+
+/** Load data from attribute dictionary.
+ * @param {dictionary} attributes - attributes extracted from database.
+ */
+User.prototype.LoadData = function(attributes) {
+  logger.Log('GetData attribute = ' + JSON.stringify(attributes));
+  for (var key in attributes) {
+    this.SetData(key, attributes[key]);
   }
 }
 

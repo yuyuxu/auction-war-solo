@@ -2,21 +2,21 @@
  * this is the main entrance from the initializer.
  * Specifically, it manage the game flow and players.
  */
-var Game = {
+var ManagerGame = {
   /** Current game type.
    * @type {integer}
    */
   game_type: -1,
 
+  /** List of players.
+   * @type {Array<Object>}
+   */
+  players: [],
+
   /** Whose turn is it.
    * @type {integer}
    */
   whose_turn: -1,
-
-  /** List of players.
-   * @type {Array.<Player>}
-   */
-  players: [],
 
   /** Game flow indicator, whether if it's finished.
    * @type {boolean}
@@ -37,8 +37,8 @@ var Game = {
     // setup game controller
     ControllerGamePage.Init();
 
-    // setup plyaer according to game type
-    ManagerPlayer.Init(player_id);
+    // setup player according to game type
+    this.CreatePlayer(player_id);
 
     // start game flow
     this.FlowMatchMaking();
@@ -46,10 +46,12 @@ var Game = {
 
   CreatePlayer: function(player_id) {
     if (ManagerGame.game_type == HumanVsScripted) {
-      this.CreatePlayer(player_id, TypePlayer, LayoutSidePlayer);
-      this.CreatePlayer('scripted', TypeScripted, LayoutSideOpponent);
+      player1 = new Player(player_id, TypePlayer, LayoutSidePlayer);
+      player2 = new Player('007', TypeScripted, LayoutSideOpponent);
+      this.players.push(player1);
+      this.players.push(player2);
     } else {
-      Logger.Log('ManagerPlayer init: game type not supported ' +
+      Logger.Log('CreatePlayer: game type not supported ' +
                              ManagerGame.game_type);
     }
   },
@@ -60,7 +62,7 @@ var Game = {
       return null;
     }
 
-    return ManagerPlayer.players[this.whose_turn];
+    return this.players[this.whose_turn];
   },
 
   // lost of binding
@@ -71,7 +73,7 @@ var Game = {
       Logger.Log('FlowMatchMaking: game start in ' +
                              wait_time + ' seconds (' +
                              this.game_type + ')');
-      ManagerScene.StartTimer(
+      ManagerSceneTimer.StartTimer(
         wait_time,
         ManagerScene.HandlerTickerGameStateMessage,
         ['Please wait while we are finding an opponent for you '],
@@ -92,9 +94,9 @@ var Game = {
       Logger.Log('FlowLoadGame: game start in ' +
                              wait_time + ' seconds (' +
                              ManagerGame.game_type + ')');
-      ManagerScene.StartTimer(
+      ManagerSceneTimer.StartTimer(
         wait_time,
-        ManagerScene.HandlerTickerGameStateMessage,
+        ManagerSceneTimer.HandlerTickerGameStateMessage,
         ['You are ready. Please wait for your opponent to get ready '],
         ManagerGame.FlowStep,
         [null, '']);
@@ -121,7 +123,7 @@ var Game = {
       ManagerGame.whose_turn = StartPlayer;
     } else {
       ManagerGame.whose_turn = (ManagerGame.whose_turn + 1) %
-                               ManagerPlayer.players.length;
+                               ManagerGame.players.length;
     }
     Logger.Log('FlowStep: whose_turn ' + ManagerGame.whose_turn);
 
@@ -133,7 +135,7 @@ var Game = {
     // update page notice, game page, scene component and animation
     if (ManagerGame.GetCurrentPlayer().player_type == TypePlayer) {
       PageTitleNotification.On('Your Turn ...');
-      ManagerScene.ResetTimer();
+      ManagerSceneTimer.ResetTimer();
       ManagerScene.EnableComponentInGame('game');
       ViewGamePage.Reset();
       ViewGamePage.DisplayMessage('game-message', params[1]);
@@ -141,8 +143,8 @@ var Game = {
     } else {
       PageTitleNotification.On('Wait for Your Turn ...');
       ManagerScene.EnableComponentInGame('none');
-      ManagerScene.StartTimer(-1,
-                              ManagerScene.HandlerTickerGameStateMessage,
+      ManagerSceneTimer.StartTimer(-1,
+                              ManagerSceneTimer.HandlerTickerGameStateMessage,
                               ['Please wait for you turn '],
                               null,
                               null);

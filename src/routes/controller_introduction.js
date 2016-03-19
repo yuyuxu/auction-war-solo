@@ -40,7 +40,7 @@ router.post('/introduction', function(req, res) {
                                         'role': user.GetData('role')},
                                        function(err, data) {
         if (err) {
-          logger.Log('/introduction UpdatePlayerAttribute error: ' + err);
+          logger.Log('/introduction UpdateUserAttributes error: ' + err);
           res.redirect('/');
           return;
         } else {
@@ -69,7 +69,7 @@ router.post('/introduction', function(req, res) {
                                         'role': user.GetData('role')},
                                        function(err, data) {
         if (err) {
-          logger.Log('/introduction UpdatePlayerAttribute error: ' + err);
+          logger.Log('/introduction UpdateUserAttributes error: ' + err);
           res.redirect('/');
           return;
         } else {

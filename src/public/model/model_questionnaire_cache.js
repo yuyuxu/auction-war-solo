@@ -47,8 +47,8 @@ var QuestionnairePageCache = {
    */
   SetAnswersString: function(answers_str) {
     if (answers_str == null || answers_str == '' || answers_str == '*') {
-      InitializerUtility.Log('SetAnswersString warning: answer ' +
-                             answers_str + ' is not a valid json string');
+      Logger.Log('SetAnswersString warning: answer ' +
+                 answers_str + ' is not a valid json string');
       return;
     }
     this.answers = JSON.parse(answers_str);

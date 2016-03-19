@@ -9,14 +9,6 @@ var ModelDatabase = {
   /** Database type. */
   database_type: '',
 
-  /** API. Use this function to get the database object. */
-  GetDatabase: function() {
-    if (this.database == null) {
-      this.InitDatabase();
-    }
-    return this.database;
-  },
-
   /** API. Use this function to get the type of database. */
   GetType: function() {
     return this.type;
@@ -25,7 +17,7 @@ var ModelDatabase = {
   /** Init database given type
    * @param {string} type - So far only dynamodb is supported.
    */
-  InitDatabase: function(type) {
+  Init: function(type) {
     // init type
     if (type == null) {
       type = 'dynamo';
@@ -34,14 +26,20 @@ var ModelDatabase = {
     // init database
     if (type == 'dynamo') {
       if (this.database == null) {
-        aws.config.loadFromPath(__dirname + '../constants/config_aws.json');
+        aws.config.loadFromPath(__dirname + '/../constants/config_aws.json');
         this.database = new aws.DynamoDB();
       }
     } else {
-      logger.Log('InitDatabase Error: type not supported ' + type);
+      logger.Log('Init Error: type not supported ' + type + ' ...');
     }
 
+    logger.Log('ModelDatabase initialized with type ' + type);
     this.type = type;
+  },
+
+  /** API. Get database object. */
+  GetDbObj: function() {
+    return this.database;
   },
 
   /** API. Load information out of returned data from database.
@@ -49,9 +47,9 @@ var ModelDatabase = {
    *   items returned from database, each database might have different format.
    */
   ExtractData: function(data) {
-    var extracted_data = null;
-    if (database.GetType() == 'dynamo') {
-      for (key in data) {
+    var extracted_data = {};
+    if (this.GetType() == 'dynamo') {
+      for (key in data['Item']) {
         extracted_data[key] = data['Item'][key]['S'];
       }
     } else {
@@ -62,3 +60,4 @@ var ModelDatabase = {
 };
 
 module.exports = ModelDatabase;
+ModelDatabase.Init();

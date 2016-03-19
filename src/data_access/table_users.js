@@ -1,4 +1,4 @@
-var database = require('database');
+var database = require('./database');
 var logger = require('../utility/logger');
 
 /** Model (static) for table that contains all the users. */
@@ -13,6 +13,8 @@ var ModelTableUsers = {
     } else {
       this.table_name = name;
     }
+    logger.Log('ModelTableUsers initialized with table name ' +
+               this.table_name + ' ...');
   },
 
   /** API. Create user.
@@ -36,7 +38,7 @@ var ModelTableUsers = {
       if (callback == null) {
         callback = this.DefaultCallback;
       }
-      this.database.putItem(param, callback);
+      database.GetDbObj().putItem(param, callback);
     } else {
       logger.Log('CreateUser Error: database type not supported!');
     }
@@ -60,7 +62,7 @@ var ModelTableUsers = {
       if (callback == null) {
         callback = this.DefaultCallback;
       }
-      this.database.deleteItem(param, callback);
+      database.GetDbObj().deleteItem(param, callback);
     } else {
       logger.Log('DeleteUser Error: database type not supported!');
     }
@@ -75,7 +77,7 @@ var ModelTableUsers = {
    */
   GetUserAttributes: function(user_id, attributes, callback) {
     if (database.GetType() == 'dynamo') {
-      if (attributes == []) {
+      if (attributes.length == 0) {
         attributes = [
           'role',
           'questionnaire',
@@ -96,7 +98,7 @@ var ModelTableUsers = {
       if (callback == null) {
         callback = this.DefaultCallback;;
       }
-      this.database.getItem(param, callback);
+      database.GetDbObj().getItem(param, callback);
     } else {
       logger.Log('GetUserAttributes Error: database type not supported!');
     }
@@ -109,7 +111,7 @@ var ModelTableUsers = {
    *                                if it's empty, return all attributes.
    * @param {Object} callback - function object to callback.
    */
-  UpdatePlayerAttributes: function(user_id, attributes, callback) {
+  UpdateUserAttributes: function(user_id, attributes, callback) {
     if (database.GetType() == 'dynamo') {
       // construct map to pass into database call
       var attribute_keys = {};
@@ -133,9 +135,9 @@ var ModelTableUsers = {
       if (callback == null) {
         callback = this.DefaultCallback;
       }
-      this.database.updateItem(param, callback);
+      database.GetDbObj().updateItem(param, callback);
     } else {
-      logger.Log('UpdatePlayerAttributes Error: database type not supported!');
+      logger.Log('UpdateUserAttributes Error: database type not supported!');
     }
   },
 
@@ -151,3 +153,4 @@ var ModelTableUsers = {
 };
 
 module.exports = ModelTableUsers;
+ModelTableUsers.Init();

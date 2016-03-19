@@ -13,6 +13,6 @@ function SceneItem(type) {
 
   /** Item render informations. */
   this.render = {
-    icon : null;
+    icon: null,
   }
 }

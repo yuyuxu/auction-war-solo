@@ -1,4 +1,4 @@
-var timer = require('timer');
+var timer = require('./timer');
 
 /** Model (static) for the logger on back end. */
 var Logger = {
@@ -18,7 +18,7 @@ var Logger = {
    */
   Log: function (message) {
     if (this.enable == true) {
-      console.log(message);
+      console.log('-- Server Log: ' + message);
     }
   },
 
@@ -54,4 +54,3 @@ var Logger = {
 }
 
 module.exports = Logger;
-
