@@ -65,10 +65,21 @@ var ManagerGame = {
     return this.players[this.whose_turn];
   },
 
+  GetNextPlayer: function() {
+    if (this.whose_turn < 0) {
+      Logger.Log('GetCurrentPlayer whose_turn has not init yet.');
+      return null;
+    }
+
+    next_turn = (this.whose_turn + 1) % this.players.length;
+    return this.players[next_turn];
+  },
+
   // lost of binding
   FlowMatchMaking: function() {
     if (this.game_type == HumanVsScripted) {
       ManagerScene.EnableComponentInGame('none');
+      ViewGamePage.Reset(false, '');
       var wait_time = Math.random() * RandomWaitingTime;
       Logger.Log('FlowMatchMaking: game start in ' +
                              wait_time + ' seconds (' +
@@ -88,15 +99,14 @@ var ManagerGame = {
   // lost of binding
   FlowLoadGame: function() {
     if (ManagerGame.game_type == HumanVsScripted) {
-      PageTitleNotification.On('Opponent Found ...');
-      ManagerScene.EnableComponentInGame('none');
+      // PageTitleNotification.On('Opponent Found ...');
       var wait_time = Math.random() * RandomWaitingTime;
       Logger.Log('FlowLoadGame: game start in ' +
                              wait_time + ' seconds (' +
                              ManagerGame.game_type + ')');
       ManagerSceneTimer.StartTimer(
         wait_time,
-        ManagerSceneTimer.HandlerTickerGameStateMessage,
+        ManagerScene.HandlerTickerGameStateMessage,
         ['You are ready. Please wait for your opponent to get ready '],
         ManagerGame.FlowStep,
         [null, '']);
@@ -111,6 +121,7 @@ var ManagerGame = {
     // validation
     if (ManagerGame.is_game_finished) {
       Logger.Log('FlowStep error: game is already finished');
+      return;
     }
     if (params.length != 2) {
       Logger.Log('FlowStep error: params size has to be 2, ' +
@@ -132,23 +143,19 @@ var ManagerGame = {
       ManagerScene.MoveItems(params[0]);
     }
 
-    // update page notice, game page, scene component and animation
+    // update rendering
     if (ManagerGame.GetCurrentPlayer().player_type == TypePlayer) {
-      PageTitleNotification.On('Your Turn ...');
+      // PageTitleNotification.On('Your Turn ...');
       ManagerSceneTimer.ResetTimer();
       ManagerScene.EnableComponentInGame('game');
-      ViewGamePage.Reset();
-      ViewGamePage.DisplayMessage('game-message', params[1]);
-      ViewGamePage.DisplayMessage('game-state', 'Your turn');
+      ViewGamePage.Reset(true, ManagerGame.GetNextPlayer().indicate_finish);
+      ViewGamePage.DisplayMessage('#game-message', params[1]);
+      ViewGamePage.DisplayMessage('#game-state', 'Your turn');
     } else {
-      PageTitleNotification.On('Wait for Your Turn ...');
+      // PageTitleNotification.On('Wait for Your Turn ...');
+      ViewGamePage.Reset(false, ManagerGame.GetNextPlayer().indicate_finish);
       ManagerScene.EnableComponentInGame('none');
-      ManagerSceneTimer.StartTimer(-1,
-                              ManagerSceneTimer.HandlerTickerGameStateMessage,
-                              ['Please wait for you turn '],
-                              null,
-                              null);
-      ViewGamePage.Reset();
+      ViewGamePage.DisplayMessage('#game-state', 'Please wait for you turn ');
     }
 
     // player logic
@@ -158,11 +165,12 @@ var ManagerGame = {
   FlowFinishGame: function() {
     Logger.Log('FlowFinishGame game finished ');
 
-    PageTitleNotification.On('Game Finished ...');
+    // PageTitleNotification.On('Game Finished ...');
     ManagerScene.EnableComponentInGame('none');
+    ViewGamePage.Reset(false, false);
 
-    ViewGamePage.Reset();
-    ViewGamePage.DisplayMessage('game-state', 'Game Finished!');
+    ViewGamePage.DisplayMessage('#game-state',
+      'Both players agreed upon the split of items. Game finished!');
     ViewGamePage.DisplayDiv('#next-stage-div', true);
     ViewGamePage.DisplayDiv('#curr-stage-div', false);
 

@@ -18,7 +18,7 @@ var Logger = {
    */
   Log: function (message) {
     if (this.enable == true) {
-      console.log('-- Server Log: ' + message);
+      console.log('-- Server Log: ' + JSON.stringify(message));
     }
   },
 

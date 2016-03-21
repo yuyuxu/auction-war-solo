@@ -14,43 +14,51 @@ function Player(id, type, side) {
   /** Player side. */
   this.player_side = side;
 
-  /** Whether this player wants to finish game. */
-  this.indicate_finish = false;
-
   /** How many turns has current played went through. */
   this.turn_number = -1;
 }
 
 /** What player does when turn starts. */
-Player.prototype.GetPlayerId = function() {
-  return this.player_id;
-}
-
-
-/** What player does when turn starts. */
 Player.prototype.StartTurn = function() {
   this.turn_number = this.turn_number + 1;
+  Logger.Log('StartTurn turn number: ' + this.turn_number + ' player type: ' +
+              this.player_type);
   if (this.player_type == TypePlayer) {
     // human player do nothing here
   } else if (this.player_type == TypeScripted) {
     // simulate one step
-    this.indicate_finish = false;
     var turn_number = this.turn_number;
+    var item_locations;
     if (turn_number >= ScriptConcession.length) {
-      turn_number = ScriptConcession.length;
+      this.indicate_finish = true;
+      item_locations = ScriptConcession[ScriptConcession.length - 1];
+    } else {
+      item_locations = ManagerSceneItem.ExportItemLocations();
+      value_on_table =
+        ManagerSceneItem.ComputeCurrentItemValue(LayoutSideOpponent);
+      value_proposed =
+        ManagerSceneItem.ComputeItemValueGivenLocations(item_locations,
+                                                        LayoutSideOpponent);
+      if (value_on_table[0] > value_proposed[0]) {
+        this.indicate_finish = true;
+        if (ManagerGame.GetNextPlayer().indicate_finish) {
+          ManagerGame.FlowFinishGame();
+          return;
+        }
+      } else {
+        this.indicate_finish = false;
+        item_locations = ScriptConcession[turn_number];
+      }
     }
-    var item_locations = ScriptConcession[turn_number];
     var wait_time = Math.random() * RandomWaitingTime;
-
-    Logger.Log('StartTurn turn number: ' + turn_number + ' player type: ' +
-               this.player_type + ' next scripted items: ' +
-               JSON.stringify(item_locations) + ' wait time ' + wait_time);
+    Logger.Log('indicate_finish ' + this.indicate_finish);
+    Logger.Log('item_locations ' + JSON.stringify(item_locations));
 
     // after simulation
     ManagerSceneTimer.StartTimer(
       wait_time,
-      ManagerSceneTimer.HandlerTickerGameStateMessage,
-      ['Wait for your turn '],
+      ManagerScene.HandlerTickerGameStateMessage,
+      ['Please wait for you turn '],
       this.FinishTurn,
       [item_locations, '']);
   } else {

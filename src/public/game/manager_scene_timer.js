@@ -84,6 +84,8 @@ var ManagerSceneTimer = {
       if (ManagerSceneTimer.timer_tick_callback != null) {
         ManagerSceneTimer.timer_tick_callback(seconds_gone,
           ManagerSceneTimer.timer_tick_callback_params);
+      } else {
+        console.log('ticker_cb not found ???');
       }
     }
   },

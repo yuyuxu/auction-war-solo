@@ -1,10 +1,12 @@
 /** Render function involving game page jquery objects. */
 var ViewGamePage = {
-  /** Reset all the jquery objects.
-   * @param {boolean} flag - game finished flag which impact what to reset.
+  /** Reset all the jquery objects according to if it's player's turn.
+   * @param {boolean} active - if it's player's turn.
+   * @param {boolean} accepted - whether the other player's accepted offer.
    */
-  Reset: function(flag) {
-    if (flag) {
+  Reset: function(active, accepted) {
+    if (accepted) {
+      // if the other player has accepted the offer
       $('#accept').text('Accept Offer & Finish Game');
       $('#accept-comment1').css('display', 'none');
       $('#accept-comment2').css('display', 'inline');
@@ -14,7 +16,14 @@ var ViewGamePage = {
       $('#accept-comment2').css('display', 'none');
     }
 
-    this.ShowDiv('#accept-div', true);
+    if (active) {
+      this.ShowDiv('#accept-div', true);
+      this.ShowDiv('#submit-div', false);
+    } else {
+      this.ShowDiv('#accept-div', false);
+      this.ShowDiv('#submit-div', false);
+    }
+
     $('#submit-error').text('');
     $('#game-message').text('');
   },
@@ -24,10 +33,7 @@ var ViewGamePage = {
    * @param {boolean} flag - game finished flag which impact whether to display.
    * @param {string} message - what to display.
    */
-  DisplayMessage: function(name, flag, message) {
-    if (flag) {
-      return;
-    }
+  DisplayMessage: function(name, message) {
     $(name).text(message);
   },
 
@@ -132,8 +138,10 @@ var ControllerGamePage = {
 $(document).ready(function() {
   // load page, init game
   window.onload = function() {
-    canvas_obj = document.getElementById('game-canvas');
+    // init game components
     ManagerGame.Init($('#player-id').val(), HumanVsScripted);
+    // init game interface
+    canvas_obj = document.getElementById('game-canvas');
     $(window).resize(this.UpdateCanvas);
     document.onkeydown = this.HandleKeyDown;
   };
@@ -145,8 +153,9 @@ $(document).ready(function() {
 
   // setup transition between stages
   $('#next-stage').click(function() {
-    $('submit-data').val(
-      JSON.stringify(ManagerSceneItem.ExportItemsInformation));
+    itemstr = JSON.stringify(ManagerSceneItem.ExportItemLocations());
+    Logger.Log('submit game_data: ' + itemstr);
+    $('#submit-data').val(itemstr);
     $('#next-stage').closest('form').submit();
   });
 });

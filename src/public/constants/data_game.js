@@ -35,35 +35,41 @@ const HumanVsScripted = 0;
 const HumanVsSocket = 1;
 
 // game starting player
-const StartPlayer = TypePlayer;
+const StartPlayer = TypeScripted;
 
 // game scripted player related
 // note: time unit is second
 const RandomWaitingTime = 5;
-// value painting:1, lamp: 2, record: 4
+// "0": painting, "1": lamp, "2": record
+const ItemValue = {
+  0: 0.1,
+  1: 2,
+  2: 4.1,
+}
+
 const ScriptConcession = [
-  // turn 1, value 12
-  {"0": [LayoutSidePlayer],
-   "1": [LayoutSidePlayer, LayoutSidePlayer],
-   "2": [LayoutSideOpponent, LayoutSideOpponent, LayoutSideOpponent]},
-  // turn 2, value 12
-  {"0": [LayoutSidePlayer],
-   "1": [LayoutSideOpponent, LayoutSideOpponent],
-   "2": [LayoutSideOpponent, LayoutSideOpponent, LayoutSidePlayer]},
-  // turn 3, value 11
-  {"0": [LayoutSideOpponent],
-   "1": [LayoutSidePlayer, LayoutSideOpponent],
-   "2": [LayoutSideOpponent, LayoutSideOpponent, LayoutSidePlayer]},
-  // turn 4, value 10
-  {"0": [LayoutSidePlayer],
-   "1": [LayoutSidePlayer, LayoutSideOpponent],
-   "2": [LayoutSideOpponent, LayoutSideOpponent, LayoutSidePlayer]},
-  // turn 5, value 9
-  {"0": [LayoutSideOpponent],
-   "1": [LayoutSideOpponent, LayoutSideOpponent],
-   "2": [LayoutSideOpponent, LayoutSidePlayer, LayoutSidePlayer]},
-  // turn 6, value 8
-  {"0": [LayoutSidePlayer],
-   "1": [LayoutSideOpponent, LayoutSideOpponent],
-   "2": [LayoutSideOpponent, LayoutSidePlayer, LayoutSidePlayer]},
+  // turn 1
+  {0: [LayoutSidePlayer],
+   1: [LayoutSideOpponent, LayoutSidePlayer],
+   2: [LayoutSideOpponent, LayoutSideOpponent, LayoutSideOpponent]},
+  // turn 2
+  {0: [LayoutSidePlayer],
+   1: [LayoutSidePlayer, LayoutSidePlayer],
+   2: [LayoutSideOpponent, LayoutSideOpponent, LayoutSideOpponent]},
+  // turn 3
+  {0: [LayoutSidePlayer],
+   1: [LayoutSideOpponent, LayoutSideOpponent],
+   2: [LayoutSidePlayer, LayoutSideOpponent, LayoutSideOpponent]},
+  // turn 4
+  {0: [LayoutSideOpponent],
+   1: [LayoutSidePlayer, LayoutSideOpponent],
+   2: [LayoutSidePlayer, LayoutSideOpponent, LayoutSideOpponent]},
+  // turn 5
+  {0: [LayoutSidePlayer],
+   1: [LayoutSidePlayer, LayoutSideOpponent],
+   2: [LayoutSidePlayer, LayoutSideOpponent, LayoutSideOpponent]},
+  // turn 6
+  {0: [LayoutSideOpponent],
+   1: [LayoutSideOpponent, LayoutSideOpponent],
+   2: [LayoutSidePlayer, LayoutSidePlayer, LayoutSideOpponent]},
 ];

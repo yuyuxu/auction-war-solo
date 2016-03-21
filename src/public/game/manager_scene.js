@@ -274,11 +274,11 @@ var ManagerScene = {
     this.stage.update();
   },
 
-  /** Component logic. */
+  /** Scene component logic. */
   /** API. Set component effect. */
   SetComponentEffect: function(component, type, input_value, curr_value) {
-    Logger.Log('SetComponentEffect input_value: ' + input_value +
-               ' curr_value: ' + curr_value + ' type: ' + type);
+    // Logger.Log('SetComponentEffect input_value: ' + input_value +
+    //            ' curr_value: ' + curr_value + ' type: ' + type);
 
     if (type == 'alpha') {
       component.alpha = input_value;
@@ -291,7 +291,6 @@ var ManagerScene = {
    * @param {string} type - how to enable components in game.
    */
   EnableComponentInGame: function(type) {
-    Logger.Log('EnableComponentInGame: type is ' + type);
     if (type == 'game') {
       this.SetComponentEffect(this.container_grid,
                               'alpha',
@@ -351,7 +350,7 @@ var ManagerScene = {
     for (var i = 0; i < num_dots; ++i) {
       display_message += '.';
     }
-    ViewGamePage.DisplayMessage('game-state', display_message);
+    ViewGamePage.DisplayMessage('#game-state', display_message);
   },
 
   /** Keyboard & mouse logic. */
@@ -394,9 +393,10 @@ var ManagerScene = {
     }
     if (data.curr_location != location) {
       data.curr_location = location;
+      ViewGamePage.ShowDiv('#accept-div', false);
+      ViewGamePage.ShowDiv('#submit-div', true);
     }
     data.render['icon'].y = ManagerScene.GetLocationY(location) -
-                  ManagerScene.GetCenterOffset(data)[1];
-    ViewGamePage.ShowDiv('#accept-div', false);
+                            ManagerScene.GetCenterOffset(data)[1];
   },
 };

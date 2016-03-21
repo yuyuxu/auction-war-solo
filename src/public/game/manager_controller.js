@@ -26,14 +26,11 @@ var ManagerController = {
    */
   TakeAction: function(type, action, params) {
     if (type == 'page') {
-      if (action == 'reset') {
-        // page button reset clicked
-        // todo
-        ManagerView.Reset('game');
-      } else if (action == 'accept') {
+      if (action == 'accept') {
+        ManagerGame.GetCurrentPlayer().indicate_finish = true;
+
         // page button accept clicked
-        // todo
-        if (ManagerGame.is_game_finished) {
+        if (ManagerGame.GetNextPlayer().indicate_finish) {
           ManagerGame.FlowFinishGame();
           return;
         }
@@ -45,14 +42,12 @@ var ManagerController = {
         // call player finish turn
         var current_player = ManagerGame.GetCurrentPlayer();
         if (current_player != null) {
-          current_player.indicate_finish = true;
           current_player.FinishTurn(
             [ManagerSceneItem.ExportItemLocations(),
              this.curr_turn_statement]);
         }
       } else if (action == 'submit') {
         // page button submit clicked
-        // todo
         ViewGamePage.ShowDiv('#accept-div', false);
 
         var item_moved = ManagerSceneItem.BackupLocation();
@@ -74,11 +69,12 @@ var ManagerController = {
         Logger.Log('submit turn: ' + ManagerGame.whose_turn);
         var current_player = ManagerGame.GetCurrentPlayer();
         if (current_player != null) {
-          current_player.indicate_finish = false;
           current_player.FinishTurn(
             [ManagerSceneItem.ExportItemLocations(),
              this.curr_turn_statement]);
         }
+      } else {
+        Logger.Log('WARNING: TakeAction action ' + action + 'not supported.');
       }
     }
   },
@@ -90,7 +86,7 @@ var ManagerController = {
   Log: function(action, params) {
     var curr_turn_action = {};
     curr_turn_action['player_id'] =
-      ManagerGame.GetCurrentPlayer().GetPlayerId();
+      ManagerGame.GetCurrentPlayer().player_id;
     curr_turn_action['time'] = Logger.GetFullTime();
     curr_turn_action['action'] = action;
     curr_turn_action['params'] = params;

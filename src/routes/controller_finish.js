@@ -34,6 +34,10 @@ router.post('/finish', function (req, res) {
     logger.Log({type: 'controller', from: 'game', to: 'finish',
                 tip: 'updated game data and reward code'});
     logger.Log({type: 'data', from: 'game', value: game_data});
+    if (game_data == '') {
+      game_data = '*';
+      logger.Log('/finish error: game_data is empty');
+    }
     table_users.UpdateUserAttributes(turker_id,
                                      {'game': game_data,
                                       'reward': reward},
