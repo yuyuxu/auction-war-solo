@@ -81,9 +81,9 @@ var ManagerGame = {
       ManagerScene.EnableComponentInGame('none');
       ViewGamePage.Reset(false, '');
       var wait_time = WaitingTimeMatchMaking;
-      Logger.Log('FlowMatchMaking: game start in ' +
-                             wait_time + ' seconds (' +
-                             this.game_type + ')');
+      // Logger.Log('FlowMatchMaking: game start in ' +
+      //                        wait_time + ' seconds (' +
+      //                        this.game_type + ')');
       ManagerSceneTimer.StartTimer(
         wait_time,
         ManagerScene.HandlerTickerGameStateMessage,
@@ -101,9 +101,9 @@ var ManagerGame = {
     if (ManagerGame.game_type == HumanVsScripted) {
       // PageTitleNotification.On('Opponent Found ...');
       var wait_time = WaitingTimeLoadGame;
-      Logger.Log('FlowLoadGame: game start in ' +
-                             wait_time + ' seconds (' +
-                             ManagerGame.game_type + ')');
+      // Logger.Log('FlowLoadGame: game start in ' +
+      //                        wait_time + ' seconds (' +
+      //                        ManagerGame.game_type + ')');
       ManagerSceneTimer.StartTimer(
         wait_time,
         ManagerScene.HandlerTickerGameStateMessage,

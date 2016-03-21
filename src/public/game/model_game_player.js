@@ -23,6 +23,8 @@ Player.prototype.StartTurn = function() {
   this.turn_number = this.turn_number + 1;
   Logger.Log('StartTurn turn number: ' + this.turn_number +
              ' player type: ' + this.player_type);
+  // reset indicate finish for both players
+  this.indicate_finish = false;
   if (this.player_type == TypePlayer) {
     // human player do nothing here
   } else if (this.player_type == TypeScripted) {
