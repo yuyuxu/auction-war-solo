@@ -50,12 +50,6 @@ var ManagerController = {
         ManagerScene.MoveNeutralItems();
         this.Log('submit', [ManagerSceneItem.ExportItemLocations(),
                             this.curr_turn_statement]);
-        // } else {
-        //   $('#submit-error').text('You need to take at least one action. ' +
-        //                           'Please select a valid statement/question, ' +
-        //                           'or/and drag items on the take to ' +
-        //                           'make an offer.');
-        // }
 
         this.ResetVariables();
 

@@ -1,12 +1,10 @@
 ### Todo feature list
 
-- [ ] Finish initializer_questionnaire/IsAnswerCompleted.
-
-- [ ] Uncomment initializer_quiz/IsSubmitDataValid.
-
-- [ ] Look into game timer, not very accurate. Aslo timer should be an object rather than a static model.
+- [ ] Timer should be an object rather than a static model.
 
 - [ ] Gradually writing front end pages into ko view model instead of jquery.
+
+- [ ] What is being recorded to database should be improved.
 
 - [ ] Add unit test.
 
