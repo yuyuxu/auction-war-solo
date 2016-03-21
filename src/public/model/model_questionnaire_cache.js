@@ -6,6 +6,12 @@ var QuestionnairePageCache = {
    */
   answers: {},
 
+  /** Actually length of questions
+   * @type {Object<int, int>}
+   * {page_id: number_questions}
+   */
+  number_questions: {},
+
   /** API. Update answers.
    * @param {integer} page_id - page number.
    * @param {integer} answer_index - page number.
@@ -23,12 +29,14 @@ var QuestionnairePageCache = {
    * @param {integer} page_id - page number.
    */
   IsAnswerCompleted: function(page_id) {
-    return true;
+    // TEST, uncomment
+    // return true;
+
     if (this.answers[page_id] == null) {
       Logger.Log('IsAnswerCompleted warning: no answers cached');
-      return;
+      return false;
     }
-    for (var i = 0; i < this.answers[page_id].length; ++i) {
+    for (var i = 0; i < this.number_questions[page_id]; ++i) {
       if (this.answers[page_id][i] == null) {
         return false;
       }

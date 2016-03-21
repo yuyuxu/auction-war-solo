@@ -16,10 +16,10 @@ var QuizPageHelper = {
 
     var side = $('#player-side').val();
     if (side == "type-0") {
-      if (submit_data[0] == null || submit_data[0] != "sam")  return false;
-      if (submit_data[1] == null || submit_data[1] != "high")  return false;
-      if (submit_data[2] == null || submit_data[2] != "med")  return false;
-      if (submit_data[3] == null || submit_data[3] != "low")  return false;
+      if (submit_data[0] == null || submit_data[0] != "high")  return false;
+      if (submit_data[1] == null || submit_data[1] != "med")  return false;
+      if (submit_data[2] == null || submit_data[2] != "low")  return false;
+      if (submit_data[3] == null || submit_data[3] != "records")  return false;
       if (submit_data[4] == null)  return false;
       return true;
     }

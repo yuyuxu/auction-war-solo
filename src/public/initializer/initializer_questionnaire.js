@@ -10,7 +10,7 @@ var Wizard = {
       onNext: function(tab, navigation, index) {
         // check if answer is complete
         if (!QuestionnairePageCache.IsAnswerCompleted(index - 1)) {
-          bootbox.alert('Please fill in all the questions.');
+          alert('Please fill in all the questions.');
           return false;
         }
       },
@@ -51,15 +51,18 @@ var Wizard = {
 
         // load instrument and answer
         if (index == 0) {
-          VModelQuestionnaire.LoadModel(index,
-                                        MachInstrument,
-                                        QuestionnairePageCache.answers[index],
-                                        QuestionnairePageCache.UpdateAnswer);
+          QuestionnairePageCache.number_questions[index] =
+            VModelQuestionnaire.LoadModel(index,
+                                          MachInstrument,
+                                          QuestionnairePageCache.answers[index],
+                                          QuestionnairePageCache.UpdateAnswer);
+
         } else if (index == 1) {
-          VModelQuestionnaire.LoadModel(index,
-                                        SVOInstrument,
-                                        QuestionnairePageCache.answers[index],
-                                        QuestionnairePageCache.UpdateAnswer);
+          QuestionnairePageCache.number_questions[index] =
+            VModelQuestionnaire.LoadModel(index,
+                                          SVOInstrument,
+                                          QuestionnairePageCache.answers[index],
+                                          QuestionnairePageCache.UpdateAnswer);
         } else {
           Logger.Log('Wizard onLast Error: index is ' + index);
         }

@@ -39,15 +39,15 @@ const StartPlayer = TypeScripted;
 
 // game scripted player related
 // note: time unit is second
-// const WaitingTimeMatchMaking = 9.2176;
-// const WaitingTimeLoadGame = 3.8315;
-// const WaitingTimeTurns = [19.5065, 21.5139, 17.8689, 10.4285, 17.8657,
-//                           12.0542, 18.4726, 10.3820, 13.3231];
-// testing
-const WaitingTimeMatchMaking = 1;
-const WaitingTimeLoadGame = 1;
-const WaitingTimeTurns = [1, 1, 1, 1, 1,
-                          1, 1, 1, 1];
+const WaitingTimeMatchMaking = 9.2176;
+const WaitingTimeLoadGame = 3.8315;
+const WaitingTimeTurns = [19.5065, 21.5139, 17.8689, 10.4285, 17.8657,
+                          12.0542, 18.4726, 10.3820, 13.3231];
+// TEST, uncomment
+// const WaitingTimeMatchMaking = 1;
+// const WaitingTimeLoadGame = 1;
+// const WaitingTimeTurns = [1, 1, 1, 1, 1,
+//                           1, 1, 1, 1];
 
 // 0: painting, 1: lamp, 2: record
 const ItemValue = {

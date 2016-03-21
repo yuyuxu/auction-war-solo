@@ -47,6 +47,7 @@ var VModelQuestionnaire = {
   },
 
   // refer ./data_questionnaire for formats
+  // return number of questions inside a model
   LoadModel: function(instrument_index, instrument, answer_list, select_cb) {
     // title
     this.view_model_survey.title(instrument[0]);
@@ -94,5 +95,7 @@ var VModelQuestionnaire = {
     for (var i = 0; i < temp.length; ++i) {
       this.view_model_survey.choices.push(temp[i]);
     }
+
+    return instrument[3].length;
   },
 };
