@@ -1,5 +1,6 @@
 var aws = require('aws-sdk');
 var logger = require('../utility/logger');
+var https = require('https');
 
 /** Model (static) for database. */
 var ModelDatabase = {
@@ -27,7 +28,14 @@ var ModelDatabase = {
     if (type == 'dynamo') {
       if (this.database == null) {
         aws.config.loadFromPath(__dirname + '/../constants/config_aws.json');
-        this.database = new aws.DynamoDB();
+        this.database = new aws.DynamoDB({
+          httpOptions: {
+            agent: new https.Agent({
+              rejectUnauthorized: true,
+              keepAlive: true
+            }),
+          }
+        });
       }
     } else {
       logger.Log('Init Error: type not supported ' + type + ' ...');
