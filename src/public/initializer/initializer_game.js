@@ -18,10 +18,12 @@ var ViewGamePage = {
 
     if (active) {
       this.ShowDiv('#accept-div', true);
-      this.ShowDiv('#submit-div', false);
+      this.ShowDiv('#submit-div', true);
+      $('#submit').removeClass('active').addClass('disabled');
     } else {
       this.ShowDiv('#accept-div', false);
       this.ShowDiv('#submit-div', false);
+      $('#submit').removeClass('active').addClass('disabled');
     }
 
     $('#submit-error').text('');
@@ -49,7 +51,7 @@ var ViewGamePage = {
     }
   },
 
-  /** Show jquery div object.
+  /** Show/Hide jquery div object.
    * @param {string} name - name of jquery object with # etc..
    * @param {boolean} flag - whether to show div.
    */
@@ -59,6 +61,14 @@ var ViewGamePage = {
     } else {
       $(name).css('visibility', 'hidden');
     }
+  },
+
+  /** Enable/Disable jquery div object.
+   * @param {string} name - name of jquery object with # etc..
+   * @param {boolean} flag - whether to disable div.
+   */
+  DisableDiv: function(name, flag) {
+    $(name).prop('disabled', flag);
   },
 };
 
@@ -153,9 +163,6 @@ $(document).ready(function() {
 
   // setup transition between stages
   $('#next-stage').click(function() {
-    itemstr = JSON.stringify(ManagerSceneItem.ExportItemLocations());
-    Logger.Log('submit game_data: ' + itemstr);
-    $('#submit-data').val(itemstr);
     $('#next-stage').closest('form').submit();
   });
 });

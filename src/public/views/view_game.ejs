@@ -40,9 +40,9 @@
   </section>
   <section id="section-services" class="section pad-bot10" style="color: #141823; font-family: Lato">
     <div class="row">
-      <div class="col-md-1">
+      <div class="col-md-3">
       </div>
-      <div class="col-md-4 left-side col-xs-9" style="margin-right: 10px; margin-top: 10px">
+<!--       <div class="col-md-4 left-side col-xs-9" style="margin-right: 10px; margin-top: 10px">
         <h4 align="center" style="margin-top: 10px; margin-bottom: 5px">
           <p style="font-weight: bold; font-family: Lato">
            <u>Make a statement or ask a question </u><br /> by selecting one from list below
@@ -98,7 +98,7 @@
           <a class="list-group-item" style="font-weight: bold" id="s7"><li style="min-width: 100px">Your previous offer is not good enough.</li></a>
         </div>
         <p id="selected-statement" style="color: black; margin-left: 10px; margin-top: 5px; font-weight: bold; font-size: 100%">You have not selected anything.</p>
-      </div>
+      </div> -->
       <div class="col-md-6 something col-xs-9" style="margin-left: 10px; margin-top: 10px">
         <h4 align="center" style="margin-top: 10px; margin-bottom: 5px">
           <p style="font-weight: bold; font-family: Lato">
@@ -111,10 +111,10 @@
       </div>
     </div>
     <div class="row" align="left" style="margin-top: 15px; border-color: rgba(128, 128, 128, 0.5); background-color: white; border-style: groove; border-width: 1.5px">
-      <div class="col-md-4" align="center"></div>
-      <div class="col-md-5" align="center">
+      <div class="col-md-3" align="center"></div>
+      <div class="col-md-6" align="center">
         <h4 style="margin-bottom: 5px; margin-top: 10px">
-          <p style="color: black; font-size: 100%; font-weight: bold; font-family: Lato; margin-bottom: 0px">- Game State -</p>
+          <p style="color: black; font-size: 100%; font-weight: bold; font-family: Lato; margin-bottom: 0px">--- Game State ---</p>
         </h4>
         <p id="game-state" style="color: blue; font-size: 110%; font-weight: bold; margin-top: 0px; margin-bottom: 0px"></p>
         <hr style="margin: 1px; padding: 0px" />
@@ -122,25 +122,28 @@
       </div>
     </div>
     <div id="curr-stage-div" class="row" style="margin-top: 20px; margin-bottom: 0px; margin-top: 0px">
-      <div class="col-md-4 col-md-offset-1" style="visibility: hidden">
+<!--       <div class="col-md-3 col-md-offset-3" style="visibility: hidden">
         <textarea disabled rows="5" style="width: 100%; line-height: 1.4; border: 0px inset black; background-color: white; resize: none; color: black;" id="logger">Welcome to auction war! - Logger</textarea>
-        <!-- hidden variable -->
-        <label id="player-role" style="visibility: hidden"><%=player_role%></label>
-      </div>
-      <div class="col-md-3" style="display: inline; margin-bottom: 0px; margin-top: 5px">
+      </div> -->
+      <div class="col-md-3 col-md-offset-3" style="display: inline; margin-bottom: 0px; margin-top: 5px">
         <div id="accept-div" style="visibility: visible;" align="left">
           <button id="accept" type="button" class="btn btn-danger btn-block" style="width: 100%">Accept Offer</button>
-          <p id="accept-comment1" style="font-size:100%; font-weight: bold; margin-top: 5px; display: inline" align="left">
-          Click to accept offer or Move items to make an offer.
+          <p id="accept-comment1" style="font-size:90%; font-weight: bold; margin-top: 5px; display: inline" align="left">
+          If you accept opponent's offer, your turn will finish.
           </p>
-          <p id="accept-comment2" style="font-size:100%; font-weight: bold; margin-top: 5px; display: none" align="left">
-          Your opponent has accepted your previous offer, click to finish game.
+          <p id="accept-comment2" style="font-size:90%; font-weight: bold; margin-top: 5px; display: none" align="left">
+          Your opponent has accepted your previous offer, if you also accept, game will finish.
           </p>
+          <!-- hidden variable -->
+          <label id="player-role" style="visibility: hidden"><%=player_role%></label>
         </div>
       </div>
       <div class="col-md-3" style="margin-bottom: 0px; margin-top: 5px">
         <div id="submit-div" style="visibility: visible;" align="left">
-          <button id="submit" type="button" class="btn btn-success btn-block" style="width: 100%">Submit Turn</button>
+          <button id="submit" type="button" class="btn btn-success btn-block disable" style="width: 100%">Submit</button>
+          <p id="submit-comment" style="font-size:90%; font-weight: bold; margin-top: 5px;" align="left">
+          Actived when you are making an offer.
+          </p>
           <p id="submit-error" style="color: red; margin-left: 10px; font-weight: bold" />
         </div>
       </div>

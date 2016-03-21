@@ -18,7 +18,7 @@
 
 - [ ] Embedded game app is still messy. Need a ManagerView as mediator to control rendering from both web page and game scene.
 
-- [ ] Performance of the code. https://www.mnot.net/cache_docs/.
+- [ ] Performance of the code and game code. https://www.mnot.net/cache_docs/.
 
 - [ ] Fixing human vs human app and integrate with solo app.
 

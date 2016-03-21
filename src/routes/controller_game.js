@@ -11,48 +11,52 @@ router.post('/game', function(req, res, next) {
 
   // validation
   if (turker_id == null) {
-    logger.Log('/game error: turker_id is null');
+    logger.Log('[null] /game error: turker_id is null');
     res.redirect('/');
     return;
   }
   var user = manager_user.GetUser(turker_id);
   if (user == null) {
-    logger.Log('/game error: user cannot be null');
+    logger.Log('[' + turker_id + '] ' + '/game error: user cannot be null');
     res.redirect('/');
     return;
   }
   var role = user.GetData('role');
   if (role == '*' || role == '') {
-    logger.Log('/game error: user cannot be null');
+    logger.Log('[' + turker_id + '] ' + '/game error: user cannot be null');
     res.redirect('/');
     return;
   }
 
   if (from == 'quiz') {
+    logger.Log('[' + turker_id + '] ' +
+               '/game: navigated here from page "quiz"');
     var quiz_data = req.body.quiz_data;
     if (quiz_data == null) {
-      logger.Log('/game error: quiz data cannot be null');
+      logger.Log('[' + turker_id + '] ' +
+                 '/game error: quiz data cannot be null');
       res.redirect('/');
       return;
     } else {
+      logger.Log('[' + turker_id + '] ' +
+                 '/game: update database quiz_data');
       user.SetData('quiz', quiz_data);
       table_users.UpdateUserAttributes(turker_id,
                                        {'quiz': quiz_data},
                                        function(err, data) {
         if (err) {
-          logger.Log('/game error: UpdateUserAttributes error ' + err);
+          logger.Log('[' + turker_id + '] ' +
+                     '/game error: UpdateUserAttributes error ' + err);
           res.redirect('/');
           return;
         } else {
-          logger.Log({type: 'controller', from: 'quiz', to: 'game',
-                      tip: 'updated database/model quiz data'});
           res.render('view_game.ejs', {user_id: turker_id,
                                        player_role: user.GetData('role')});
         }
       });
     }
   } else {
-    logger.Log('/game error: from is invalid ' + from);
+    logger.Log('[' + turker_id + '] ' + '/game error: from is invalid ' + from);
     res.redirect('/');
     return;
   }

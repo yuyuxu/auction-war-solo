@@ -7,7 +7,7 @@ var ManagerController = {
    */
   curr_statement: '',
 
-  /** Log all the action taken.
+  /** Log actions taken. These recorded action will be upload to database.
    * @type {Array.Object}
    */
   log_actions: [],
@@ -47,26 +47,19 @@ var ManagerController = {
              this.curr_turn_statement]);
         }
       } else if (action == 'submit') {
-        // page button submit clicked
-        ViewGamePage.ShowDiv('#accept-div', false);
+        ManagerScene.MoveNeutralItems();
+        this.Log('submit', [ManagerSceneItem.ExportItemLocations(),
+                            this.curr_turn_statement]);
+        // } else {
+        //   $('#submit-error').text('You need to take at least one action. ' +
+        //                           'Please select a valid statement/question, ' +
+        //                           'or/and drag items on the take to ' +
+        //                           'make an offer.');
+        // }
 
-        var item_moved = ManagerSceneItem.BackupLocation();
-        if (item_moved || this.curr_turn_statement != '') {
-          var item_information_str = ManagerSceneItem.ExportItemLocations();
-          ManagerScene.MoveNeutralItems();
-          ManagerController.Log('submit',
-                                [item_information_str,
-                                 this.curr_turn_statement]);
-        } else {
-          $('#submit-error').text('You need to take at least one action. ' +
-                                  'Please select a valid statement/question, ' +
-                                  'or/and drag items on the take to ' +
-                                  'make an offer.');
-        }
         this.ResetVariables();
 
         // call player finish turn
-        Logger.Log('submit turn: ' + ManagerGame.whose_turn);
         var current_player = ManagerGame.GetCurrentPlayer();
         if (current_player != null) {
           current_player.FinishTurn(
@@ -74,7 +67,7 @@ var ManagerController = {
              this.curr_turn_statement]);
         }
       } else {
-        Logger.Log('WARNING: TakeAction action ' + action + 'not supported.');
+        Logger.Log('TakeAction warning: action ' + action + 'not supported.');
       }
     }
   },
@@ -85,9 +78,9 @@ var ManagerController = {
    */
   Log: function(action, params) {
     var curr_turn_action = {};
-    curr_turn_action['player_id'] =
-      ManagerGame.GetCurrentPlayer().player_id;
-    curr_turn_action['time'] = Logger.GetFullTime();
+    // curr_turn_action['player_id'] =
+    //   ManagerGame.GetCurrentPlayer().player_id;
+    // curr_turn_action['time'] = Logger.GetFullTime();
     curr_turn_action['action'] = action;
     curr_turn_action['params'] = params;
     var action_str = JSON.stringify(curr_turn_action);

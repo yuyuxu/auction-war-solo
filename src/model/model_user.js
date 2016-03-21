@@ -35,7 +35,7 @@ User.prototype.SetData = function(attribute, value) {
   } else if (attribute == 'game') {
     this.cache['game'] = value;
   } else if (attribute == 'reward') {
-    this.cache['reward'] == value;
+    this.cache['reward'] = value;
   } else {
     logger.Log('User SetData Error: attribute not found ' + attribute);
   }
@@ -65,7 +65,6 @@ User.prototype.GetData = function(attribute) {
  * @param {dictionary} attributes - attributes extracted from database.
  */
 User.prototype.LoadData = function(attributes) {
-  logger.Log('GetData attribute = ' + JSON.stringify(attributes));
   for (var key in attributes) {
     this.SetData(key, attributes[key]);
   }
@@ -78,7 +77,8 @@ User.prototype.GetGameName = function() {
 
 /** Check whether user has finished game. */
 User.prototype.FinishedGame = function() {
-  if (this.cache.reward === '' || this.cache.reward === '*') {
+  // logger.Log('FinishedGame reward is: ' + this.cache['reward']);
+  if (this.cache['reward'] == '' || this.cache['reward'] == '*') {
     return false;
   } else {
     logger.Log('Game finished. User ' + this.user_id +

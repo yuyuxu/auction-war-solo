@@ -119,7 +119,7 @@ var ManagerSceneItem = {
         } else if (item_array[i].curr_location != LayoutSideNeutral) {
           v2 = v2 + ItemValue[k];
         } else {
-          Logger.Log('ComputeItemValue WARNING: ' +
+          Logger.Log('ComputeItemValue warning: ' +
                      'item should be fully splitted!');
           v1 = 0.0;
           v2 = 0.0;
@@ -130,27 +130,27 @@ var ManagerSceneItem = {
     return [v1, v2];
   },
 
-  /** API. Compute item's value given item locations.
+  /** API. Compute item's value given item location (refer ExportItemLocations).
   Return [current player item value, the other player's total item value]. */
-  ComputeItemValueGivenLocations: function(item_locations, current_side) {
+  ComputeItemValueGivenInformation: function(item_locations, current_side) {
     v1 = 0.0;
     v2 = 0.0;
     for (var k in item_locations) {
       var item_array = item_locations[k];
       for (var i = 0; i < item_array.length; i++) {
-        if (item_array[i].curr_location == current_side) {
+        if (item_array[i] == current_side) {
           v1 = v1 + ItemValue[k];
-        } else if (item_array[i].curr_location != LayoutSideNeutral) {
+        } else if (item_array[i] != LayoutSideNeutral) {
           v2 = v2 + ItemValue[k];
         } else {
-          Logger.Log('ComputeItemValueGivenLocations WARNING: '+
+          Logger.Log('ComputeItemValueGivenInformation warning: '+
                      'item should be fully splitted!');
           v1 = 0.0;
           v2 = 0.0;
         }
       }
     }
-    Logger.Log('ComputeItemValueGivenLocations: ' + v1 + ' ' + v2);
+    Logger.Log('ComputeItemValueGivenInformation: ' + v1 + ' ' + v2);
     return [v1, v2];
   }
 };

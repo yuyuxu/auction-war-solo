@@ -10,32 +10,31 @@ router.post('/quiz', function (req, res) {
 
   // validation
   if (turker_id == null) {
-    logger.Log('/quiz error: turker_id is null');
+    logger.Log('[null] ' + '/quiz error: turker_id is null');
     res.redirect('/');
     return;
   }
   var user = manager_user.GetUser(turker_id);
   if (user == null) {
-    logger.Log('/quiz error: user cannot be null');
+    logger.Log('[' + turker_id + '] ' + '/quiz error: user cannot be null');
     res.redirect('/');
     return;
   }
   var role = user.GetData('role');
   if (role == '*' || role == '') {
-    logger.Log('/quiz error: user cannot be null');
+    logger.Log('[' + turker_id + '] ' + '/quiz error: user cannot be null');
     res.redirect('/');
     return;
   }
 
   if (from == 'introduction') {
-    logger.Log('/quiz: navigated here from page "introduction"');
-    logger.Log({type: 'controller', from: 'introduction', to: 'quiz',
-                tip: 'load quiz data'});
+    logger.Log('[' + turker_id + '] ' +
+               '/quiz: navigated here from page "introduction"');
     res.render('view_quiz.ejs', {user_id: turker_id,
                                  player_role: user.GetData('role'),
                                  quiz_data: user.GetData('quiz')});
   } else {
-    logger.Log('/quiz error: from is invalid ' + from);
+    logger.Log('[' + turker_id + '] ' + '/quiz error: from is invalid ' + from);
     res.redirect('/');
     return;
   }

@@ -80,7 +80,7 @@ var ManagerGame = {
     if (this.game_type == HumanVsScripted) {
       ManagerScene.EnableComponentInGame('none');
       ViewGamePage.Reset(false, '');
-      var wait_time = Math.random() * RandomWaitingTime;
+      var wait_time = WaitingTimeMatchMaking;
       Logger.Log('FlowMatchMaking: game start in ' +
                              wait_time + ' seconds (' +
                              this.game_type + ')');
@@ -100,7 +100,7 @@ var ManagerGame = {
   FlowLoadGame: function() {
     if (ManagerGame.game_type == HumanVsScripted) {
       // PageTitleNotification.On('Opponent Found ...');
-      var wait_time = Math.random() * RandomWaitingTime;
+      var wait_time = WaitingTimeLoadGame;
       Logger.Log('FlowLoadGame: game start in ' +
                              wait_time + ' seconds (' +
                              ManagerGame.game_type + ')');
@@ -136,7 +136,6 @@ var ManagerGame = {
       ManagerGame.whose_turn = (ManagerGame.whose_turn + 1) %
                                ManagerGame.players.length;
     }
-    Logger.Log('FlowStep: whose_turn ' + ManagerGame.whose_turn);
 
     // update items
     if (params[0] != null) {
@@ -173,10 +172,11 @@ var ManagerGame = {
       'Both players agreed upon the split of items. Game finished!');
     ViewGamePage.DisplayDiv('#next-stage-div', true);
     ViewGamePage.DisplayDiv('#curr-stage-div', false);
-
-    var submit_data = ControllerGamePage.action_history;
-    $('#submit-data').val(submit_data);
-
     this.is_game_finished = true;
+
+    // submit data
+    $('#submit-data').val(JSON.stringify(ManagerController.log_actions));
+    Logger.Log('FlowFinishGame action log: ' +
+               JSON.stringify(ManagerController.log_actions));
   },
 };

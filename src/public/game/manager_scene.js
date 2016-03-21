@@ -212,15 +212,13 @@ var ManagerScene = {
   /** API. Move neutral items to corresponding locations. */
   MoveNeutralItems: function() {
     var current_player = ManagerGame.GetCurrentPlayer();
-    Logger.Log('MoveNeutralItems: current player ' +
-               JSON.stringify(current_player));
     var target = LayoutNoGridY - current_player.player_side - 1;
-    Logger.Log('MoveNeutralItems: target ' + target);
+    // Logger.Log('MoveNeutralItems: target ' + target);
     for (var k in ManagerSceneItem.curr_items) {
       var item_array = ManagerSceneItem.curr_items[k];
       for (var i = 0; i < item_array.length; ++i) {
         if (item_array[i].curr_location == LayoutSideNeutral) {
-          Logger.Log('MoveNeutralItems: item' + k + ' ' + i);
+          // Logger.Log('MoveNeutralItems: item' + k + ' ' + i);
           this.MoveItem(item_array[i], target);
         }
       }
@@ -231,7 +229,6 @@ var ManagerScene = {
 
   /** API. Move items to target locations. */
   MoveItems: function(target_item_locations) {
-    Logger.Log('MoveItems: ' + JSON.stringify(target_item_locations));
     if (target_item_locations == null) {
       Logger.Log('MoveItems error: target_item_locations are invalid');
       return;
@@ -378,7 +375,8 @@ var ManagerScene = {
     data.render['icon'].y = evt.stageY + data.offset.y;
     if (data.render['icon'].y < 0) {
       data.render['icon'].y = 0;
-    } else if (data.render['icon'].y > (ManagerScene.grid_height * LayoutNoGridY)) {
+    } else if (data.render['icon'].y >
+               (ManagerScene.grid_height * LayoutNoGridY)) {
       data.render['icon'].y = ManagerScene.grid_height * LayoutNoGridY;
     }
   },
@@ -394,7 +392,7 @@ var ManagerScene = {
     if (data.curr_location != location) {
       data.curr_location = location;
       ViewGamePage.ShowDiv('#accept-div', false);
-      ViewGamePage.ShowDiv('#submit-div', true);
+      $('#submit').removeClass('disabled').addClass('active');
     }
     data.render['icon'].y = ManagerScene.GetLocationY(location) -
                             ManagerScene.GetCenterOffset(data)[1];

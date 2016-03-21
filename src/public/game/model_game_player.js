@@ -21,40 +21,65 @@ function Player(id, type, side) {
 /** What player does when turn starts. */
 Player.prototype.StartTurn = function() {
   this.turn_number = this.turn_number + 1;
-  Logger.Log('StartTurn turn number: ' + this.turn_number + ' player type: ' +
-              this.player_type);
+  Logger.Log('StartTurn turn number: ' + this.turn_number +
+             ' player type: ' + this.player_type);
   if (this.player_type == TypePlayer) {
     // human player do nothing here
   } else if (this.player_type == TypeScripted) {
     // simulate one step
+    // current turn number for player, start from 0
     var turn_number = this.turn_number;
+    // final item location for update
     var item_locations;
     if (turn_number >= ScriptConcession.length) {
-      this.indicate_finish = true;
+      // if turn number is larger than scripts
+      // if already exceeded ExtraNumTurns, then directly terminate game.
+      if (turn_number >= (ExtraNumTurns + ScriptConcession.length)) {
+        this.indicate_finish = true;
+        ManagerGame.FlowFinishGame();
+        return;
+      }
+      // else just indicate finish and repeat last step
+      this.indicate_finish = false;
       item_locations = ScriptConcession[ScriptConcession.length - 1];
     } else {
+      // if turn number is within scripts
       item_locations = ManagerSceneItem.ExportItemLocations();
-      value_on_table =
-        ManagerSceneItem.ComputeCurrentItemValue(LayoutSideOpponent);
-      value_proposed =
-        ManagerSceneItem.ComputeItemValueGivenLocations(item_locations,
-                                                        LayoutSideOpponent);
-      if (value_on_table[0] > value_proposed[0]) {
-        this.indicate_finish = true;
-        if (ManagerGame.GetNextPlayer().indicate_finish) {
-          ManagerGame.FlowFinishGame();
-          return;
-        }
-      } else {
+      proposed_locations = ScriptConcession[turn_number];
+      if (turn_number == 0) {
+        // if first turn, just use script location
         this.indicate_finish = false;
-        item_locations = ScriptConcession[turn_number];
+        item_locations = proposed_locations;
+      } else {
+        // otherwise, check values to see if indicate finish
+        value_on_table =
+          ManagerSceneItem.ComputeCurrentItemValue(LayoutSideOpponent);
+        value_proposed =
+          ManagerSceneItem.ComputeItemValueGivenInformation(proposed_locations,
+                                                            LayoutSideOpponent);
+        if (value_on_table[0] >= value_proposed[0]) {
+          // if value on table better than next step value in script, finish
+          this.indicate_finish = true;
+          if (ManagerGame.GetNextPlayer().indicate_finish) {
+            // if opponent already accepted, then just finish game
+            ManagerGame.FlowFinishGame();
+            return;
+          }
+        } else {
+          // otherwise, follow script
+          this.indicate_finish = false;
+          item_locations = proposed_locations;
+        }
       }
     }
-    var wait_time = Math.random() * RandomWaitingTime;
-    Logger.Log('indicate_finish ' + this.indicate_finish);
-    Logger.Log('item_locations ' + JSON.stringify(item_locations));
+
+    if (turn_number >= (ExtraNumTurns + ScriptConcession.length)) {
+      Logger.Log('StartTurn error: turn number invalid ' + turn_number);
+      return;
+    }
 
     // after simulation
+    var wait_time = WaitingTimeTurns[turn_number];
     ManagerSceneTimer.StartTimer(
       wait_time,
       ManagerScene.HandlerTickerGameStateMessage,
@@ -63,7 +88,7 @@ Player.prototype.StartTurn = function() {
       [item_locations, '']);
   } else {
     Logger.Log('Player StartTurn: player type not supported ' +
-                           this.player_type);
+               this.player_type);
   }
 }
 

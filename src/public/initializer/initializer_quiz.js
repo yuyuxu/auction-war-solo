@@ -52,9 +52,10 @@ var QuizPageHelper = {
 
 /** Initializer for quiz page. */
 $(document).ready(function() {
+  Logger.Log('loading quiz page...');
   // load data when initializing the page
   var quiz_data_str = $('#quiz_data_prev').val();
-  Logger.Log('quiz: laod data ' + quiz_data_str);
+  Logger.Log('load data ' + quiz_data_str);
   if (quiz_data_str != null && quiz_data_str != '*' && quiz_data_str != '') {
     QuizPageHelper.LoadSubmitData(quiz_data_str);
   }

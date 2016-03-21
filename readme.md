@@ -44,14 +44,11 @@ Http request form contents / page loading content from http request:
 
 ###### Logging (front/back end)
 General logging format:
-- '[function name] [type]: [log content]'
-- type: '', 'error/err', 'warning'
+- '[user id] [function name] [type]: [log content]'
+- type (optional): '', 'error/err', 'warning'
 
 Back end logging:
 - Log routing behavior and general data flow in the back end.
-  - from: which page gets here.
-  - to: which page this routes is going.
-  - tip: what is being logged, database/model is updated etc.
 
 Front end logging:
 - Log user general page behavior.
@@ -59,7 +56,7 @@ Front end logging:
 
 ###### Game page
 - Item locations format: {category: [list of integer]}
-- Actions
+- Actions: 'submit', 'accept'
 - Views
 
 ###### Font (front end)

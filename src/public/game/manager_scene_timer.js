@@ -26,8 +26,8 @@ var ManagerSceneTimer = {
     this.timer_tick_callback_params = tick_params;
     this.timer_finish_callback = finish_cb;
     this.timer_finish_callback_params = finish_params;
-    Logger.Log('StartTimer: second ' + this.timer_start + ' ' +
-               this.timer_duration + ' ' + this.timer_tick_callback_params);
+    // Logger.Log('StartTimer: second ' + this.timer_start + ' ' +
+    //            this.timer_duration + ' ' + this.timer_tick_callback_params);
   },
 
   /** API. Reset timer. */
