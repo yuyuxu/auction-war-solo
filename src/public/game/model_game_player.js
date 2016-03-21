@@ -41,6 +41,11 @@ Player.prototype.StartTurn = function() {
         ManagerGame.FlowFinishGame();
         return;
       }
+      // if opponent already accepted, then just finish game
+      if (ManagerGame.GetNextPlayer().indicate_finish) {
+        ManagerGame.FlowFinishGame();
+        return;
+      }
       // else just indicate finish and repeat last step
       this.indicate_finish = false;
       item_locations = ScriptConcession[ScriptConcession.length - 1];
