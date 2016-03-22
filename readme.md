@@ -132,3 +132,17 @@ Front end logging:
       AttributeUpdates: attribute_keys,
     }
     ```
+
+### How to config AWS EC2 and put the app on it
+* Get AWS account.
+
+* Follow instruction to launch a EC2 instance (use AMI Linux 64 bit). Note you will create a new *.pem key pair, save it.
+
+* Connect to EC2 instance. On windows, download PuTTY and follow this:
+https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/putty.html?icmpid=docs_ec2_console
+Basically, first convert *.pem key pair to *.ppk (SSH-2 RSA). Then create a session in PuTTY use that *.ppk, connect to ec2-user@PublicDNS(of the ec2 instance), port number 22.
+
+* Once connected into ec2 ssh, install default packages as mentioned in the terminal. Install git. Then install node js:
+https://gist.github.com/douglascorrea/b81b11f8bbf8e6c45cd5
+
+* Run node js. Note now from outside you still might have troubling connecting to your node app. In this case, go to security group, change both inbounds and outbounds to allow all traffic.
