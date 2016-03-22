@@ -16,12 +16,14 @@ var VModelQuestionnaire = {
 
   // catetory: id of the study this question belongs to
   // data: the whole data for one question
+  // align: how to align the question
   // index: the index of this question among all the questions in the study
   // select_cb: which function to notify if the choice is selected
-  Question: function(category, data, index, select_cb) {
+  Question: function(category, data, align, index, select_cb) {
     this.category = category;
     this.question_data = data;
     this.question_row = ko.observableArray();
+    this.question_align = align;
     this.count = index;
     this.selected = ko.observable();
     this.select_cb = select_cb;
@@ -31,9 +33,6 @@ var VModelQuestionnaire = {
     }
   },
 
-  Choice: function(text) {
-    this.choice_text = text;
-  },
 
   Description: function(data) {
     this.description_image = '';
@@ -44,6 +43,10 @@ var VModelQuestionnaire = {
     if (data.length > 0) {
       this.description_text = data[0];
     }
+  },
+
+  Choice: function(text) {
+    this.choice_text = text;
   },
 
   // refer ./data_questionnaire for formats
@@ -69,6 +72,7 @@ var VModelQuestionnaire = {
     var temp = $.map(instrument[3], function(data, index) {
       return new VModelQuestionnaire.Question(instrument_index,
                                               data,
+                                              instrument[5],
                                               index,
                                               select_cb);
     });

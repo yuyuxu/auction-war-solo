@@ -59,10 +59,10 @@
               <td width="2%"></td>
               <!-- second cell is the question text -->
               <td width="48%" align="left">
-                <!-- question text is (row * 1) table -->
+                <!-- question text is (row * 1) table-->
                 <table align="left">
-                  <tbody data-bind="foreach: question_row" align="left">
-                    <tr><td><span data-bind="text: question_text" style="font-weight: 600" /></td></tr>
+                  <tbody data-bind="foreach: question_row, style: {textAlign: question_align}">
+                      <tr><td><span data-bind="text: question_text" style="font-weight: 600"/></td></tr>
                   </tbody>
                 </table>
               </td>

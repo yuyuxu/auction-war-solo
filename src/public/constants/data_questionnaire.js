@@ -11,6 +11,7 @@
             ]
             where cell11 is a data point
   data[4]: [choice text]
+  data[5]: how to align the questions of each questionnaire, "left"/"right" etc.
 */
 
 // Mach-IV Test
@@ -61,6 +62,8 @@ const MachInstrument = [
    "neutral",
    "agree",
    "strongly agree"],
+  // 5
+  "left",
 ];
 
 // SVO Test
@@ -125,4 +128,6 @@ const SVOInstrument = [
   ],
   // 4
   ["A", "B", "C"],
+  // 5
+  "right",
 ];

@@ -6,7 +6,7 @@ var QuizPageHelper = {
     submit_data.push($('input[name=group1]:checked').val());
     submit_data.push($('input[name=group2]:checked').val());
     submit_data.push($('input[name=group3]:checked').val());
-    submit_data.push($('input[name=group4]:checked').val());
+    // submit_data.push($('input[name=group4]:checked').val());
     submit_datastr = JSON.stringify(submit_data);
     return submit_datastr;
   },
@@ -22,7 +22,7 @@ var QuizPageHelper = {
       if (submit_data[0] == null || submit_data[0] != "high")  return false;
       if (submit_data[1] == null || submit_data[1] != "med")  return false;
       if (submit_data[2] == null || submit_data[2] != "low")  return false;
-      if (submit_data[3] == null || submit_data[3] != "records")  return false;
+      // if (submit_data[3] == null || submit_data[3] != "records")  return false;
       return true;
     }
   },
@@ -45,10 +45,10 @@ var QuizPageHelper = {
       var $radios = $('input:radio[name=group3]');
       $radios.filter('[value=' + submit_data[2] + ']').prop('checked', true);
     }
-    if (submit_data[3] != null) {
-      var $radios = $('input:radio[name=group4]');
-      $radios.filter('[value=' + submit_data[3] + ']').prop('checked', true);
-    }
+    // if (submit_data[3] != null) {
+    //   var $radios = $('input:radio[name=group4]');
+    //   $radios.filter('[value=' + submit_data[3] + ']').prop('checked', true);
+    // }
   }
 };
 

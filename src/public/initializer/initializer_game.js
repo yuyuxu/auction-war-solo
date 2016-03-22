@@ -146,6 +146,20 @@ var ControllerGamePage = {
 
 /** Initializer for game page. */
 $(document).ready(function() {
+  window.onbeforeunload = function(e) {
+    var message = 'Are you sure you want to leave this page? ' +
+                  'Your game will be restarted ...';
+    alert(message);
+
+    // for IE and FireFox
+    if (e) {
+      e.returnValue = message;
+    }
+
+    // for chrome
+    return message;
+  }
+
   // load page, init game
   window.onload = function() {
     // init game components
@@ -163,6 +177,8 @@ $(document).ready(function() {
 
   // setup transition between stages
   $('#next-stage').click(function() {
+    window.onbeforeunload = null;
+    window.beforeunload = null;
     $('#next-stage').closest('form').submit();
   });
 });
