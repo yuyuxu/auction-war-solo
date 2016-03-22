@@ -17,7 +17,7 @@
 // Mach-IV Test
 const MachInstrument = [
   // 0
-  "Test One",
+  "Test One: Answer all the following questions",
   // 1
   [],
   // 2
@@ -69,7 +69,7 @@ const MachInstrument = [
 // SVO Test
 const SVOInstrument = [
   // 0
-  "Test Two",
+  "Test Two: Answer all the following questions",
   // 1
   [
    ["Imagine that you have been randomly paired with another person, " +
