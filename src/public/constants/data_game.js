@@ -39,7 +39,7 @@ const StartPlayer = TypeScripted;
 
 // game scripted player related
 // note: time unit is second
-const WaitingTimeMatchMaking = 7.2176;
+const WaitingTimeMatchMaking = 9.2176;
 const WaitingTimeLoadGame = 2.8315;
 const WaitingTimeTurns = [5.9754, 7.3571, 11.5761, 8.4189, 13.7874,
                           14.5774, 10.9223, 6.3846, 5.8559];

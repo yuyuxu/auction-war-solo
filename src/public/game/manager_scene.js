@@ -155,10 +155,11 @@ var ManagerScene = {
     item.render['icon'].addChild(item_image);
     item.render['icon'].addChild(hit_area);
     this.container_grid.addChild(item.render['icon']);
-    hit_area.on('mousedown', this.MousedownIcon, null, false, item);
+    // hit_area.on('mousedown', this.MousedownIcon, null, false, item);
     hit_area.on('mouseover', this.MouseOverIcon, null, false, item);
-    hit_area.on('pressup', this.ReleaseIcon, null, false, item);
-    hit_area.on('pressmove', this.PressmoveIcon, null, false, item);
+    // hit_area.on('pressup', this.ReleaseIcon, null, false, item);
+    // hit_area.on('pressmove', this.PressmoveIcon, null, false, item);
+    hit_area.on('dblclick', this.DoubleclickIcon, null, false, item);
 
     this.stage.update();
   },
@@ -396,5 +397,26 @@ var ManagerScene = {
     }
     data.render['icon'].y = ManagerScene.GetLocationY(location) -
                             ManagerScene.GetCenterOffset(data)[1];
+  },
+
+  DoubleclickIcon: function(evt, data) {
+    var o = evt.target;
+    o.cursor = 'pointer';
+    var location = Math.floor(data.render['icon'].y / ManagerScene.grid_height);
+    if (location >= LayoutNoGridY) {
+      location = LayoutNoGridY - 1;
+    }
+    data.curr_location = LayoutNoGridY - 1 - location;
+    data.render['icon'].y = ManagerScene.GetLocationY(data.curr_location) -
+                            ManagerScene.GetCenterOffset(data)[1];
+    ViewGamePage.ShowDiv('#accept-div', false);
+    $('#submit').removeClass('disabled').addClass('active');
+    // if (data.curr_location != location) {
+    //   data.curr_location = location;
+    //   ViewGamePage.ShowDiv('#accept-div', false);
+    //   $('#submit').removeClass('disabled').addClass('active');
+    // }
+    // data.render['icon'].y = ManagerScene.GetLocationY(location) -
+    //                         ManagerScene.GetCenterOffset(data)[1];
   },
 };

@@ -1,5 +1,6 @@
 var express = require('express');
 var logger = require('../utility/logger');
+var timer = require('../utility/timer');
 var database = require('../data_access/database');
 var table_users = require('../data_access/table_users');
 var manager_user = require('../model/model_manager_user').GetInstance();
@@ -51,6 +52,7 @@ router.post('/questionnaire', function(req, res) {
                        '/questionnaire CreateUser error: ' + err);
           } else {
             var user = manager_user.CreateUser(turker_id);
+            user.game_start_time = timer.GetFullTime();
             res.render('view_questionnaire.ejs',
               {user_id: turker_id,
                questionnaire_data: user.GetData('questionnaire')});
@@ -70,6 +72,7 @@ router.post('/questionnaire', function(req, res) {
             {user_id: turker_id, reward_code: user.GetData('reward')});
         } else {
           // the existing (model) player hasn't played the game
+          user.game_start_time = timer.GetFullTime();
           res.render('view_questionnaire.ejs',
             {user_id: turker_id,
              questionnaire_data: user.GetData('questionnaire')});

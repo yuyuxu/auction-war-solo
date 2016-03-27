@@ -1,6 +1,7 @@
 var express = require('express');
 var logger = require('../utility/logger');
 var helpers = require('../utility/helpers');
+var timer = require('../utility/timer');
 var table_users = require('../data_access/table_users');
 var manager_user = require('../model/model_manager_user').GetInstance();
 
@@ -30,6 +31,10 @@ router.post('/finish', function (req, res) {
     res.redirect('/');
     return;
   }
+  user.game_finish_time = timer.GetFullTime();
+  logger.Log('[' + turker_id + '] ' +
+             '/finish: game_start_time - ' + user.game_start_time +
+             ' game_finish_time - ' + user.game_finish_time);
 
   if (from == 'game') {
     logger.Log('[' + turker_id + '] ' +

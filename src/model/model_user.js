@@ -19,6 +19,12 @@ function User(user_id) {
     game: '*',
     reward: '*',
   };
+
+  /** User model game time.
+   * @type {float}
+   */
+  this.game_start_time = -1;
+  this.game_finish_time = -1;
 }
 
 /** Set data cache.
