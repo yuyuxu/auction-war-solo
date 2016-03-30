@@ -73,7 +73,7 @@ const SVOInstrument = [
   // 1
   [
    ["Imagine that you have been randomly paired with another person, " +
-    "whom you do not know and will not meet or communicate " +
+    "whom you do not know and will not meet or communicate with " +
     "in the future. Both of you are making choices among three options " +
     "(A, B, C) by choosing one of the options. Each option represents " +
     "a different point allocation to yourself and another person."],

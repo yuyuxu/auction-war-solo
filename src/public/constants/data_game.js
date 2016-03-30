@@ -35,7 +35,7 @@ const HumanVsScripted = 0;
 const HumanVsSocket = 1;
 
 // game starting player
-const StartPlayer = TypeScripted;
+const StartPlayer = TypePlayer;
 
 // game scripted player related
 // note: time unit is second
