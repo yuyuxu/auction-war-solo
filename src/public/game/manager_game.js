@@ -169,7 +169,8 @@ var ManagerGame = {
     ViewGamePage.Reset(false, false);
 
     ViewGamePage.DisplayMessage('#game-state',
-      'Both players agreed upon the split of items. Game finished!');
+      'You and your opponent agreed upon the split of the items, ' +
+      'so the negotiation is completed !');
     ViewGamePage.DisplayDiv('#next-stage-div', true);
     ViewGamePage.DisplayDiv('#curr-stage-div', false);
     this.is_game_finished = true;

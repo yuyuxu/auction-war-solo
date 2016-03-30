@@ -6,6 +6,15 @@
 <link rel="stylesheet" href="./stylesheets/prettify.css"></link>
 <link rel="stylesheet" href="./stylesheets/custom.css"></link>
 <link rel="stylesheet" href="./stylesheets/style.css"/></link>
+<style type="text/css">
+.table tbody>tr>td{
+    vertical-align: top;
+}
+
+.table tbody>tr>td.vert-align{
+    vertical-align: middle;
+}
+</style>
 </head>
 <body>
 <section class="featured">
@@ -20,73 +29,363 @@
 <section id="section-services" class="pad-bot10 fill" style="color: #141823">
   <div class="container-fluid row col-md-8 col-md-offset-2">
     <div id="root-wizard" class="form-group" style="margin-top: 30px">
-      <div class="container" style="margin-bottom: 10px" align="left">
+      <div style="margin-bottom: 10px" align="left">
         <ul><li><a href="#tab1" data-toggle="tab">Step One</a></li>
         <li><a href="#tab2" data-toggle="tab">Step Two</a></li></ul>
       </div>
-      <!-- title -->
-      <h3 align="center" data-bind="text: title"></h3>
-      <!-- descriptions -->
-      <div class="container">
-        <ul data-bind="foreach: descriptions">
-        <p data-bind="text: description_text" class="text-left" style="font-size: 17px"></p>
-        <div align="center"><img data-bind="attr: {src: description_image}"/></div>
-        </ul>
+      <!-- div for questionnaire -->
+      <!-- questionnaire1 using knockout js -->
+      <div id="mach" style="display:visible">
+        <!-- title -->
+        <h3 align="center" data-bind="text: title"></h3>
+        <!-- descriptions -->
+        <div >
+          <ul data-bind="foreach: descriptions">
+          <p data-bind="text: description_text" class="text-left" style="font-size: 17px"></p>
+          <div align="center"><img data-bind="attr: {src: description_image}"/></div>
+          </ul>
+        </div>
+        <br />
+        <!-- main contents -->
+        <div align="left">
+          <!-- table one: one row for statements and choices -->
+          <table class="table">
+            <tbody>
+            <div class="row">
+              <div class="col-xs-6 col-md-6">
+                <h4 data-bind="text: statements" style="text-align: center; font-weight: bold"></h4>
+              </div>
+              <div class="col-xs-6 col-md-6">
+                <h4 style="text-align: center; font-weight: bold">Choices</h4>
+              </div>
+            </div>
+            </tbody>
+          </table>
+          <!-- table two: main content -->
+          <table class="table">
+            <!-- each question data is a table body -->
+            <tbody data-bind="foreach: questions">
+              <!-- each table body should only have 1 row -->
+              <tr>
+                <!-- first cell is placeholder -->
+                <td width="2%"></td>
+                <!-- second cell is the question text -->
+                <td width="48%" align="left">
+                  <!-- question text is (row * 1) table-->
+                  <table align="left">
+                    <tbody data-bind="foreach: question_row, style: {textAlign: question_align}">
+                        <tr><td><span data-bind="text: question_text" style="font-weight: 600"/></td></tr>
+                    </tbody>
+                  </table>
+                </td>
+                <!-- third cell is the choices -->
+                <td width="48%" align="center">
+                  <!-- choice is also a (1 * number of choices) table -->
+                  <table align="center">
+                    <tr>
+                      <td data-bind="foreach: $root.choices" style="text-align: left">
+                        <label class="radio-inline">
+                          <input type="radio" data-bind="checked: $parent.selected, click: $parent.Select.bind($data, $parent), clickBubble: false, attr: {name: $parent.count, value: choice_text}" />
+                          <span data-bind="text: choice_text" />
+                        </label>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+                <!-- final cell is placeholder -->
+                <td width="2%"></td>
+              </tr>
+            </tbody>
+          </table>
+          <hr />
+        </div>
       </div>
-      <br />
-      <!-- main contents -->
-      <div class="container" align="left">
-        <!-- table one: one row for statements and choices -->
-        <table class="table">
-          <tbody>
-          <div class="row">
-            <div class="col-xs-6 col-md-6">
-              <h4 data-bind="text: statements" style="text-align: center; font-weight: bold"></h4>
-            </div>
-            <div class="col-xs-6 col-md-6">
-              <h4 style="text-align: center; font-weight: bold">Choices</h4>
-            </div>
-          </div>
-          </tbody>
-        </table>
-        <!-- table two: main content -->
-        <table class="table">
-          <!-- each question data is a table body -->
-          <tbody data-bind="foreach: questions">
-            <!-- each table body should only have 1 row -->
-            <tr>
-              <!-- first cell is placeholder -->
-              <td width="2%"></td>
-              <!-- second cell is the question text -->
-              <td width="48%" align="left">
-                <!-- question text is (row * 1) table-->
-                <table align="left">
-                  <tbody data-bind="foreach: question_row, style: {textAlign: question_align}">
-                      <tr><td><span data-bind="text: question_text" style="font-weight: 600"/></td></tr>
-                  </tbody>
-                </table>
-              </td>
-              <!-- third cell is the choices -->
-              <td width="48%" align="center">
-                <!-- choice is also a (1 * number of choices) table -->
-                <table align="center">
-                  <tr>
-                    <td data-bind="foreach: $root.choices" style="text-align: left">
-                      <label class="radio-inline">
-                        <input type="radio" data-bind="checked: $parent.selected, click: $parent.Select.bind($data, $parent), clickBubble: false, attr: {name: $parent.count, value: choice_text}" />
-                        <span data-bind="text: choice_text" />
-                      </label>
-                    </td>
+      <!-- questionnaire2 is not view model (TODO) -->
+      <div id="svo" style="display:visible">
+        <!-- title -->
+        <h3 align="center">Test Two: Answer all the following questions</h3>
+        <!-- descriptions -->
+        <div>
+          <p class="text-left" style="font-size: 17px">In this task you have been randomly paired with another person, whom we will refer to as the other. This other person is someone you do not know and will remain mutually anonymous. All of your choices are completely confidential. You will be making a series of decisions about allocating resources between you and this other person. For each of the following questions, please indicate the distribution you prefer most by marking the respective position along the midline. You can only make one mark for each question. </p>
+          <p class="text-left" style="font-size: 17px"> Your decisions will yield money for both yourself and the other person. here are no right or wrong answers, this is all about personal preferences.</p>
+        </div>
+        <br />
+        <hr />
+        <!-- main contents -->
+        <div align="center">
+          <table class="table">
+            <tbody>
+              <tr>
+                <table class="table">
+                  <h4 style="font-weight: bold; margin-bottom: 0px" align="center">- 1 -</h4>
+                  <tr align="center">
+                    <td style="font-weight: bold;">You receive</td>
+                    <td>100</td>
+                    <td>98</td>
+                    <td>96</td>
+                    <td>94</td>
+                    <td>93</td>
+                    <td>91</td>
+                    <td>89</td>
+                    <td>87</td>
+                    <td>85</td>
+                    <!-- <td align="left" style="font-weight: bold;">You: </td> -->
+                  </tr>
+                  <tr align="center"><div class="btn-group" data-toggle="buttons">
+                    <td></td>
+                    <td ><input type="radio" name="q1" value="1"/></td>
+                    <td ><input type="radio" name="q1" value="2"/></td>
+                    <td ><input type="radio" name="q1" value="3"/></td>
+                    <td ><input type="radio" name="q1" value="4"/></td>
+                    <td ><input type="radio" name="q1" value="5"/></td>
+                    <td ><input type="radio" name="q1" value="6"/></td>
+                    <td ><input type="radio" name="q1" value="7"/></td>
+                    <td ><input type="radio" name="q1" value="8"/></td>
+                    <td ><input type="radio" name="q1" value="9"/></td>
+                    <!-- <td></td> -->
+                  </div></tr>
+                  <tr align="center">
+                    <td style="font-weight: bold;">Other receives</td>
+                    <td>50</td>
+                    <td>54</td>
+                    <td>59</td>
+                    <td>63</td>
+                    <td>68</td>
+                    <td>72</td>
+                    <td>76</td>
+                    <td>81</td>
+                    <td>85</td>
+                    <!-- <td align="left" style="font-weight: bold;">Other: </td> -->
                   </tr>
                 </table>
-              </td>
-              <!-- final cell is placeholder -->
-              <td width="2%"></td>
-            </tr>
-          </tbody>
-        </table>
-        <!-- table three: buttons -->
-        <hr />
+              </tr>
+              <tr>
+                <table class="table">
+                  <h4 style="font-weight: bold; margin-bottom: 0px" align="center">- 2 -</h4>
+                  <tr align="center">
+                    <td style="font-weight: bold;">You receive</td>
+                    <td>100</td>
+                    <td>94</td>
+                    <td>88</td>
+                    <td>81</td>
+                    <td>75</td>
+                    <td>69</td>
+                    <td>63</td>
+                    <td>56</td>
+                    <td>50</td>
+                    <!-- <td align="left" style="font-weight: bold;">You: </td> -->
+                  </tr>
+                  <tr align="center"><div class="btn-group" data-toggle="buttons">
+                    <td></td>
+                    <td ><input type="radio" name="q2" value="1"/></td>
+                    <td ><input type="radio" name="q2" value="2"/></td>
+                    <td ><input type="radio" name="q2" value="3"/></td>
+                    <td ><input type="radio" name="q2" value="4"/></td>
+                    <td ><input type="radio" name="q2" value="5"/></td>
+                    <td ><input type="radio" name="q2" value="6"/></td>
+                    <td ><input type="radio" name="q2" value="7"/></td>
+                    <td ><input type="radio" name="q2" value="8"/></td>
+                    <td ><input type="radio" name="q2" value="9"/></td>
+                    <!-- <td></td> -->
+                  </div></tr>
+                  <tr align="center">
+                    <td style="font-weight: bold;">Other receives</td>
+                    <td>50</td>
+                    <td>56</td>
+                    <td>63</td>
+                    <td>69</td>
+                    <td>75</td>
+                    <td>81</td>
+                    <td>88</td>
+                    <td>94</td>
+                    <td>100</td>
+                    <!-- <td align="left" style="font-weight: bold;">Other: </td> -->
+                  </tr>
+                </table>
+              </tr>
+              <tr>
+                <table class="table">
+                  <h4 style="font-weight: bold; margin-bottom: 0px" align="center">- 3 -</h4>
+                  <tr align="center">
+                    <td style="font-weight: bold;">You receive</td>
+                    <td>50</td>
+                    <td>54</td>
+                    <td>59</td>
+                    <td>63</td>
+                    <td>68</td>
+                    <td>72</td>
+                    <td>76</td>
+                    <td>81</td>
+                    <td>85</td>
+                    <!-- <td align="left" style="font-weight: bold;">You: </td> -->
+                  </tr>
+                  <tr align="center"><div class="btn-group" data-toggle="buttons">
+                    <td></td>
+                    <td ><input type="radio" name="q3" value="1"/></td>
+                    <td ><input type="radio" name="q3" value="2"/></td>
+                    <td ><input type="radio" name="q3" value="3"/></td>
+                    <td ><input type="radio" name="q3" value="4"/></td>
+                    <td ><input type="radio" name="q3" value="5"/></td>
+                    <td ><input type="radio" name="q3" value="6"/></td>
+                    <td ><input type="radio" name="q3" value="7"/></td>
+                    <td ><input type="radio" name="q3" value="8"/></td>
+                    <td ><input type="radio" name="q3" value="9"/></td>
+                    <!-- <td></td> -->
+                  </div></tr>
+                  <tr align="center">
+                    <td style="font-weight: bold;">Other receives</td>
+                    <td>100</td>
+                    <td>89</td>
+                    <td>79</td>
+                    <td>68</td>
+                    <td>58</td>
+                    <td>47</td>
+                    <td>36</td>
+                    <td>26</td>
+                    <td>15</td>
+                    <!-- <td align="left" style="font-weight: bold;">Other: </td> -->
+                  </tr>
+                </table>
+              </tr>
+              <tr>
+                <table class="table">
+                  <h4 style="font-weight: bold; margin-bottom: 0px" align="center">- 4 -</h4>
+                  <tr align="center">
+                    <td style="font-weight: bold;">You receive</td>
+                    <td>50</td>
+                    <td>54</td>
+                    <td>59</td>
+                    <td>63</td>
+                    <td>68</td>
+                    <td>72</td>
+                    <td>76</td>
+                    <td>81</td>
+                    <td>85</td>
+                    <!-- <td align="left" style="font-weight: bold;">You: </td> -->
+                  </tr>
+                  <tr align="center"><div class="btn-group" data-toggle="buttons">
+                    <td></td>
+                    <td ><input type="radio" name="q4" value="1"/></td>
+                    <td ><input type="radio" name="q4" value="2"/></td>
+                    <td ><input type="radio" name="q4" value="3"/></td>
+                    <td ><input type="radio" name="q4" value="4"/></td>
+                    <td ><input type="radio" name="q4" value="5"/></td>
+                    <td ><input type="radio" name="q4" value="6"/></td>
+                    <td ><input type="radio" name="q4" value="7"/></td>
+                    <td ><input type="radio" name="q4" value="8"/></td>
+                    <td ><input type="radio" name="q4" value="9"/></td>
+                    <!-- <td></td> -->
+                  </div></tr>
+                  <tr align="center">
+                    <td style="font-weight: bold;">Other receives</td>
+                    <td>100</td>
+                    <td>98</td>
+                    <td>96</td>
+                    <td>94</td>
+                    <td>93</td>
+                    <td>91</td>
+                    <td>89</td>
+                    <td>87</td>
+                    <td>85</td>
+                    <!-- <td align="left" style="font-weight: bold;">Other: </td> -->
+                  </tr>
+                </table>
+              </tr>
+              <tr>
+                <table class="table">
+                  <h4 style="font-weight: bold; margin-bottom: 0px" align="center">- 5 -</h4>
+                  <tr align="center">
+                    <td style="font-weight: bold;">You receive</td>
+                    <td>85</td>
+                    <td>87</td>
+                    <td>89</td>
+                    <td>91</td>
+                    <td>93</td>
+                    <td>94</td>
+                    <td>96</td>
+                    <td>98</td>
+                    <td>100</td>
+                    <!-- <td align="left" style="font-weight: bold;">You: </td> -->
+                  </tr>
+                  <tr align="center"><div class="btn-group" data-toggle="buttons">
+                    <td></td>
+                    <td ><input type="radio" name="q5" value="1"/></td>
+                    <td ><input type="radio" name="q5" value="2"/></td>
+                    <td ><input type="radio" name="q5" value="3"/></td>
+                    <td ><input type="radio" name="q5" value="4"/></td>
+                    <td ><input type="radio" name="q5" value="5"/></td>
+                    <td ><input type="radio" name="q5" value="6"/></td>
+                    <td ><input type="radio" name="q5" value="7"/></td>
+                    <td ><input type="radio" name="q5" value="8"/></td>
+                    <td ><input type="radio" name="q5" value="9"/></td>
+                    <!-- <td></td> -->
+                  </div></tr>
+                  <tr align="center">
+                    <td style="font-weight: bold;">Other receives</td>
+                    <td>15</td>
+                    <td>19</td>
+                    <td>24</td>
+                    <td>28</td>
+                    <td>33</td>
+                    <td>37</td>
+                    <td>41</td>
+                    <td>46</td>
+                    <td>50</td>
+                    <!-- <td align="left" style="font-weight: bold;">Other: </td> -->
+                  </tr>
+                </table>
+              </tr>
+              <tr>
+                <table class="table">
+                  <h4 style="font-weight: bold; margin-bottom: 0px" align="center">- 6 -</h4>
+                  <tr align="center">
+                    <td style="font-weight: bold;">You receive</td>
+                    <td>85</td>
+                    <td>85</td>
+                    <td>85</td>
+                    <td>85</td>
+                    <td>85</td>
+                    <td>85</td>
+                    <td>85</td>
+                    <td>85</td>
+                    <td>85</td>
+                    <!-- <td align="left" style="font-weight: bold;">You: </td> -->
+                  </tr>
+                  <tr align="center"><div class="btn-group" data-toggle="buttons">
+                    <td></td>
+                    <td ><input type="radio" name="q6" value="1"/></td>
+                    <td ><input type="radio" name="q6" value="2"/></td>
+                    <td ><input type="radio" name="q6" value="3"/></td>
+                    <td ><input type="radio" name="q6" value="4"/></td>
+                    <td ><input type="radio" name="q6" value="5"/></td>
+                    <td ><input type="radio" name="q6" value="6"/></td>
+                    <td ><input type="radio" name="q6" value="7"/></td>
+                    <td ><input type="radio" name="q6" value="8"/></td>
+                    <td ><input type="radio" name="q6" value="9"/></td>
+                    <!-- <td></td> -->
+                  </div></tr>
+                  <tr align="center">
+                    <td style="font-weight: bold;">Other receives</td>
+                    <td>85</td>
+                    <td>76</td>
+                    <td>68</td>
+                    <td>59</td>
+                    <td>50</td>
+                    <td>41</td>
+                    <td>33</td>
+                    <td>24</td>
+                    <td>15</td>
+                    <!-- <td align="left" style="font-weight: bold;">Other: </td> -->
+                  </tr>
+                </table>
+              </tr>
+            </tbody>
+          </table>
+          <hr />
+        </div>
+      </div>
+      <!-- div for main buttons -->
+      <div>
         <table class="table">
           <tbody>
           <div class="pull-left">
@@ -105,6 +404,7 @@
             </form>
           </div>
           </tbody>
+        </table>
       </div>
       <br />
       <br />

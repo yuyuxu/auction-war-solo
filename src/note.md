@@ -2,7 +2,7 @@
 
 - [ ] Timer should be an object rather than a static model.
 
-- [ ] Gradually writing front end pages into ko view model instead of jquery.
+- [ ] Gradually writing front end pages into ko view model instead of jquery (Questionnaire SVO page and Quiz page).
 
 - [ ] What is being recorded to database should be improved.
 
