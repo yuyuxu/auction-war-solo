@@ -144,12 +144,18 @@ var ManagerGame = {
 
     // update rendering
     if (ManagerGame.GetCurrentPlayer().player_type == TypePlayer) {
+      Logger.Log('dafad');
       // PageTitleNotification.On('Your Turn ...');
       ManagerSceneTimer.ResetTimer();
       ManagerScene.EnableComponentInGame('game');
       ViewGamePage.Reset(true, ManagerGame.GetNextPlayer().indicate_finish);
-      ViewGamePage.DisplayMessage('#game-message', params[1]);
       ViewGamePage.DisplayMessage('#game-state', 'Your turn');
+      // if game has not started yet and human player goes first,
+      // then do not show accept division
+      if (ManagerGame.GetCurrentPlayer().turn_number < 0 &&
+          StartPlayer == TypePlayer) {
+        ViewGamePage.ShowDiv('#accept-div', false);
+      }
     } else {
       // PageTitleNotification.On('Wait for Your Turn ...');
       ViewGamePage.Reset(false, ManagerGame.GetNextPlayer().indicate_finish);

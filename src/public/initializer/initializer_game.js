@@ -27,7 +27,7 @@ var ViewGamePage = {
     }
 
     $('#submit-error').text('');
-    $('#game-message').text('');
+    // $('#game-message').text('');
   },
 
   /** Display message using some jquery objects.
