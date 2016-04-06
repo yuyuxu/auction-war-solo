@@ -300,6 +300,8 @@ var ManagerScene = {
                               EffectDefaultTransparency,
                               this.container_grid.alpha);
     }
+
+    this.stage.update();
   },
 
 

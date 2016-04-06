@@ -144,7 +144,6 @@ var ManagerGame = {
 
     // update rendering
     if (ManagerGame.GetCurrentPlayer().player_type == TypePlayer) {
-      Logger.Log('dafad');
       // PageTitleNotification.On('Your Turn ...');
       ManagerSceneTimer.ResetTimer();
       ManagerScene.EnableComponentInGame('game');

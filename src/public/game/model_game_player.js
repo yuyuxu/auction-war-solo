@@ -53,7 +53,7 @@ Player.prototype.StartTurn = function() {
       // if turn number is within scripts
       item_locations = ManagerSceneItem.ExportItemLocations();
       proposed_locations = ScriptConcession[turn_number];
-      if (turn_number == 0) {
+      if (turn_number == 0 && StartPlayer == TypeScripted) {
         // if first turn, just use script location
         this.indicate_finish = false;
         item_locations = proposed_locations;
