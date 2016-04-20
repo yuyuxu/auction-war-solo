@@ -187,17 +187,6 @@ end
 % subplot(1, 2, 2);
 % histogram(y_svo);
 
-save('temp/D.mat', 'D');
-save('temp/y_mach.mat', 'y_mach');
-save('temp/y_svo.mat', 'y_svo');
-
-else % end of save_data
-
-load('temp/D.mat');
-load('temp/y_mach.mat');
-load('temp/y_svo.mat');
-end % otherwise load data
-
 % -- PROCESSING: extracting features
 % 24 moving action, 1 accept, total 25 actions
 % NOTE: JSON.parse has trouble parsing double type, so here using jsonlab
@@ -222,9 +211,23 @@ for i = 1:n
         k = k + 1;
       end
       % compute the action index
-      
+      X{i, 1}(j, 1) = 2 * count(1, 1) + 3 * count(1, 2) + ...
+                      4 * count(1, 3);
     else
       error('action not valid');
     end
   end
 end
+
+save('temp/D.mat', 'D');
+save('temp/y_mach.mat', 'y_mach');
+save('temp/y_svo.mat', 'y_svo');
+save('temp/X.mat', 'X');
+
+else % end of save_data
+
+load('temp/D.mat');
+load('temp/y_mach.mat');
+load('temp/y_svo.mat');
+load('temp/X.mat');
+end % otherwise load data
