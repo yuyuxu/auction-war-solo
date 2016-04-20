@@ -2,6 +2,10 @@ clear;
 clc;
 close all;
 
+config;
+
+if save_data == 1
+
 % -- LOADING: loading mturk data
 n1 = 32;
 M1 = csv2cell('data/Batch1_.csv', 'fromfile');
@@ -81,7 +85,7 @@ D(unmapped, :) = [];
 % subplot(2, 2, 4);
 % histogram(str2double(D(1:end, 7)));
 
-% -- PROCESSING: consider numeric data now
+% -- PROCESSING: extracting label
 n = size(D, 1);
 y_mach = zeros(n, 1);
 mach_keys = ['T+', 'V-', 'V+', 'T-', 'V+', 'T+', 'V+', 'M+', 'V-', ...
@@ -101,9 +105,7 @@ svo_o = [50	54	59	63	68	72	76	81	85; ...
          15	19	24	28	33	37	41	46	50; ...
          85	76	68	59	50	41	33	24	15];
 for i = 1:n
-  gstr = JSON.parse(D{i, 2});
   qstr = JSON.parse(D{i, 3});
-  
   % mach
   j = 1;
   mach_score = zeros(length(fieldnames(qstr.s0)), 1);
@@ -185,3 +187,44 @@ end
 % subplot(1, 2, 2);
 % histogram(y_svo);
 
+save('temp/D.mat', 'D');
+save('temp/y_mach.mat', 'y_mach');
+save('temp/y_svo.mat', 'y_svo');
+
+else % end of save_data
+
+load('temp/D.mat');
+load('temp/y_mach.mat');
+load('temp/y_svo.mat');
+end % otherwise load data
+
+% -- PROCESSING: extracting features
+% 24 moving action, 1 accept, total 25 actions
+% NOTE: JSON.parse has trouble parsing double type, so here using jsonlab
+n = size(D, 1);
+X = cell(n, 1);
+for i = 1:n
+  gamedata = JSON.parse(D{i, 2});
+  X{i, 1} = zeros(size(gamedata, 2) ,1);
+  for j = 1:size(gamedata, 2)  
+    stepstr = gamedata{1, j};
+    % to use jsonlab, need to strip character '/' off stepstr
+    stepstr = strrep(stepstr, '\', '');
+    step = loadjson(stepstr);
+    if strcmp(step.action, 'accept') == 1
+      X{i, 1}(j, 1) = 25;
+    elseif strcmp(step.action, 'submit') == 1
+      count = [0, 0, 0];
+      k = 1;
+      for fields = fieldnames(step.params{1, 1})'
+        selected = step.params{1, 1}.(fields{1});
+        count(1, k) = length(find(selected == 2));
+        k = k + 1;
+      end
+      % compute the action index
+      
+    else
+      error('action not valid');
+    end
+  end
+end
