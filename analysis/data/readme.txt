@@ -20,3 +20,4 @@
   Maybe the user didn't really submit the study result?
 - Demographic data is not enforced, fix in next batch
 - Put too much money in one HIT, reduce it to 30 cents.
+- There's bunch of action sequence start with index 1, not sure if it's a UI issue or just a behavior
