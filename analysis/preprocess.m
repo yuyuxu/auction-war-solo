@@ -26,20 +26,20 @@ A = [A1(2:end, :); A2(2:end, :); A3(2:end, :); A4(2:end, :)];
 % -- PREPROCESSING: clean mturk data
 % trim mturk data worker id (possibly has space inside)
 M(1:end, :) = strtrim(M(1:end, :));
+% remove people without game reward code
+unfinished = strmatch('{}', M(1:end, 6));
+M(unfinished, :) = [];
 % remove duplicates in mturk data
 [tmp, unique_id1] = unique(M(1:end, 1), 'first');
 dup_id1 = find(not(ismember(1:numel(M(1:end, 1)), unique_id1)));
 M = M(unique_id1, :);
-% remove people without game reward code
-unfinished = strmatch('{}', M(1:end, 6));
-M(unfinished, :) = [];
 
 % -- PREPROCESSING: clean data amazon dynamo db
+% trim dynamo data worker id (possibly has space inside)
+A(1:end, :) = strtrim(A(1:end, :));
 % remove non finished user
 unfinished = strmatch('*', A(1:end, 5), 'exact');
 A(unfinished, :) = [];
-% trim dynamo data worker id (possibly has space inside)
-A(1:end, :) = strtrim(A(1:end, :));
 % check if there's duplicate in dynamo data (shouldn't be any)
 [tmp, unique_id2] = unique(A(1:end, 1), 'first');
 dup_id2 = find(not(ismember(1:numel(A(1:end, 1)), unique_id2)));
@@ -48,7 +48,7 @@ if (~isempty(dup_id2))
 end
 
 % -- PREPROCESSING: find mapping and concatenate worker information
-%   create centralized input cell matrix
+% create centralized input cell matrix
 % final input data
 D = cell(size(A, 1), (size(A, 2) + size(M, 2) - 2));
 unmapped = [];
@@ -67,41 +67,18 @@ for i = 1:size(A, 1)
     end
     continue;
   end
-  D(i, 1:n2) = A(i, :);
-  D(i, n2 + 1:end) = M(mapped, 2:end - 1);
+  D(i, 1:6) = A(i, :);
+  D(i, 7:end) = M(mapped, 2:end - 1);
 end
+% remove data that has incorrect mapping
 D(unmapped, :) = [];
 
-% -- PROCESSING: simple plot of demographic information
-% figure;
-% subplot(2, 2, 1);
-% histogram(categorical(D(1:end, 8)));
-% subplot(2, 2, 2);
-% histogram(categorical(D(1:end, 9)));
-% subplot(2, 2, 3);
-% histogram(categorical(D(1:end, 10)));
-% subplot(2, 2, 4);
-% histogram(str2double(D(1:end, 7)));
-
 % -- PROCESSING: extracting label
+% final number of data points
 n = size(D, 1);
+% labels
 y_mach = zeros(n, 1);
-mach_keys = ['T+', 'V-', 'V+', 'T-', 'V+', 'T+', 'V+', 'M+', 'V-', ...
-  'T+', 'V+', 'T-', 'V-', 'V-', 'T-', 'T-', 'V+', 'T+', 'T-', 'M-'];
 y_svo = zeros(n, 1);
-y_svo_angle = zeros(n, 1);
-svo_s = [100	98	96	94	93	91	89	87	85; ...
-         100	94	88	81	75	69	63	56	50; ...
-         50	54	59	63	68	72	76	81	85; ...
-         50	54	59	63	68	72	76	81	85; ...
-         85	87	89	91	93	94	96	98	100; ...
-         85	85	85	85	85	85	85	85	85];
-svo_o = [50	54	59	63	68	72	76	81	85; ...
-         50	56	63	69	75	81	88	94	100; ...
-         100	89	79	68	58	47	36	26	15; ...
-         100	98	96	94	93	91	89	87	85; ...
-         15	19	24	28	33	37	41	46	50; ...
-         85	76	68	59	50	41	33	24	15];
 for i = 1:n
   qstr = JSON.parse(D{i, 3});
   % mach
@@ -109,7 +86,6 @@ for i = 1:n
   mach_score = zeros(length(fieldnames(qstr.s0)), 1);
   for fields = fieldnames(qstr.s0)'
     selected = qstr.s0.(fields{1});
-    score = 0;
     if strcmp(selected, 'strongly disagree') == 1
       score = 1;
     elseif strcmp(selected, 'disagree') == 1
@@ -167,7 +143,6 @@ for i = 1:n
   avg_s = mean(svo_score_s);
   avg_o = mean(svo_score_o);
   angle = atand((avg_o - 50.0) / (avg_s - 50.0));
-  y_svo_angle(i, 1) = angle;
   if angle > 57.15
     y_svo(i, 1) = 1; % altruist
   elseif angle <= 57.15 && angle > 22.45
@@ -179,14 +154,9 @@ for i = 1:n
   end
 end
 
-% figure;
-% subplot(1, 2, 1);
-% histogram(y_mach);
-% subplot(1, 2, 2);
-% histogram(y_svo);
-
 % -- PROCESSING: extracting features
 % 24 moving action, 1 accept, total 25 actions
+% longest sequence should only contain 9 actions
 % NOTE: JSON.parse has trouble parsing double type, so here using jsonlab
 n = size(D, 1);
 X = cell(n, 1);
@@ -195,12 +165,13 @@ for i = 1:n
   X{i, 1} = zeros(size(gamedata, 2) ,1);
   for j = 1:size(gamedata, 2)  
     stepstr = gamedata{1, j};
-    % to use jsonlab, need to strip character '/' off stepstr
+    % to use jsonlab, need to strip character '\' off stepstr
     stepstr = strrep(stepstr, '\', '');
     step = loadjson(stepstr);
     if strcmp(step.action, 'accept') == 1
       X{i, 1}(j, 1) = 25;
     elseif strcmp(step.action, 'submit') == 1
+      % get item count and find action index
       count = [0, 0, 0];
       k = 1;
       for fields = fieldnames(step.params{1, 1})'
@@ -216,16 +187,31 @@ for i = 1:n
   end
 end
 
-% save('temp/D.mat', 'D');
-% save('temp/y_mach.mat', 'y_mach');
-% save('temp/y_svo.mat', 'y_svo');
-% save('temp/X.mat', 'X');
+% -- PROCESSING: Cleanup features and labels
+% remove action 25 and 10th action
+n = size(X, 1);
+for i = 1:n
+  l = length(X{i, 1});
+  if X{i, 1}(l, 1) == 25
+    X{i, 1} = X{i, 1}(1:end-1, 1);
+  end
+  l = length(X{i, 1});
+  if l == 10
+    X{i, 1} = X{i, 1}(1:end-1, 1);
+  end
+end
 
-% else % end of save_data
-% 
-% load('temp/D.mat');
-% load('temp/y_mach.mat');
-% load('temp/y_svo.mat');
-% load('temp/X.mat');
-% end % otherwise load data
+% remove action sequence starting with action 1 (0, 0, 0) or less than 3
+invalid_action_indices = [];
+for i = 1:n
+  if X{i, 1}(1, 1) == 1 || length(X{i, 1}) < 3
+    invalid_action_indices = [invalid_action_indices, i];
+  end
+end
+X(invalid_action_indices, :) = [];
+y_mach(invalid_action_indices, :) = [];
+y_svo(invalid_action_indices, :) = [];
 
+% For SVO, only has class 2 and 3 at this point, make them binary
+y_svo(y_svo == 2) = 1;
+y_svo(y_svo == 3) = 0;

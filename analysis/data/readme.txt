@@ -19,5 +19,6 @@
 - There's still missing mapping between Mturk and Dynamodb, both in terms of id and game reward
   Maybe the user didn't really submit the study result?
 - Demographic data is not enforced, fix in next batch
-- Put too much money in one HIT, reduce it to 30 cents.
+- Put too much money in one HIT, reduce it to 30 cents
 - There's bunch of action sequence start with index 1, not sure if it's a UI issue or just a behavior
+- Longest sequence contains 10 actions, it should be 9 actions, there's a bug in the code when human player starts first, delete last action in this case
