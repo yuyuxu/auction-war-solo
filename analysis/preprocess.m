@@ -12,7 +12,7 @@ M4 = csv2cell('data/Batch4_.csv', 'fromfile');
 M5 = csv2cell('data/Batch5_.csv', 'fromfile');
 % first row is column names
 M = [M1(2:end, :); M2(2:end, :); M3(2:end, :); M4(2:end, :); M5(2:end, :)];
-col_needed = [16, 28, 29, 30, 31, 32];
+col_needed = [16, 24, 28, 29, 30, 31, 32];
 M = M(:, col_needed);
 
 % -- LOADING: loading dynamo db data
@@ -53,7 +53,7 @@ end
 D = cell(size(A, 1), (size(A, 2) + size(M, 2) - 2));
 unmapped = [];
 for i = 1:size(A, 1)
-  mapped = find(ismember(M(1:end, 6), A{i, 5}));
+  mapped = find(ismember(M(1:end, 7), A{i, 5}));
   if isempty(mapped)
     unmapped = [unmapped, i];
     % diagnose to see what might be the issue
@@ -63,7 +63,7 @@ for i = 1:size(A, 1)
         (A{i, 1}), (A{i, 5}));
     else
       fprintf('id (%s) is found, reward (%s) is not matching %s \n', ...
-        (A{i, 1}), (A{i, 5}), (M{tmp, 6}));
+        (A{i, 1}), (A{i, 5}), (M{tmp, 7}));
     end
     continue;
   end
@@ -154,7 +154,7 @@ for i = 1:n
   end
 end
 
-% -- PROCESSING: extracting features
+% -- PROCESSING: extracting raw data
 % 24 moving action, 1 accept, total 25 actions
 % longest sequence should only contain 9 actions
 % NOTE: JSON.parse has trouble parsing double type, so here using jsonlab
@@ -187,6 +187,28 @@ for i = 1:n
   end
 end
 
+spent_times = zeros(n, 1);
+for i = 1:n
+  spent_times(i, 1) = str2double(D{i, 7});
+end
+
+unwanted_demographic_indices = [];
+for i = 1:n
+  % strcmp(D{i, 9}, 'Graduate degree (Masters/ Doctorate/ etc.)') == 0 good
+  % strcmp(D{i, 9}, 'Bachelors degree') == 0
+  % strcmp(D{i, 10}, 'Male') == 0
+  % strcmp(D{i, 11}, 'Asian') == 0 good
+  % strcmp(D{i, 12}, 'Hispanic') == 0 good
+  % str2double(D{i, 8}) > 50 || str2double(D{i, 8}) <= 25 || strcmp(D{i, 8}, 'NA') == 1 || strcmp(D{i, 8}, '{}') == 1
+  if str2double(D{i, 7}) < 500
+   unwanted_demographic_indices = [unwanted_demographic_indices, i];
+  end
+end
+D(unwanted_demographic_indices, :) = [];
+X(unwanted_demographic_indices, :) = [];
+y_mach(unwanted_demographic_indices, :) = [];
+y_svo(unwanted_demographic_indices, :) = [];
+
 % -- PROCESSING: Cleanup features and labels
 % remove action 25 and 10th action
 n = size(X, 1);
@@ -204,7 +226,7 @@ end
 % remove action sequence starting with action 1 (0, 0, 0) or less than 3
 invalid_action_indices = [];
 for i = 1:n
-  if X{i, 1}(1, 1) == 1 || length(X{i, 1}) < 3
+  if length(X{i, 1}) < 3 || X{i, 1}(1, 1) == 1
     invalid_action_indices = [invalid_action_indices, i];
   end
 end

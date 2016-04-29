@@ -25,6 +25,9 @@ plot(mdl);
 rho = corr([X X.^2], y)
 % subset selection
 mdl1 = stepwiselm(X, y, modelspec)
+figure;
+plot(mdl1);
+tbl1 = anova(mdl1)
 % k fold
 k = 5;
 indices = crossvalind('Kfold', n, k);

@@ -1,19 +1,6 @@
 function analysis_logistic(X, y)
 n = size(X, 1);
 
-logi = fitglm(X, y, 'distr', 'binomial', 'link', 'logit')
-nrow = 2;
-ncol = 2;
-figure;
-subplot(nrow, ncol, 1);
-plotDiagnostics(logi);
-subplot(nrow, ncol, 2);
-plotDiagnostics(logi, 'cookd');
-subplot(nrow, ncol, 3);
-plotResiduals(logi, 'fitted');
-subplot(nrow, ncol, 4);
-plotResiduals(logi, 'probability');
-
 k = 10;
 indices = crossvalind('Kfold', n, k);
 err_vec = zeros(k, 1);
@@ -24,9 +11,13 @@ ncol = ceil(k / 2);
 for i = 1:k
   testidx = (indices == i);
   trainidx = ~testidx;
-  b = glmfit(X(trainidx, :), y(trainidx, :), ...
-      'binomial', 'link', 'probit');
-  yhat = glmval(b, X(testidx, :), 'probit');
+  [b, FitInfo] = lassoglm(X(trainidx, :), y(trainidx, :), 'binomial', 'CV', 10);
+  indx = FitInfo.Index1SE;
+  b0 = b(:,indx);
+  nonzeros = sum(b0 ~= 0);
+  cnst = FitInfo.Intercept(indx);
+  b1 = [cnst;b0];
+  yhat = glmval(b1, X(testidx, :), 'logit');
   yhat(yhat > 0.5) = 1;
   yhat(yhat <= 0.5) = 0;
   err_vec(i, 1) = sum(abs(y(testidx, :) - yhat)) / size(yhat, 1);
