@@ -200,7 +200,8 @@ for i = 1:n
   % strcmp(D{i, 11}, 'Asian') == 0 good
   % strcmp(D{i, 12}, 'Hispanic') == 0 good
   % str2double(D{i, 8}) > 50 || str2double(D{i, 8}) <= 25 || strcmp(D{i, 8}, 'NA') == 1 || strcmp(D{i, 8}, '{}') == 1
-  if str2double(D{i, 7}) < 500
+  if str2double(D{i, 7}) < 500 || ...
+     strcmp(D{i, 10}, 'Male') == 0
    unwanted_demographic_indices = [unwanted_demographic_indices, i];
   end
 end
