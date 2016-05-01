@@ -92,15 +92,15 @@ X_all = [first_reward, final_reward, ...
 % analysis_svm(X_all, y_svo);
 
 
-% -- HMM: observation is action index, hidden states 1
-O = 24;
-Q = 3;
-
-% training data
+% -- HMM: observation is action index/rewards
+% assemble data for HMM
 data = X;
 for i = 1:size(X, 1)
   data{i} = data{i}';
 end
+y_mach_c = zeros(size(y_mach, 1), 1);
+y_mach_c(y_mach > mach_thresh) = 1;
+analysis_hmm(data, y_mach_c, 2, Q, O, plot_data_index);
 
 % % initial guess of parameters
 % prior1 = normalise(rand(Q,1));
@@ -186,40 +186,40 @@ end
 %   err_vec(i, 1) = countdiff / size(yhat, 1);
 % end
 % mean(err_vec)
+% 
+% 
+% % HMM interpretation
+% % initial guess of parameters
+% prior0 = normalise(rand(Q,1));
+% transmat0 = mk_stochastic(rand(Q,Q));
+% obsmat0 = mk_stochastic(rand(Q,O));
+% indices1 = find(y_mach > mach_thresh);
+% indices2 = find(y_mach <= mach_thresh);
+% % improve guess of parameters using EM
+% [LL, prior1, transmat1, obsmat1] = ...
+%   dhmm_em(data(indices1, :), prior0, transmat0, obsmat0, 'max_iter', 100);
+% [LL, prior2, transmat2, obsmat2] = ...
+%   dhmm_em(data(indices1, :), prior0, transmat0, obsmat0, 'max_iter', 100);
+% one_data_id = 79;
+% one_data = data{one_data_id, :};
+% if y_mach(one_data_id) == 1
+% B = multinomial_prob(one_data, obsmat1);
+% path = viterbi_path(prior1, transmat1, B);
+% else
+% B = multinomial_prob(one_data, obsmat2);
+% path = viterbi_path(prior2, transmat2, B);
+% end
+% figure;
+% hold on;
+% plot(path, 'bo-');
+% plot(one_data, 'r*-');
+% % ylim([-0.1, 24.1]);
+% xlim([0, 10]);
+% hold off;
 
-
-% HMM interpretation
-% initial guess of parameters
-prior0 = normalise(rand(Q,1));
-transmat0 = mk_stochastic(rand(Q,Q));
-obsmat0 = mk_stochastic(rand(Q,O));
-indices1 = find(y_mach > mach_thresh);
-indices2 = find(y_mach <= mach_thresh);
-% improve guess of parameters using EM
-[LL, prior1, transmat1, obsmat1] = ...
-  dhmm_em(data(indices1, :), prior0, transmat0, obsmat0, 'max_iter', 100);
-[LL, prior2, transmat2, obsmat2] = ...
-  dhmm_em(data(indices1, :), prior0, transmat0, obsmat0, 'max_iter', 100);
-one_data_id = 79;
-one_data = data{one_data_id, :};
-if y_mach(one_data_id) == 1
-B = multinomial_prob(one_data, obsmat1);
-path = viterbi_path(prior1, transmat1, B);
-else
-B = multinomial_prob(one_data, obsmat2);
-path = viterbi_path(prior2, transmat2, B);
-end
-figure;
-hold on;
-plot(path, 'bo-');
-plot(one_data, 'r*-');
-% ylim([-0.1, 24.1]);
-xlim([0, 10]);
-hold off;
-
-
+% 
 % HMM classification
-k = 10;
+k = 3;
 indices = crossvalind('Kfold', n, k);
 err_vec = zeros(k, 1);
 for i = 1:k
@@ -231,12 +231,12 @@ for i = 1:k
   test_data_x = data(testidx, :);
   train_data_y = y_mach(trainidx, :);
   test_data_y = y_mach(testidx, :);
-  indices1 = find(train_data_y > mach_thresh);
-  indices2 = find(train_data_y <= mach_thresh);
+  indices1 = train_data_y > mach_thresh;
+  indices2 = train_data_y <= mach_thresh;
   train_data1 = train_data_x(indices1, :);
   train_data2 = train_data_x(indices2, :);
   test_data_y(test_data_y > mach_thresh) = 1;
-  test_data_y(test_data_y <= mach_thresh) = 0;
+  test_data_y(test_data_y <= mach_thresh & test_data_y ~= 1) = 0;
 
   % initial guess of parameters
   prior0 = normalise(rand(Q,1));
@@ -254,31 +254,33 @@ for i = 1:k
   yhat = zeros(size(test_data_y, 1), 1);
   countdiff = 0.0;
   for j = 1:size(test_data_y, 1)
-  [loglik1, errors1] = dhmm_logprob(test_data_x(j, 1), prior1, transmat1, obsmat1);
-  [loglik2, errors2] = dhmm_logprob(test_data_x(j, 1), prior2, transmat2, obsmat2);
-  yhat(j, 1) = loglik1 > loglik2;
+    [loglik1, errors1] = dhmm_logprob(test_data_x(j, 1), prior1, transmat1, obsmat1);
+    [loglik2, errors2] = dhmm_logprob(test_data_x(j, 1), prior2, transmat2, obsmat2);
+    yhat(j, 1) = loglik1 > loglik2;
+
+    if (loglik1 > loglik2)
+      use_prior = prior1;
+      use_transmat = transmat1;
+      use_obsmat = obsmat1;
+    else
+      use_prior = prior2;
+      use_transmat = transmat2;
+      use_obsmat = obsmat2;
+    end
+  %   B = multinomial_prob(test_data_x{j, 1}, use_obsmat);
+  %   path = viterbi_path(use_prior, use_transmat, B);
+  %   figure;
+  %   hold on;
+  %   plot(path, 'bo-');
+  %   plot(test_data_x{j, 1}, 'r*-');
+  %   xlim([0, 10]);
+  %   hold off;
+  end
   
-  if (loglik1 > loglik2)
-    use_prior = prior1;
-    use_transmat = transmat1;
-    use_obsmat = obsmat1;
-  else
-    use_prior = prior2;
-    use_transmat = transmat2;
-    use_obsmat = obsmat2;
-  end
-%   B = multinomial_prob(test_data_x{j, 1}, use_obsmat);
-%   path = viterbi_path(use_prior, use_transmat, B);
-%   figure;
-%   hold on;
-%   plot(path, 'bo-');
-%   plot(test_data_x{j, 1}, 'r*-');
-%   xlim([0, 10]);
-%   hold off;
   err_vec(i, 1) = sum(abs(test_data_y - yhat)) / size(yhat, 1);
-  end
+  fprintf('- hmm: fold %d, error rate: %f \n', i, err_vec(i, 1));
 end
-mean(err_vec)
+fprintf('--- mean error rate is: %f\n\n', mean(err_vec));
 
 % HMM simulation
 

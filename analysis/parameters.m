@@ -62,3 +62,6 @@ svo_o = [50	54	59	63	68	72	76	81	85; ...
        
 % HMM related
 mach_thresh = 60;
+O = 24;
+Q = 3;
+plot_data_index = 10;
