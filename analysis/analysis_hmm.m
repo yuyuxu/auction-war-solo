@@ -30,7 +30,7 @@ if c < 2
 end
 
 n = size(X, 1);
-k = 3;
+k = 10;
 indices = crossvalind('Kfold', n, k);
 err_vec = zeros(k, 1);
 for i = 1:k
