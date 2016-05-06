@@ -192,37 +192,57 @@ for i = 1:n
   spent_times(i, 1) = str2double(D{i, 7});
 end
 
-unwanted_demographic_indices = [];
-for i = 1:n
-  % strcmp(D{i, 9}, 'Graduate degree (Masters/ Doctorate/ etc.)') == 0 good
-  % strcmp(D{i, 9}, 'Bachelors degree') == 0
-  % strcmp(D{i, 10}, 'Male') == 0
-  % strcmp(D{i, 11}, 'Asian') == 0 good
-  % strcmp(D{i, 12}, 'Hispanic') == 0 good
-  % str2double(D{i, 8}) > 50 || str2double(D{i, 8}) <= 25 || strcmp(D{i, 8}, 'NA') == 1 || strcmp(D{i, 8}, '{}') == 1
-  if str2double(D{i, 7}) < 500 || ...
-     strcmp(D{i, 10}, 'Male') == 0
-   unwanted_demographic_indices = [unwanted_demographic_indices, i];
-  end
-end
-D(unwanted_demographic_indices, :) = [];
-X(unwanted_demographic_indices, :) = [];
-y_mach(unwanted_demographic_indices, :) = [];
-y_svo(unwanted_demographic_indices, :) = [];
-
 % -- PROCESSING: Cleanup features and labels
-% remove action 25 and 10th action
+% replace action 25 with final reward, remove 10th action
 n = size(X, 1);
 for i = 1:n
-  l = length(X{i, 1});
-  if X{i, 1}(l, 1) == 25
-    X{i, 1} = X{i, 1}(1:end-1, 1);
-  end
   l = length(X{i, 1});
   if l == 10
     X{i, 1} = X{i, 1}(1:end-1, 1);
   end
+  l = length(X{i, 1});
+  if X{i, 1}(l, 1) == 25
+    fprintf('player %d accepted agent previous offer and game over\n', i);
+    X{i, 1}(l, 1) = agent_actions_r(1, l);
+  end
+  agent_reward_on_table = 16.4 - reward_index(X{i, 1}(l, 1));
+  if (agent_reward_on_table - agent_rewards(1, l)) < -0.00001 && ...
+     l ~= 9
+    fprintf('player %d final action error\n', i);
+  end
 end
+
+% -- PROCESSING: Reward and number of item sequence
+Xr = cell(n, 1);
+Xc = cell(n, 1);
+for i = 1:n
+  l = length(X{i, 1});
+  Xr{i, 1} = zeros(l, 1);
+  for j = 1:l
+    Xr{i, 1}(j, 1) = reward_index(X{i, 1}(j, 1));
+    Xc{i, 1}(j, 1) = sum(action_index(X{i, 1}(j, 1), :));
+  end
+end
+
+
+% -- FILTERS
+% remove according to turker information
+% unwanted_stats = [];
+% for i = 1:n
+%   % strcmp(D{i, 9}, 'Graduate degree (Masters/ Doctorate/ etc.)') == 0 good
+%   % strcmp(D{i, 9}, 'Bachelors degree') == 0
+%   % strcmp(D{i, 10}, 'Male') == 0
+%   % strcmp(D{i, 11}, 'Asian') == 0 good
+%   % strcmp(D{i, 12}, 'Hispanic') == 0 good
+%   % str2double(D{i, 8}) > 50 || str2double(D{i, 8}) <= 25 || strcmp(D{i, 8}, 'NA') == 1 || strcmp(D{i, 8}, '{}') == 1
+% %   if str2double(D{i, 7}) < 500
+% %    unwanted_stats = [unwanted_stats, i];
+% %   end
+% end
+% D(unwanted_stats, :) = [];
+% X(unwanted_stats, :) = [];
+% y_mach(unwanted_stats, :) = [];
+% y_svo(unwanted_stats, :) = [];
 
 % remove action sequence starting with action 1 (0, 0, 0) or less than 3
 invalid_action_indices = [];
@@ -231,10 +251,9 @@ for i = 1:n
     invalid_action_indices = [invalid_action_indices, i];
   end
 end
+D(invalid_action_indices, :) = [];
 X(invalid_action_indices, :) = [];
+Xr(invalid_action_indices, :) = [];
+Xc(invalid_action_indices, :) = [];
 y_mach(invalid_action_indices, :) = [];
 y_svo(invalid_action_indices, :) = [];
-
-% For SVO, only has class 2 and 3 at this point, make them binary
-y_svo(y_svo == 2) = 1;
-y_svo(y_svo == 3) = 0;

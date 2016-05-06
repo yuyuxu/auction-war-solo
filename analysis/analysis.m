@@ -61,6 +61,14 @@ end
 % figure;
 % histogram(sequence_len);
 
+% For SVO, only has class 2 and 3 at this point, make them binary
+y_svo(y_svo == 2) = 1;
+y_svo(y_svo == 3) = 0;
+
+
+
+
+
 % -- Model: y_mach ~ sequence len
 % analysis_linear(sequence_len, y_mach, 'purequadratic');
 % -- Model: y_mach ~ final reward
@@ -72,7 +80,7 @@ end
 % -- Model: y_mach ~ repeated_offer
 % analysis_linear(repeated_offer, y_mach, 'purequadratic');
 % -- Model: y_mach ~ all features
-% X_all = [first_reward, final_reward, ...
+% X_all = [sequence_len, first_reward, final_reward, ...
 %          num_counter_offer, repeated_offer];
 % analysis_linear(X_all, y_mach, 'quadratic');
 
