@@ -194,6 +194,7 @@ end
 
 % -- PROCESSING: Cleanup features and labels
 % replace action 25 with final reward, remove 10th action
+% action 25 should be replaced with the actual items
 n = size(X, 1);
 for i = 1:n
   l = length(X{i, 1});
@@ -224,28 +225,30 @@ for i = 1:n
   end
 end
 
-
 % -- FILTERS
 % remove according to turker information
-% unwanted_stats = [];
-% for i = 1:n
-%   % strcmp(D{i, 9}, 'Graduate degree (Masters/ Doctorate/ etc.)') == 0 good
-%   % strcmp(D{i, 9}, 'Bachelors degree') == 0
-%   % strcmp(D{i, 10}, 'Male') == 0
-%   % strcmp(D{i, 11}, 'Asian') == 0 good
-%   % strcmp(D{i, 12}, 'Hispanic') == 0 good
-%   % str2double(D{i, 8}) > 50 || str2double(D{i, 8}) <= 25 || strcmp(D{i, 8}, 'NA') == 1 || strcmp(D{i, 8}, '{}') == 1
-% %   if str2double(D{i, 7}) < 500
-% %    unwanted_stats = [unwanted_stats, i];
-% %   end
-% end
-% D(unwanted_stats, :) = [];
-% X(unwanted_stats, :) = [];
-% y_mach(unwanted_stats, :) = [];
-% y_svo(unwanted_stats, :) = [];
+unwanted_stats = [];
+for i = 1:n
+  % strcmp(D{i, 9}, 'Graduate degree (Masters/ Doctorate/ etc.)') == 0 good
+  % strcmp(D{i, 9}, 'Bachelors degree') == 0
+  % strcmp(D{i, 10}, 'Male') == 0
+  % strcmp(D{i, 11}, 'Asian') == 0 good
+  % strcmp(D{i, 12}, 'Hispanic') == 0 good
+  % str2double(D{i, 8}) > 50 || str2double(D{i, 8}) <= 25 || strcmp(D{i, 8}, 'NA') == 1 || strcmp(D{i, 8}, '{}') == 1
+  if str2double(D{i, 7}) < 500
+   unwanted_stats = [unwanted_stats, i];
+  end
+end
+D(unwanted_stats, :) = [];
+X(unwanted_stats, :) = [];
+Xr(unwanted_stats, :) = [];
+Xc(unwanted_stats, :) = [];
+y_mach(unwanted_stats, :) = [];
+y_svo(unwanted_stats, :) = [];
 
 % remove action sequence starting with action 1 (0, 0, 0) or less than 3
 invalid_action_indices = [];
+n = size(X, 1);
 for i = 1:n
   if length(X{i, 1}) < 3 || X{i, 1}(1, 1) == 1
     invalid_action_indices = [invalid_action_indices, i];
