@@ -10,9 +10,9 @@
 
 
 * Note
-- There's duplicated data in Batch*.csv, but not in auction-war-solo*.csv
+- There's duplicated data in Batch*.csv (people playing multiple times), but not in auction-war-solo*.csv
   Solution: a) have a post process script that checks people who cheated and reject them
-            b) in Mturk template, query dynamodb to see if the turker played already, prevent them from going further (might be hard)
+            b) mention in the instruction not to play twice
 - Mapping between auction-war-solo*.csv to Batch*.csv should be according to game reward code
   Mturk data has correct turker id but might have duplicated turker id
   Dynamodb data has correct unique game reward code and unique player id (which might not be matching turker id)
