@@ -5,13 +5,21 @@ close all;
 parameters;
 
 % -- LOADING: loading mturk data
+% collection 1
 M1 = csv2cell('data/Batch1_.csv', 'fromfile');
 M2 = csv2cell('data/Batch2_.csv', 'fromfile');
 M3 = csv2cell('data/Batch3_.csv', 'fromfile');
 M4 = csv2cell('data/Batch4_.csv', 'fromfile');
 M5 = csv2cell('data/Batch5_.csv', 'fromfile');
+% collection 2
+M6 = csv2cell('data/Batch6_.csv', 'fromfile');
+M7 = csv2cell('data/Batch7_.csv', 'fromfile');
+M8 = csv2cell('data/Batch8_.csv', 'fromfile');
+M9 = csv2cell('data/Batch9_.csv', 'fromfile');
 % first row is column names
-M = [M1(2:end, :); M2(2:end, :); M3(2:end, :); M4(2:end, :); M5(2:end, :)];
+M = [M1(2:end, :); M2(2:end, :); M3(2:end, :); ...
+     M4(2:end, :); M5(2:end, :); M6(2:end, :); ...
+     M7(2:end, :); M8(2:end, :); M9(2:end, :)];
 col_needed = [16, 24, 28, 29, 30, 31, 32];
 M = M(:, col_needed);
 
@@ -20,14 +28,15 @@ A1 = csv2cell('data/auction-war-solo-users1.csv', 'fromfile');
 A2 = csv2cell('data/auction-war-solo-users2.csv', 'fromfile');
 A3 = csv2cell('data/auction-war-solo-users3.csv', 'fromfile');
 A4 = csv2cell('data/auction-war-solo-users4.csv', 'fromfile');
+A5 = csv2cell('data/auction-war-solo-users5.csv', 'fromfile');
 % first row is column names
-A = [A1(2:end, :); A2(2:end, :); A3(2:end, :); A4(2:end, :)];
+A = [A1(2:end, :); A2(2:end, :); A3(2:end, :); A4(2:end, :); A5(2:end, :)];
 
 % -- PREPROCESSING: clean mturk data
 % trim mturk data worker id (possibly has space inside)
 M(1:end, :) = strtrim(M(1:end, :));
 % remove people without game reward code
-unfinished = strmatch('{}', M(1:end, 6));
+unfinished = strmatch('{}', M(1:end, 7));
 M(unfinished, :) = [];
 % remove duplicates in mturk data
 [tmp, unique_id1] = unique(M(1:end, 1), 'first');
@@ -44,15 +53,15 @@ A(unfinished, :) = [];
 [tmp, unique_id2] = unique(A(1:end, 1), 'first');
 dup_id2 = find(not(ismember(1:numel(A(1:end, 1)), unique_id2)));
 if (~isempty(dup_id2))
-  error('dynamodb data should not have duplicates');
+  warning('dynamodb data have duplicates %d \n', size(dup_id2, 2));
 end
 
 % -- PREPROCESSING: find mapping and concatenate worker information
 % create centralized input cell matrix
 % final input data
 D = cell(size(A, 1), (size(A, 2) + size(M, 2) - 2));
-unmapped = [];
-for i = 1:size(A, 1)
+unmapped = []; 
+for i = 1:size(A, 1) 
   mapped = find(ismember(M(1:end, 7), A{i, 5}));
   if isempty(mapped)
     unmapped = [unmapped, i];
@@ -203,7 +212,7 @@ for i = 1:n
   end
   l = length(X{i, 1});
   if X{i, 1}(l, 1) == 25
-    fprintf('player %d accepted agent previous offer and game over\n', i);
+%     fprintf('player %d accepted agent previous offer and game over\n', i);
     X{i, 1}(l, 1) = agent_actions_r(1, l);
   end
   agent_reward_on_table = 16.4 - reward_index(X{i, 1}(l, 1));
@@ -235,7 +244,7 @@ for i = 1:n
   % strcmp(D{i, 11}, 'Asian') == 0 good
   % strcmp(D{i, 12}, 'Hispanic') == 0 good
   % str2double(D{i, 8}) > 50 || str2double(D{i, 8}) <= 25 || strcmp(D{i, 8}, 'NA') == 1 || strcmp(D{i, 8}, '{}') == 1
-  if str2double(D{i, 7}) < 500
+  if str2double(D{i, 7}) < 400
    unwanted_stats = [unwanted_stats, i];
   end
 end
@@ -247,10 +256,14 @@ y_mach(unwanted_stats, :) = [];
 y_svo(unwanted_stats, :) = [];
 
 % remove action sequence starting with action 1 (0, 0, 0) or less than 3
+% also remove last reward less than 5.0
 invalid_action_indices = [];
 n = size(X, 1);
 for i = 1:n
-  if length(X{i, 1}) < 3 || X{i, 1}(1, 1) == 1
+  l = length(X{i, 1});
+  if l < 3 ||...
+     X{i, 1}(1, 1) == 1 || ...
+     Xr{i, 1}(l, 1) < 5.0
     invalid_action_indices = [invalid_action_indices, i];
   end
 end

@@ -5,13 +5,22 @@ for wr = 0.01:0.01:0.05
       for wfa = 1:2:10
         for wfb = 1:2:10
           count = count + 1;
+          if count <= 2000
+            continue;
+          end
           fileid = fopen(sprintf('bsub_py%04d.bash', count), 'w');
           fprintf(fileid, '#!/bin/sh\n');
           fprintf(fileid, '#BSUB -J JOB.%04d\n', count);
           fprintf(fileid, '#BSUB -o out_file%04d\n', count);
           fprintf(fileid, '#BSUB -e err_file%04d\n', count);
-          fprintf(fileid, '#BSUB -n 4\n');
-          fprintf(fileid, '#BSUB -q ht-10g\n');
+          fprintf(fileid, '#BSUB -n 1\n');
+          if count <= 2450
+            fprintf(fileid, '#BSUB -q ser-par-10g-2\n');
+          elseif count <= 2850
+            fprintf(fileid, '#BSUB -q ser-par-10g-3\n');
+          else
+            fprintf(fileid, '#BSUB -q ser-par-10g\n');
+          end
           fprintf(fileid, '#BSUB -cwd /home/xu.yuyu/research/psychsim\n');
           fprintf(fileid, 'work=/home/xu.yuyu/research/psychsim\n');
           fprintf(fileid, 'cd $work\n');
