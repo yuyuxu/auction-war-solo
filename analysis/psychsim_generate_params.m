@@ -5,8 +5,11 @@ for wr = 0.01:0.01:0.05
       for wfa = 1:2:10
         for wfb = 1:2:10
           count = count + 1;
-          if count <= 2000
+          if count <= 800
             continue;
+          end
+          if count > 900
+            error('missing 100');
           end
           fileid = fopen(sprintf('bsub_py%04d.bash', count), 'w');
           fprintf(fileid, '#!/bin/sh\n');
@@ -14,9 +17,9 @@ for wr = 0.01:0.01:0.05
           fprintf(fileid, '#BSUB -o out_file%04d\n', count);
           fprintf(fileid, '#BSUB -e err_file%04d\n', count);
           fprintf(fileid, '#BSUB -n 1\n');
-          if count <= 2450
+          if count <= 1575
             fprintf(fileid, '#BSUB -q ser-par-10g-2\n');
-          elseif count <= 2850
+          elseif count <= 2350
             fprintf(fileid, '#BSUB -q ser-par-10g-3\n');
           else
             fprintf(fileid, '#BSUB -q ser-par-10g\n');
@@ -35,7 +38,7 @@ for wr = 0.01:0.01:0.05
           fprintf(fileid, '  CORE=${hosts[(($i+1))]}\n');
           fprintf(fileid, '  echo $HOST:SCORE >> $tempfile2\n');
           fprintf(fileid, 'done\n');
-          fprintf(fileid, 'PYTHONPATH=/home/xu.yuyu/research/psychsim python Yuyu_Model_0429_Dan.py -l 2 -ho 3 -d 1.0 -r 10.0 -sb 0 -db 0 -s2db 0 -d2sb 0 -c 0.5 -wr %f -wa %f -ws %f -wfa %f  -wfb %f\n', wr, wa, ws, wfa, wfb);
+          fprintf(fileid, 'PYTHONPATH=/home/xu.yuyu/research/psychsim python Yuyu_Model_0429_Dan.py -l 2 -ho 4 -d 1.0 -r 10.0 -sb 0 -db 0 -s2db 0 -d2sb 0 -c 0.5 -wr %f -wa %f -ws %f -wfa %f  -wfb %f\n', wr, wa, ws, wfa, wfb);
           fprintf(fileid, 'rm $work/$tempfile1\n');
           fprintf(fileid, 'rm $work/$tempfile2\n');
           fclose(fileid);

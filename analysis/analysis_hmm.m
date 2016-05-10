@@ -1,4 +1,6 @@
 function analysis_hmm(X, y, c, Q, O, plot_data_index)
+Q = 3;
+plot_data_index = 1;
 
 % -- HMM general analysis on whole data set
 % initial guess of parameters
@@ -9,6 +11,11 @@ obsmat0 = mk_stochastic(rand(Q, O));
 % improve guess of parameters using EM
 [~, prior1, transmat1, obsmat1] = ...
   dhmm_em(X, prior0, transmat0, obsmat0, 'max_iter', 100);
+
+% simulation
+one_data = X{plot_data_index, :};
+B = multinomial_prob(one_data, obsmat1);
+S = mc_sample(prior1, transmat1, 6, 10);
 
 % use model to compute log likelihood
 % loglik = dhmm_logprob(X, prior1, transmat1, obsmat1);
@@ -30,7 +37,7 @@ if c < 2
 end
 
 n = size(X, 1);
-k = 10;
+k = 3;
 indices = crossvalind('Kfold', n, k);
 err_vec = zeros(k, 1);
 for i = 1:k

@@ -93,6 +93,8 @@ y_svo(y_svo == 2) = 1;
 y_svo(y_svo == 3) = 0;
 y_mach_c = zeros(size(y_mach, 1), 1);
 y_mach_c(y_mach > mach_thresh) = 1;
+length(find(y_mach_c == 1))
+length(find(y_mach_c == 0))
 
 X_all = [sequence_len, ...
 final_reward, ...
@@ -138,8 +140,14 @@ reward_eff, ...
 
 % -- HMM: observation is action index/rewards
 % assemble data for HMM
-data = X;
-for i = 1:size(X, 1)
-  data{i} = data{i}';
-end
+% data = X;
+% for i = 1:size(X, 1)
+%   data{i} = data{i}';
+% end
 % analysis_hmm(data, y_mach_c, 2, Q, O, plot_data_index);
+
+data1 = Xr;
+for i = 1:size(Xr, 1)
+  data1{i} = data1{i}';
+end
+analysis_hmm1(data1, y_mach_c, 2, Q, O, plot_data_index);

@@ -3,7 +3,7 @@ clc;
 close all;
 
 parameters;
-
+tic;
 % -- LOADING: loading mturk data
 % collection 1
 M1 = csv2cell('data/Batch1_.csv', 'fromfile');
@@ -31,6 +31,7 @@ A4 = csv2cell('data/auction-war-solo-users4.csv', 'fromfile');
 A5 = csv2cell('data/auction-war-solo-users5.csv', 'fromfile');
 % first row is column names
 A = [A1(2:end, :); A2(2:end, :); A3(2:end, :); A4(2:end, :); A5(2:end, :)];
+toc;
 
 % -- PREPROCESSING: clean mturk data
 % trim mturk data worker id (possibly has space inside)
@@ -81,6 +82,7 @@ for i = 1:size(A, 1)
 end
 % remove data that has incorrect mapping
 D(unmapped, :) = [];
+toc;
 
 % -- PROCESSING: extracting label
 % final number of data points
@@ -233,17 +235,12 @@ for i = 1:n
     Xc{i, 1}(j, 1) = sum(action_index(X{i, 1}(j, 1), :));
   end
 end
+toc;
 
 % -- FILTERS
 % remove according to turker information
 unwanted_stats = [];
 for i = 1:n
-  % strcmp(D{i, 9}, 'Graduate degree (Masters/ Doctorate/ etc.)') == 0 good
-  % strcmp(D{i, 9}, 'Bachelors degree') == 0
-  % strcmp(D{i, 10}, 'Male') == 0
-  % strcmp(D{i, 11}, 'Asian') == 0 good
-  % strcmp(D{i, 12}, 'Hispanic') == 0 good
-  % str2double(D{i, 8}) > 50 || str2double(D{i, 8}) <= 25 || strcmp(D{i, 8}, 'NA') == 1 || strcmp(D{i, 8}, '{}') == 1
   if str2double(D{i, 7}) < 400
    unwanted_stats = [unwanted_stats, i];
   end
@@ -273,3 +270,30 @@ Xr(invalid_action_indices, :) = [];
 Xc(invalid_action_indices, :) = [];
 y_mach(invalid_action_indices, :) = [];
 y_svo(invalid_action_indices, :) = [];
+
+% -- SELECTS
+% remove according to turker information
+selected_demo = [];
+n = size(X, 1);
+for i = 1:n
+  % strcmp(D{i, 9}, 'Graduate degree (Masters/ Doctorate/ etc.)') == 0 good
+  % strcmp(D{i, 9}, 'Bachelors degree') == 0
+  % strcmp(D{i, 10}, 'Male') == 0
+  % strcmp(D{i, 11}, 'Asian') == 0 good
+  % strcmp(D{i, 12}, 'Hispanic') == 0 good
+  % str2double(D{i, 8}) > 50 || str2double(D{i, 8}) <= 25 || 
+  % strcmp(D{i, 8}, 'NA') == 1 || strcmp(D{i, 8}, '{}') == 1
+  if ...
+  strcmp(D{i, 9}, 'Graduate degree (Masters/ Doctorate/ etc.)') == 1 || ...
+  str2double(D{i, 8}) > 50 || ...
+  strcmp(D{i, 11}, 'Asian') == 1
+    selected_demo = [selected_demo, i];
+  end
+end
+D = D(selected_demo, :);
+X = X(selected_demo, :);
+Xr = Xr(selected_demo, :);
+Xc = Xc(selected_demo, :);
+y_mach = y_mach(selected_demo, :);
+y_svo = y_svo(selected_demo, :);
+toc;

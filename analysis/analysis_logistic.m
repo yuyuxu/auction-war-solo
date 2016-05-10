@@ -31,13 +31,13 @@ for i = 1:k
   yhat(yhat <= 0.5) = 0;
   err_vec(i, 1) = sum(abs(y(testidx, :) - yhat)) / size(yhat, 1);
   
-  [roc_x, roc_y, roc_t, roc_auc] = perfcurve(y(testidx, :), yhat, '1');
-  subplot(nrow, ncol, i);
-  plot(roc_x, roc_y);
-  xlabel('False positive rate');
-  ylabel('True positive rate');
-  title('ROC for Classification by Logistic Regression');
-  auc_vec(i, 1) = roc_auc;
+%   [roc_x, roc_y, roc_t, roc_auc] = perfcurve(y(testidx, :), yhat, '1');
+%   subplot(nrow, ncol, i);
+%   plot(roc_x, roc_y);
+%   xlabel('False positive rate');
+%   ylabel('True positive rate');
+%   title('ROC for Classification by Logistic Regression');
+%   auc_vec(i, 1) = roc_auc;
 end
 err = mean(err_vec)
 auc = mean(auc_vec)
