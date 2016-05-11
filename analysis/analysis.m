@@ -146,8 +146,10 @@ reward_eff, ...
 % end
 % analysis_hmm(data, y_mach_c, 2, Q, O, plot_data_index);
 
-data1 = Xr;
+data1 = cell(size(Xr, 1), 1);
 for i = 1:size(Xr, 1)
-  data1{i} = data1{i}';
+  % data1{i} = [Xr{i, 1}'; Xra{i, 1}'];
+  data1{i} = Xr{i, 1}';
 end
-analysis_hmm1(data1, y_mach_c, 2, Q, O, plot_data_index);
+[prior1, transmat1, mu1, Sigma1, mixmat1, paths] = ...
+  analysis_hmm1(data1, y_mach_c, 2, Q, O, plot_data_index);

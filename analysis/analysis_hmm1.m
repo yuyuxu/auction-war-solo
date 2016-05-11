@@ -1,7 +1,8 @@
-function analysis_hmm1(X, y, c, Q, O, plot_data_index)
+function [prior1, transmat1, mu1, Sigma1, mixmat1, paths] = ...
+  analysis_hmm1(X, y, c, Q, O, plot_data_index)
 O = 1;
 Q = 3;
-M = 3;
+M = 1;
 plot_data_index = 31;
 cov_type = 'full';
 
@@ -30,8 +31,9 @@ for i = 1:size(X, 1)
   plot(path, 'bo-');
   plot(one_data, 'r*-');
   xlim([0, 10]);
+  ylim([0, 17]);
   hold off;
-  saveas(fig, sprintf('path%d.jpg', i));
+  saveas(fig, sprintf('./temp/path%d.jpg', i));
 end
 
 % use model to compute log likelihood

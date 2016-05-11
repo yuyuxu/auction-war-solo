@@ -297,3 +297,21 @@ Xc = Xc(selected_demo, :);
 y_mach = y_mach(selected_demo, :);
 y_svo = y_svo(selected_demo, :);
 toc;
+
+
+% -- FIND sequence that has reject accepts
+n = size(X, 1);
+Xra = cell(n, 1);
+for i = 1:n
+  l = length(X{i, 1});
+  Xra{i, 1} = zeros(l, 1);
+  for j = 1:l
+    agent_reward_on_table = 16.4 - reward_index(X{i, 1}(j, 1));
+    if (agent_reward_on_table - agent_rewards(1, j)) > 0.00001 && ...
+       j ~= l
+      fprintf('player %d rejected the accept from agent %d\n', i, j + 1);
+      Xra{i, 1}(j, 1) = 1;
+    end
+  end
+end
+toc
