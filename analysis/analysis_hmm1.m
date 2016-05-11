@@ -1,6 +1,6 @@
 function [prior1, transmat1, mu1, Sigma1, mixmat1, paths] = ...
   analysis_hmm1(X, y, c, Q, O, plot_data_index)
-O = 1;
+O = 2;
 Q = 3;
 M = 1;
 plot_data_index = 31;
@@ -25,15 +25,15 @@ for i = 1:size(X, 1)
   obslik = mixgauss_prob(one_data, mu1, Sigma1, mixmat1);
   path = viterbi_path(prior1, transmat1, obslik);
   paths{i, 1} = path;
-  close all;
-  fig = figure;
-  hold on;
-  plot(path, 'bo-');
-  plot(one_data, 'r*-');
-  xlim([0, 10]);
-  ylim([0, 17]);
-  hold off;
-  saveas(fig, sprintf('./temp/path%d.jpg', i));
+%   close all;
+%   fig = figure;
+%   hold on;
+%   plot(path, 'bo-');
+%   plot(one_data, 'r*-');
+%   xlim([0, 10]);
+%   ylim([0, 17]);
+%   hold off;
+%   saveas(fig, sprintf('./temp/path%d.jpg', i));
 end
 
 % use model to compute log likelihood
