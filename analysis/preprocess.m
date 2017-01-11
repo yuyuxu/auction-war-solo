@@ -40,7 +40,7 @@ M(1:end, :) = strtrim(M(1:end, :));
 unfinished = strmatch('{}', M(1:end, 7));
 M(unfinished, :) = [];
 % remove duplicates in mturk data
-[tmp, unique_id1] = unique(M(1:end, 1), 'first');
+[~, unique_id1] = unique(M(1:end, 1), 'first');
 dup_id1 = find(not(ismember(1:numel(M(1:end, 1)), unique_id1)));
 M = M(unique_id1, :);
 
@@ -51,34 +51,38 @@ A(1:end, :) = strtrim(A(1:end, :));
 unfinished = strmatch('*', A(1:end, 5), 'exact');
 A(unfinished, :) = [];
 % check if there's duplicate in dynamo data (shouldn't be any)
-[tmp, unique_id2] = unique(A(1:end, 1), 'first');
+[~, unique_id2] = unique(A(1:end, 1), 'first');
 dup_id2 = find(not(ismember(1:numel(A(1:end, 1)), unique_id2)));
 if (~isempty(dup_id2))
   warning('dynamodb data have duplicates %d \n', size(dup_id2, 2));
 end
+A = A(unique_id2, :);
 
 % -- PREPROCESSING: find mapping and concatenate worker information
-% create centralized input cell matrix
-% final input data
 D = cell(size(A, 1), (size(A, 2) + size(M, 2) - 2));
 unmapped = []; 
 for i = 1:size(A, 1) 
-  mapped = find(ismember(M(1:end, 7), A{i, 5}));
-  if isempty(mapped)
-    unmapped = [unmapped, i];
+  mapped_reward = find(ismember(M(1:end, 7), A{i, 5}));
+  if isempty(mapped_reward)
     % diagnose to see what might be the issue
-    tmp = find(ismember(M(1:end, 1), A{i, 1}));
-    if (isempty(tmp))
+    mapped_id = find(ismember(M(1:end, 1), A{i, 1}));
+    if isempty(mapped_id)
       fprintf('both id (%s) and reward (%s) cannot be matched \n', ...
         (A{i, 1}), (A{i, 5}));
+      unmapped = [unmapped, i];
     else
-      fprintf('id (%s) is found, reward (%s) is not matching %s \n', ...
-        (A{i, 1}), (A{i, 5}), (M{tmp, 7}));
+      fprintf('id (%s) is found, reward (%s) is not matching, M id is: %s, reward is: %s \n', ...
+        (A{i, 1}), (A{i, 5}), (M{mapped_id, 1}), (M{mapped_id, 7}));
+      D(i, 1:6) = A(i, :);
+      D(i, 7:end) = M(mapped_id, 2:end - 1);
     end
-    continue;
+  else
+    if strcmp(M{mapped_reward, 1}, A{i, 1}) == 0
+      fprintf('reward (%s) matched, but id cannot be matched, M id: %s, A id: %s \n', (A{i, 5}), (M{mapped_reward, 1}), (A{i, 1}));
+    end
+    D(i, 1:6) = A(i, :);
+    D(i, 7:end) = M(mapped_reward, 2:end - 1);
   end
-  D(i, 1:6) = A(i, :);
-  D(i, 7:end) = M(mapped, 2:end - 1);
 end
 % remove data that has incorrect mapping
 D(unmapped, :) = [];
@@ -165,7 +169,7 @@ for i = 1:n
   end
 end
 
-% -- PROCESSING: extracting raw data
+% -- PROCESSING: extracting raw feature
 % 24 moving action, 1 accept, total 25 actions
 % longest sequence should only contain 9 actions
 % NOTE: JSON.parse has trouble parsing double type, so here using jsonlab
@@ -198,14 +202,9 @@ for i = 1:n
   end
 end
 
-spent_times = zeros(n, 1);
-for i = 1:n
-  spent_times(i, 1) = str2double(D{i, 7});
-end
-
-% -- PROCESSING: Cleanup features and labels
-% replace action 25 with final reward, remove 10th action
-% action 25 should be replaced with the actual items
+% -- PROCESSING: extract actual features
+% remove 10th action
+% replace action 25 with the actual items
 n = size(X, 1);
 for i = 1:n
   l = length(X{i, 1});
@@ -214,104 +213,21 @@ for i = 1:n
   end
   l = length(X{i, 1});
   if X{i, 1}(l, 1) == 25
-%     fprintf('player %d accepted agent previous offer and game over\n', i);
-    X{i, 1}(l, 1) = agent_actions_r(1, l);
+    X{i, 1}(l, 1) = agent_actions_r(1, l - 1);
   end
-  agent_reward_on_table = 16.4 - reward_index(X{i, 1}(l, 1));
-  if (agent_reward_on_table - agent_rewards(1, l)) < -0.00001 && ...
+  agent_reward_offered = 16.4 - reward_index(X{i, 1}(l, 1));
+  if (agent_reward_offered < agent_rewards(1, l)) < -0.00001 && ...
      l ~= 9
     fprintf('player %d final action error\n', i);
   end
 end
-
-% -- PROCESSING: Reward and number of item sequence
+% reward sequence
 Xr = cell(n, 1);
-Xc = cell(n, 1);
 for i = 1:n
   l = length(X{i, 1});
   Xr{i, 1} = zeros(l, 1);
   for j = 1:l
     Xr{i, 1}(j, 1) = reward_index(X{i, 1}(j, 1));
-    Xc{i, 1}(j, 1) = sum(action_index(X{i, 1}(j, 1), :));
   end
 end
 toc;
-
-% -- FILTERS
-% remove according to turker information
-unwanted_stats = [];
-for i = 1:n
-  if str2double(D{i, 7}) < 400
-   unwanted_stats = [unwanted_stats, i];
-  end
-end
-D(unwanted_stats, :) = [];
-X(unwanted_stats, :) = [];
-Xr(unwanted_stats, :) = [];
-Xc(unwanted_stats, :) = [];
-y_mach(unwanted_stats, :) = [];
-y_svo(unwanted_stats, :) = [];
-
-% remove action sequence starting with action 1 (0, 0, 0) or less than 3
-% also remove last reward less than 5.0
-invalid_action_indices = [];
-n = size(X, 1);
-for i = 1:n
-  l = length(X{i, 1});
-  if l < 3 ||...
-     X{i, 1}(1, 1) == 1 || ...
-     Xr{i, 1}(l, 1) < 5.0
-    invalid_action_indices = [invalid_action_indices, i];
-  end
-end
-D(invalid_action_indices, :) = [];
-X(invalid_action_indices, :) = [];
-Xr(invalid_action_indices, :) = [];
-Xc(invalid_action_indices, :) = [];
-y_mach(invalid_action_indices, :) = [];
-y_svo(invalid_action_indices, :) = [];
-
-% -- SELECTS
-% remove according to turker information
-selected_demo = [];
-n = size(X, 1);
-for i = 1:n
-  % strcmp(D{i, 9}, 'Graduate degree (Masters/ Doctorate/ etc.)') == 0 good
-  % strcmp(D{i, 9}, 'Bachelors degree') == 0
-  % strcmp(D{i, 10}, 'Male') == 0
-  % strcmp(D{i, 11}, 'Asian') == 0 good
-  % strcmp(D{i, 12}, 'Hispanic') == 0 good
-  % str2double(D{i, 8}) > 50 || str2double(D{i, 8}) <= 25 || 
-  % strcmp(D{i, 8}, 'NA') == 1 || strcmp(D{i, 8}, '{}') == 1
-  if ...
-  strcmp(D{i, 9}, 'Graduate degree (Masters/ Doctorate/ etc.)') == 1 || ...
-  str2double(D{i, 8}) > 50 || ...
-  strcmp(D{i, 11}, 'Asian') == 1
-    selected_demo = [selected_demo, i];
-  end
-end
-D = D(selected_demo, :);
-X = X(selected_demo, :);
-Xr = Xr(selected_demo, :);
-Xc = Xc(selected_demo, :);
-y_mach = y_mach(selected_demo, :);
-y_svo = y_svo(selected_demo, :);
-toc;
-
-
-% -- FIND sequence that has reject accepts
-n = size(X, 1);
-Xra = cell(n, 1);
-for i = 1:n
-  l = length(X{i, 1});
-  Xra{i, 1} = zeros(l, 1);
-  for j = 1:l
-    agent_reward_on_table = 16.4 - reward_index(X{i, 1}(j, 1));
-    if (agent_reward_on_table - agent_rewards(1, j)) > 0.00001 && ...
-       j ~= l
-      fprintf('player %d rejected the accept from agent %d\n', i, j + 1);
-      Xra{i, 1}(j, 1) = 1;
-    end
-  end
-end
-toc
