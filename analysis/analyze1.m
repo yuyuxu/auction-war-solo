@@ -1,8 +1,7 @@
-clc;
 close all;
 warning off;
 
-% -- plot demographic information
+% -- Plot: demographic information
 % figure;
 % subplot(2, 2, 1);
 % histogram(categorical(D(1:end, 8)));
@@ -13,7 +12,7 @@ warning off;
 % subplot(2, 2, 4);
 % histogram(str2double(D(1:end, 7)));
 
-% -- plot labels
+% -- Plot: labels
 % figure;
 % subplot(1, 2, 1);
 % histogram(y_mach);
@@ -33,7 +32,6 @@ warning off;
 % -- Model: y_mach ~ all features
 % analysis_linear(X_all, y_mach, 'quadratic');
 
-
 % -- Model: y_svo ~ sequence len
 % analysis_logistic(sequence_len, y_svo);
 % analysis_svm(sequence_len, y_svo);
@@ -47,7 +45,6 @@ warning off;
 % analysis_logistic_lasso(action_frequency, y_svo);
 % analysis_svm(action_frequency, y_svo);
 % analysis_svm(X_all, y_svo);
-
 
 % -- HMM: observation is action index/rewards
 % assemble data for HMM

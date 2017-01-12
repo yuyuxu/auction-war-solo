@@ -1,6 +1,6 @@
-% -- CONSTANTS --
+% -- CONSTANTS
 
-% action index
+% action index -> number items owned by the player
 action_index = ...
 [ ...
 0, 0, 0; ...
@@ -29,7 +29,7 @@ action_index = ...
 1, 2, 3; ...
 ];
 
-% reward index
+% reward index -> reward owned by the player
 reward_index = ...
 [ ...
 0.0; ...
@@ -58,7 +58,7 @@ reward_index = ...
 16.4; ...
 ];
 
-% painting, lamp, record
+% info about painting, lamp, record
 item_rewards = [0.1, 2.0, 4.1];
 num_items = [1, 2, 3];
 
@@ -77,7 +77,7 @@ agent_actions = [8, 4, 11, 19, 7, 22, 22, 22, 22];
 agent_actions_r = [17, 21, 14, 6, 18, 3, 3, 3, 3];
 agent_rewards = [14.3, 12.3, 12.2, 10.3, 10.2, 8.2, 8.2, 8.2, 8.2];
 
-% study parameters
+% study calculation
 mach_keys = ['T+', 'V-', 'V+', 'T-', 'V+', 'T+', 'V+', 'M+', 'V-', ...
   'T+', 'V+', 'T-', 'V-', 'V-', 'T-', 'T-', 'V+', 'T+', 'T-', 'M-'];
 svo_s = [100	98	96	94	93	91	89	87	85; ...
@@ -93,8 +93,10 @@ svo_o = [50	54	59	63	68	72	76	81	85; ...
          15	19	24	28	33	37	41	46	50; ...
          85	76	68	59	50	41	33	24	15];
        
-% HMM related
+% -- Features, label, model parameters -- 
+% label threshold
 mach_thresh = 60;
+% hmm
 O = 24;
 Q = 2;
 plot_data_index = 10;
