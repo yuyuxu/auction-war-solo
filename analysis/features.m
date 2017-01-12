@@ -1,6 +1,13 @@
+% REASSIGN the preprocessed data matrices
+D = D_;
+X = X_;
+Xr = Xr_;
+y_mach = y_mach_;
+y_svo = y_svo_;
+
 % =========================================================================
 % -- FILTERS
-% remove according to turker specific information
+% according to turker specific information
 unwanted_stats = [];
 for i = 1:n
   if str2double(D{i, 7}) < 400
@@ -13,10 +20,9 @@ Xr(unwanted_stats, :) = [];
 y_mach(unwanted_stats, :) = [];
 y_svo(unwanted_stats, :) = [];
 
-% remove
 % sequence length less than 3
-% action sequence starting with action 1 (0, 0, 0) ?
-% also remove last reward less than 5.0 ?
+% action sequence starting with action 1 (0, 0, 0)?
+% also remove last reward less than 4.0?
 invalid_action_indices = [];
 n = size(X, 1);
 for i = 1:n

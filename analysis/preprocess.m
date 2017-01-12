@@ -231,3 +231,10 @@ for i = 1:n
   end
 end
 toc;
+
+% -- BACKUP the data matrix
+D_ = D;
+X_ = X;
+Xr_ = Xr;
+y_mach_ = y_mach;
+y_svo_ = y_svo;
