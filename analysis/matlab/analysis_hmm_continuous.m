@@ -20,12 +20,26 @@ end
 % print learned information
 loglik = mhmm_logprob(X, prior1, transmat1, mu1, Sigma1, mixmat1);
 fprintf('#datapoints: %d, loglikelihood: %f\n', (size(X, 1)), (loglik));
-disp(prior1');
-disp(mu1);
+
+[mu1_, indices] = sort(mu1);
+str = 'state1';
+for i = 2:Q
+  str = strcat(str, ' state', int2str(i));
+end
+printmat(mu1_, '', 'mean', str);
 var1 = zeros(Q, M);
 var1(:, :) = Sigma1(1, :, :);
-disp(var1');
-disp(transmat1);
+var1_ = var1(indices')';
+printmat(var1_, '', 'various', str);
+prior1_ = prior1(indices')';
+printmat(prior1_, '', 'prior prob', str);
+transmat1_ = transmat1(indices, :);
+transmat1_ = transmat1_(:, indices);
+str = strcat('mu:', num2str(mu1_(1, 1)));
+for i = 2:Q
+  str = strcat(str, ' mu:', num2str(mu1_(1, i)));
+end
+printmat(transmat1_, 'trans prob', str, str);
 
 
 % simulation, sample with length, #repetition

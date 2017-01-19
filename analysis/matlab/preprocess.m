@@ -6,16 +6,16 @@ parameters;
 tic;
 % -- LOADING: loading mturk data
 % collection 1
-M1 = csv2cell('data/Batch1_.csv', 'fromfile');
-M2 = csv2cell('data/Batch2_.csv', 'fromfile');
-M3 = csv2cell('data/Batch3_.csv', 'fromfile');
-M4 = csv2cell('data/Batch4_.csv', 'fromfile');
-M5 = csv2cell('data/Batch5_.csv', 'fromfile');
+M1 = csv2cell('../data/Batch1_.csv', 'fromfile');
+M2 = csv2cell('../data/Batch2_.csv', 'fromfile');
+M3 = csv2cell('../data/Batch3_.csv', 'fromfile');
+M4 = csv2cell('../data/Batch4_.csv', 'fromfile');
+M5 = csv2cell('../data/Batch5_.csv', 'fromfile');
 % collection 2
-M6 = csv2cell('data/Batch6_.csv', 'fromfile');
-M7 = csv2cell('data/Batch7_.csv', 'fromfile');
-M8 = csv2cell('data/Batch8_.csv', 'fromfile');
-M9 = csv2cell('data/Batch9_.csv', 'fromfile');
+M6 = csv2cell('../data/Batch6_.csv', 'fromfile');
+M7 = csv2cell('../data/Batch7_.csv', 'fromfile');
+M8 = csv2cell('../data/Batch8_.csv', 'fromfile');
+M9 = csv2cell('../data/Batch9_.csv', 'fromfile');
 % first row is column names
 M = [M1(2:end, :); M2(2:end, :); M3(2:end, :); ...
      M4(2:end, :); M5(2:end, :); M6(2:end, :); ...
@@ -24,11 +24,11 @@ col_needed = [16, 24, 28, 29, 30, 31, 32];
 M = M(:, col_needed);
 
 % -- LOADING: loading dynamo db data
-A1 = csv2cell('data/auction-war-solo-users1.csv', 'fromfile');
-A2 = csv2cell('data/auction-war-solo-users2.csv', 'fromfile');
-A3 = csv2cell('data/auction-war-solo-users3.csv', 'fromfile');
-A4 = csv2cell('data/auction-war-solo-users4.csv', 'fromfile');
-A5 = csv2cell('data/auction-war-solo-users5.csv', 'fromfile');
+A1 = csv2cell('../data/auction-war-solo-users1.csv', 'fromfile');
+A2 = csv2cell('../data/auction-war-solo-users2.csv', 'fromfile');
+A3 = csv2cell('../data/auction-war-solo-users3.csv', 'fromfile');
+A4 = csv2cell('../data/auction-war-solo-users4.csv', 'fromfile');
+A5 = csv2cell('../data/auction-war-solo-users5.csv', 'fromfile');
 % first row is column names
 A = [A1(2:end, :); A2(2:end, :); A3(2:end, :); A4(2:end, :); A5(2:end, :)];
 toc;

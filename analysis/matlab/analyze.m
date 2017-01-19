@@ -135,16 +135,30 @@ for i = 1:n
   l = length(X{i, 1});
   reward = zeros(l, 1);
   for j = 1:l
-    if Xr{i, 1}(j, 1) < 8
+    if Xr{i, 1}(j, 1) < 6.1
       reward(j, 1) = 1;
-    elseif Xr{i, 1}(j, 1) >= 8 && Xr{i, 1}(j, 1) < 10
+    elseif Xr{i, 1}(j, 1) >= 6.1 && Xr{i, 1}(j, 1) <= 8.1
       reward(j, 1) = 2;
-    else
+    elseif Xr{i, 1}(j, 1) == 8.2
       reward(j, 1) = 3;
+    elseif Xr{i, 1}(j, 1) >= 8.3 && Xr{i, 1}(j, 1) <= 10.3
+      reward(j, 1) = 4;
+    elseif Xr{i, 1}(j, 1) > 10.3
+      reward(j, 1) = 5;
     end
   end
   data_cat{i} = reward';
 end
-analysis_hmm_discrete(data_cat, 3, 3, -1);
-analysis_hmm_discrete(data_cat(y_mach_bin == 0, :), 3, 3, -1);
-analysis_hmm_discrete(data_cat(y_mach_bin == 1, :), 3, 3, -1);
+print_label = '[0,6.1) [6.1,8.1] [8.2] [8.3,10.3] (10.3,16.4]';
+
+% hidden markov
+% analysis_hmm_discrete(data_cat, 3, 3, -1);
+% analysis_hmm_discrete(data_cat(y_mach_bin == 0, :), 3, 3, -1);
+% analysis_hmm_discrete(data_cat(y_mach_bin == 1, :), 3, 3, -1);
+
+% markov on whole dataset
+analysis_markov(data_cat, 5, print_label, print_label);
+
+% carve up the data into small groups according to mach
+analysis_markov(data_cat(y_mach_bin == 0, :), 5, print_label, print_label);
+analysis_markov(data_cat(y_mach_bin == 1, :), 5, print_label, print_label);
