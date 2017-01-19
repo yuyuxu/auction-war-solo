@@ -133,6 +133,11 @@ for i = 1:n
   study_time(i, 1) = str2double(D{i, 7});
 end
 
+all_features = [sequence_len, first_reward, final_reward, avg_reward, ...
+  ratio_counter_offer, ratio_repeated_offer, ratio_peak, ratio_valley, ...
+  study_time];
+all_features = standardize(all_features);
+
 
 % =========================================================================
 % -- LABELS
@@ -140,4 +145,4 @@ y_svo_bin = zeros(size(y_svo, 1), 1);
 y_svo_bin(y_svo == 2) = 1;
 y_svo_bin(y_svo == 3) = 0;
 y_mach_bin = zeros(size(y_mach, 1), 1);
-y_mach_bin(y_mach > mach_thresh) = 1;
+y_mach_bin(y_mach > 58.2642) = 1;

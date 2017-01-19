@@ -1,10 +1,5 @@
-function [prior1, transmat1, mu1, Sigma1, mixmat1, paths] = ...
-  analysis_hmm1(X, y, c, Q, O, plot_data_index)
-O = 2;
-Q = 3;
-M = 1;
-plot_data_index = 31;
-cov_type = 'full';
+function analysis_hmm_continuous(X, Q, M, plot_data_index)
+O = 1;
 
 % -- HMM general analysis on whole data set
 % initial guess of parameters
@@ -12,51 +7,67 @@ prior0 = normalise(rand(Q, 1));
 transmat0 = mk_stochastic(rand(Q, Q));
 
 mu0 = repmat(rand(), [O Q M]);
-Sigma0 = repmat(eye(O), [1 1 Q M]);
-mixmat0 = mk_stochastic(rand(Q,M));
+Sigma0 = repmat(eye(O), [O O Q M]);
+mixmat0 = mk_stochastic(rand(Q, M));
 
 % improve guess of parameters using EM
-[LL, prior1, transmat1, mu1, Sigma1, mixmat1] = ...
-  mhmm_em(X, prior0, transmat0, mu0, Sigma0, mixmat0, 'max_iter', 100);
+if M == 1
+  mixmat0 = ones(Q, 1);
+end
+[~, prior1, transmat1, mu1, Sigma1, mixmat1] = ...
+  mhmm_em(X, prior0, transmat0, mu0, Sigma0, mixmat0, 'max_iter', 1000, 'verbose', 1);
 
-paths = cell(size(X, 1), 1);
-for i = 1:size(X, 1)
-  one_data = X{i, :};
+% print learned information
+loglik = mhmm_logprob(X, prior1, transmat1, mu1, Sigma1, mixmat1);
+fprintf('#datapoints: %d, loglikelihood: %f\n', (size(X, 1)), (loglik));
+disp(prior1');
+disp(mu1);
+var1 = zeros(Q, M);
+var1(:, :) = Sigma1(1, :, :);
+disp(var1');
+disp(transmat1);
+
+
+% simulation, sample with length, #repetition
+% S = mc_sample(prior1, transmat1, 6, 10);
+
+% plot state change of one data
+if plot_data_index >= 0
+  one_data = X{plot_data_index, :};
   obslik = mixgauss_prob(one_data, mu1, Sigma1, mixmat1);
   path = viterbi_path(prior1, transmat1, obslik);
-  paths{i, 1} = path;
+  figure;
+  hold on;
+  plot(path, 'bo-');
+  plot(one_data, 'r*-');
+  xlim([0, 10]);
+  ylim([0, 17]);
+  hold off;
+end
+
+% save all paths
+% for i = 1:size(X, 1)
+%   one_data = X{i, :};
+%   obslik = mixgauss_prob(one_data, mu1, Sigma1, mixmat1);
+%   path = viterbi_path(prior1, transmat1, obslik);
 %   close all;
-%   fig = figure;
+%   fig = figure('visible','off');
 %   hold on;
 %   plot(path, 'bo-');
 %   plot(one_data, 'r*-');
 %   xlim([0, 10]);
-%   ylim([0, 17]);
+%   ylim([0, 22]);
 %   hold off;
-%   saveas(fig, sprintf('./temp/path%d.jpg', i));
-end
+%   saveas(fig, sprintf('./figure/path/7/path%03d.jpg', i));
+% end
 
-% use model to compute log likelihood
-% loglik = mhmm_logprob(X, prior1, transmat1, obsmat1);
-
-% plot state change of one data
-% one_data = X{plot_data_index, :};
-% obslik = mixgauss_prob(one_data, mu1, Sigma1, mixmat1);
-% path = viterbi_path(prior1, transmat1, obslik);
-% figure;
-% hold on;
-% plot(path, 'bo-');
-% plot(one_data, 'r*-');
-% xlim([0, 10]);
-% hold off;
-% 
-% % -- HMM classification
+% HMM classification
 % if c < 2
 %   return;
 % end
 % 
 % n = size(X, 1);
-% k = 3;
+% k = 10;
 % indices = crossvalind('Kfold', n, k);
 % err_vec = zeros(k, 1);
 % for i = 1:k
@@ -76,7 +87,7 @@ end
 %   Sigma0 = repmat(eye(O), [1 1 Q M]);
 %   mixmat0 = mk_stochastic(rand(Q,M));
 % 
-%   hmm_models = cell(c, 5);  
+%   hmm_models = cell(c, 5);
 %   for j = 1:c
 %     indices_c = train_data_y == (j - 1);
 %     train_data_xc = train_data_x(indices_c, :);
@@ -104,9 +115,6 @@ end
 % end
 % 
 % fprintf('--- mean error rate is: %f\n\n', mean(err_vec));
-
-% -- HMM simulation
-% ...
 
 end
 

@@ -92,11 +92,3 @@ svo_o = [50	54	59	63	68	72	76	81	85; ...
          100	98	96	94	93	91	89	87	85; ...
          15	19	24	28	33	37	41	46	50; ...
          85	76	68	59	50	41	33	24	15];
-       
-% -- Features, label, model parameters -- 
-% label threshold
-mach_thresh = 60;
-% hmm
-O = 24;
-Q = 2;
-plot_data_index = 10;
