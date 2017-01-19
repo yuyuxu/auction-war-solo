@@ -1,5 +1,6 @@
 function analysis_markov(X, O, row_label, column_label)
 n = size(X, 1);
+fprintf('#datapoints: %d\n', (n));
 transmat = zeros(O, O);
 
 for i = 1:n
