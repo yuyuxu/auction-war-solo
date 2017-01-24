@@ -136,8 +136,9 @@ end
 all_features = [sequence_len, first_reward, final_reward, avg_reward, ...
   ratio_counter_offer, ratio_repeated_offer, ratio_peak, ratio_valley, ...
   study_time];
-all_features = standardize(all_features);
-
+for i = 1:size(all_features, 1)
+  all_features(i, :) = standardize(all_features(i, :));
+end
 
 % =========================================================================
 % -- LABELS
