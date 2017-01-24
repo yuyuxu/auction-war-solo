@@ -239,3 +239,9 @@ print_label = '[0,6.1) [6.1,8.1] [8.2] [8.3,10.3] (10.3,16.4]';
 % [C1, ~] = analysis_markov(data_cat(diff_first_last_offer == 1, :), 5, print_label, print_label);
 % [C2, ~] = analysis_markov(data_cat(diff_first_last_offer == 2, :), 5, print_label, print_label);
 % analysis_compare_markov(C1, C2);
+
+% classification task
+% analysis_markov_classfication(data_cat, y_mach_bin);
+% analysis_markov_classfication(data_cat, y_mach_bin, 5);
+% analysis_markov_classfication(data_cat, y_svo_bin);
+% analysis_markov_classfication(data_cat, y_svo_bin, 5);
