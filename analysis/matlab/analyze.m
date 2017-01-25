@@ -55,10 +55,10 @@ warning off;
 
 % -- HMM: observation is rewards
 % prepare data
-data = cell(size(Xr, 1), 1);
-for i = 1:size(Xr, 1)
-  data{i} = Xr{i, 1}';
-end
+% data = cell(size(Xr, 1), 1);
+% for i = 1:size(Xr, 1)
+%   data{i} = Xr{i, 1}';
+% end
 
 % analysis on the whole dataset
 % analysis_hmm_continuous(data, 5, 1, -1);
@@ -147,9 +147,9 @@ end
 print_label = '[0,6.1) [6.1,8.1] [8.2] [8.3,10.3] (10.3,16.4]';
 
 % hidden markov
-% analysis_hmm_discrete(data_cat, 3, 3, -1);
-% analysis_hmm_discrete(data_cat(y_mach_bin == 0, :), 3, 3, -1);
-% analysis_hmm_discrete(data_cat(y_mach_bin == 1, :), 3, 3, -1);
+% analysis_hmm_discrete(data_cat, 3, 5, -1);
+% analysis_hmm_discrete(data_cat(y_mach_bin == 0, :), 3, 5, -1);
+% analysis_hmm_discrete(data_cat(y_mach_bin == 1, :), 3, 5, -1);
 
 % markov on whole dataset
 % analysis_markov(data_cat, 5, print_label, print_label);
